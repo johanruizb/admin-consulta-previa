@@ -44,6 +44,7 @@ export default function handler(req, res) {
                 "Set-Cookie",
                 `session=${access}; Path=/; HttpOnly; SameSite=Strict`
             );
+            
             return res
                 .status(200)
                 .json({ message: "Inicio de sesión exitoso" });
