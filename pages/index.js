@@ -11,10 +11,14 @@ import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import Layout from "@/components/Home/Layout";
 import OrderList from "@/components/Home/OrderList";
 import OrderTable from "@/components/Home/OrderTable";
+import Head from "next/head";
 
 export default function Home() {
     return (
         <Layout>
+            <Head>
+                <title>Inicio - Consulta previa</title>
+            </Head>
             <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Breadcrumbs
                     size="sm"

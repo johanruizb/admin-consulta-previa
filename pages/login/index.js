@@ -16,6 +16,7 @@ import { useColorScheme } from "@mui/joy/styles";
 import Typography from "@mui/joy/Typography";
 import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
+import Head from "next/head";
 
 function ColorSchemeToggle(props) {
     const { onClick, ...other } = props;
@@ -82,6 +83,9 @@ export default function JoySignInSideTemplate() {
 
     return (
         <Fragment>
+            <Head>
+                <title>Iniciar sesión - Consulta previa</title>
+            </Head>
             <CssBaseline />
             <GlobalStyles
                 styles={{
