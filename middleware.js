@@ -15,8 +15,8 @@ export default async function middleware(req) {
     const cookiesList = cookies();
     const session = cookiesList.get("session");
 
-    console.log("cookiesList", cookiesList);
-    console.log("session", session);
+    // console.log("cookiesList", cookiesList);
+    // console.log("session", session);
 
     // 5. Redirect to /login if the user is not authenticated
     if (isProtectedRoute && !session?.value)
