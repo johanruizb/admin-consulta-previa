@@ -30,7 +30,7 @@ export default function handler(req, res) {
     const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 
     const { username, password } = req.body;
-    fetch(baseURL + "/api/autenticacion/login", {
+    return fetch(baseURL + "/api/autenticacion/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -44,12 +44,11 @@ export default function handler(req, res) {
                 "Set-Cookie",
                 `session=${access}; Path=/; HttpOnly; SameSite=Strict`
             );
-            
-            return res
-                .status(200)
-                .json({ message: "Inicio de sesión exitoso" });
+
+            res.status = 200;
         } else {
-            return res.status(401).json({ ...response });
+            res.status = 401;
         }
+        res.end();
     });
 }
