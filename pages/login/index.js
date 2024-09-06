@@ -14,6 +14,7 @@ import Input from "@mui/joy/Input";
 import Stack from "@mui/joy/Stack";
 import { useColorScheme } from "@mui/joy/styles";
 import Typography from "@mui/joy/Typography";
+import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 
 function ColorSchemeToggle(props) {
@@ -49,7 +50,30 @@ function ColorSchemeToggle(props) {
 }
 
 export default function JoySignInSideTemplate() {
+    const router = useRouter();
     const [show, setShow] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const onSubmit = (event) => {
+        event.preventDefault();
+        setLoading(true);
+
+        const formElements = event.currentTarget.elements;
+        const data = {
+            username: formElements.username.value,
+            password: formElements.password.value,
+        };
+
+        fetch("api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        }).then((response) => {
+            if (response.ok) router.replace("/");
+        });
+    };
 
     return (
         <Fragment>
@@ -154,18 +178,7 @@ export default function JoySignInSideTemplate() {
                         }}
                     >
                         <Stack sx={{ gap: 4, mt: 2 }}>
-                            <form
-                                onSubmit={(event) => {
-                                    event.preventDefault();
-                                    const formElements =
-                                        event.currentTarget.elements;
-                                    const data = {
-                                        email: formElements.username.value,
-                                        password: formElements.password.value,
-                                    };
-                                    alert(JSON.stringify(data, null, 2));
-                                }}
-                            >
+                            <form onSubmit={onSubmit}>
                                 <FormControl required>
                                     <FormLabel>Usuario</FormLabel>
                                     <Input type="text" name="username" />
@@ -193,7 +206,11 @@ export default function JoySignInSideTemplate() {
                                     />
                                 </FormControl>
                                 <Stack sx={{ gap: 4, mt: 2 }}>
-                                    <Button type="submit" fullWidth>
+                                    <Button
+                                        type="submit"
+                                        fullWidth
+                                        loading={loading}
+                                    >
                                         Iniciar sesión
                                     </Button>
                                 </Stack>
