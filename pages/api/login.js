@@ -48,9 +48,7 @@ export default function handler(req, res) {
                 .status(200)
                 .json({ message: "Inicio de sesión exitoso" });
         } else {
-            return res
-                .status(401)
-                .json({ message: "Error en el inicio de sesión" });
+            return res.status(401).json({ response });
         }
     });
 }

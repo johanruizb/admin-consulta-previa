@@ -70,8 +70,12 @@ export default function JoySignInSideTemplate() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(data),
-        }).then((response) => {
+        }).then(async (response) => {
             if (response.ok) router.replace("/");
+            else {
+                setLoading(false);
+                console.error(await response.json());
+            }
         });
     };
 
