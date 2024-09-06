@@ -1,12 +1,12 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { NextRequest } from "next/server";
-import { ServerResponse } from "http";
+import { NextRequest, NextResponse } from "next/server";
+// import { ServerResponse } from "http";
 
 /**
  * Handler para la ruta API de Next.js que maneja el inicio de sesión.
  *
  * @param {NextRequest} req - El objeto de solicitud HTTP.
- * @param {ServerResponse} res - El objeto de respuesta HTTP.
+ * @param {NextResponse} res - El objeto de respuesta HTTP.
  *
  * @returns {Promise<void>} - Una promesa que se resuelve cuando la operación de inicio de sesión se completa.
  *
@@ -43,11 +43,13 @@ export default function handler(req, res) {
                 "Set-Cookie",
                 `session=${access}; Path=/; HttpOnly; SameSite=Strict`
             );
-            res.statusCode = 200;
+            return res
+                .status(200)
+                .json({ message: "Inicio de sesión exitoso" });
         } else {
-            res.statusCode = 401;
+            return res
+                .status(401)
+                .json({ message: "Error en el inicio de sesión" });
         }
-
-        res.end();
     });
 }
