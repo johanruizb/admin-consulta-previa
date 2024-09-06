@@ -10,8 +10,8 @@ import { ServerResponse } from "http";
  *
  * @returns {Promise<void>} - Una promesa que se resuelve cuando la operación de inicio de sesión se completa.
  *
+ * Ejemplo de uso en una solicitud HTTP POST
  * @example
- * // Ejemplo de uso en una solicitud HTTP POST
  * fetch('/api/login', {
  *   method: 'POST',
  *   headers: {
@@ -26,8 +26,8 @@ import { ServerResponse } from "http";
  *   }
  * });
  */
+
 export default async function handler(req, res) {
-    console.log("res", res.constructor.name);
     const { username, password } = req.body;
     const data = await fetch("http://localhost:8080/api/autenticacion/login", {
         method: "POST",
