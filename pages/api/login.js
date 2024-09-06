@@ -1,5 +1,4 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-
 import { NextRequest } from "next/server";
 import { ServerResponse } from "http";
 
@@ -27,44 +26,28 @@ import { ServerResponse } from "http";
  *   }
  * });
  */
-export async function POST(req, res) {
+
+export default function handler(req, res) {
     const { username, password } = req.body;
-    const data = await fetch("http://localhost:8080/api/autenticacion/login", {
+    const data = fetch("http://localhost:8080/api/autenticacion/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({ username, password }),
+    }).then(async (response) => {
+        if (response.ok) {
+            const { access } = await response.json();
+
+            res.setHeader(
+                "Set-Cookie",
+                `session=${access}; Path=/; HttpOnly; SameSite=Strict`
+            );
+            res.statusCode = 200;
+        } else {
+            res.statusCode = 401;
+        }
+
+        res.end();
     });
-
-    if (data.ok) {
-        const { access } = await data.json();
-
-        res.setHeader(
-            "Set-Cookie",
-            `session=${access}; Path=/; HttpOnly; SameSite=Strict`
-        );
-        res.statusCode = 200;
-    } else {
-        res.statusCode = 401;
-    }
-
-    res.end();
-}
-
-/**
- * Handler para la ruta API de Next.js que maneja el inicio de sesión.
- *
- * @param {NextRequest} req - El objeto de solicitud HTTP.
- * @param {ServerResponse} res - El objeto de respuesta HTTP.
- *
- * @returns {Promise<void>} - Una promesa que se resuelve cuando la operación de inicio de sesión se completa.
- *
- * Ejemplo de uso en una solicitud HTTP POST
- * @example
- */
-
-export async function GET(req, res) {
-    res.statusCode = 200;
-    res.json({ message: "Hello World" });
 }
