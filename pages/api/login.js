@@ -26,10 +26,11 @@ import { NextRequest, NextResponse } from "next/server";
  *   }
  * });
  */
-
 export default function handler(req, res) {
+    const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
+
     const { username, password } = req.body;
-    const data = fetch("http://localhost:8080/api/autenticacion/login", {
+    fetch(baseURL + "/api/autenticacion/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
