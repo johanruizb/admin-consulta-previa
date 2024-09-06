@@ -74,7 +74,7 @@ export default function JoySignInSideTemplate() {
             if (response.ok) router.replace("/");
             else {
                 setLoading(false);
-                console.error(response);
+                console.error({ ...response, body: await response.json() });
             }
         });
     };
