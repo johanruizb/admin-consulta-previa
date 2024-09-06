@@ -34,9 +34,12 @@ import { closeSidebar } from "../utils";
 import ColorSchemeToggle from "./ColorSchemeToggle";
 
 import { Fragment, useState } from "react";
+import { deleteCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
 
 function Toggler({ defaultExpanded = false, renderToggle, children }) {
     const [open, setOpen] = useState(defaultExpanded);
+
     return (
         <Fragment>
             {renderToggle({ open, setOpen })}
@@ -61,6 +64,21 @@ function Toggler({ defaultExpanded = false, renderToggle, children }) {
 }
 
 export default function Sidebar() {
+    const [logout, setLogout] = useState(false);
+
+    const router = useRouter();
+
+    const onLogout = () => {
+        setLogout(true);
+
+        fetch("/api/logout", {
+            method: "POST",
+        }).then(() => {
+            router.refresh();
+        });
+        router.refresh();
+    };
+
     return (
         <Sheet
             className="Sidebar"
@@ -324,7 +342,13 @@ export default function Sidebar() {
                     <Typography level="title-sm">Usuario</Typography>
                     <Typography level="body-xs">example@example.com</Typography>
                 </Box>
-                <IconButton size="sm" variant="plain" color="neutral">
+                <IconButton
+                    size="sm"
+                    variant="plain"
+                    color="neutral"
+                    onClick={onLogout}
+                    loading={logout}
+                >
                     <LogoutRoundedIcon />
                 </IconButton>
             </Box>
