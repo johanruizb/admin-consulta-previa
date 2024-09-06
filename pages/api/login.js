@@ -2,6 +2,7 @@
 
 import { NextRequest } from "next/server";
 import { ServerResponse } from "http";
+
 /**
  * Handler para la ruta API de Next.js que maneja el inicio de sesión.
  *
@@ -26,8 +27,7 @@ import { ServerResponse } from "http";
  *   }
  * });
  */
-
-export default async function handler(req, res) {
+export async function POST(req, res) {
     const { username, password } = req.body;
     const data = await fetch("http://localhost:8080/api/autenticacion/login", {
         method: "POST",
@@ -50,4 +50,21 @@ export default async function handler(req, res) {
     }
 
     res.end();
+}
+
+/**
+ * Handler para la ruta API de Next.js que maneja el inicio de sesión.
+ *
+ * @param {NextRequest} req - El objeto de solicitud HTTP.
+ * @param {ServerResponse} res - El objeto de respuesta HTTP.
+ *
+ * @returns {Promise<void>} - Una promesa que se resuelve cuando la operación de inicio de sesión se completa.
+ *
+ * Ejemplo de uso en una solicitud HTTP POST
+ * @example
+ */
+
+export async function GET(req, res) {
+    res.statusCode = 200;
+    res.json({ message: "Hello World" });
 }
