@@ -7,12 +7,18 @@ import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 
 import Layout from "@/components/Home/Layout";
-import useDevRouter from "@/hooks/useDevRouter";
 
 import Head from "next/head";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
-    useDevRouter();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (process.env.NODE_ENV === "production") router.push("/registros");
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <Layout>
