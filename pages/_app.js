@@ -1,18 +1,31 @@
 import "@/styles/globals.css";
-import { CssVarsProvider, extendTheme } from "@mui/joy";
+import { CssBaseline, extendTheme } from "@mui/joy";
+import { CssVarsProvider as JoyCssVarsProvider } from "@mui/joy/styles";
+import {
+    THEME_ID as MATERIAL_THEME_ID,
+    extendTheme as materialExtendTheme,
+    ThemeProvider,
+} from "@mui/material/styles";
 
 const customTheme = extendTheme({
     colorSchemeSelector: "media",
 });
 
+const materialTheme = materialExtendTheme({
+    colorSchemes: { dark: true, light: true },
+    colorSchemeSelector: "data",
+});
+
 export default function App({ Component, pageProps }) {
     return (
-        <CssVarsProvider
-            theme={customTheme}
-            defaultMode="system"
-            disableTransitionOnChange
-        >
-            <Component {...pageProps} />
-        </CssVarsProvider>
+        <JoyCssVarsProvider theme={customTheme} defaultMode="system">
+            <ThemeProvider
+                theme={{ [MATERIAL_THEME_ID]: materialTheme }}
+                defaultMode="system"
+            >
+                <CssBaseline enableColorScheme />
+                <Component {...pageProps} />
+            </ThemeProvider>
+        </JoyCssVarsProvider>
     );
 }
