@@ -6,7 +6,6 @@
 import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import SupportRoundedIcon from "@mui/icons-material/SupportRounded";
@@ -16,7 +15,6 @@ import SupportRoundedIcon from "@mui/icons-material/SupportRounded";
 // import Chip from "@mui/joy/Chip";
 // import LinearProgress from "@mui/joy/LinearProgress";
 // import Stack from "@mui/joy/Stack";
-import Avatar from "@mui/joy/Avatar";
 import Box from "@mui/joy/Box";
 import Divider from "@mui/joy/Divider";
 import GlobalStyles from "@mui/joy/GlobalStyles";
@@ -34,7 +32,9 @@ import { closeSidebar } from "../utils";
 import ColorSchemeToggle from "./ColorSchemeToggle";
 
 import { useRouter } from "next/navigation";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
+import Profile from "./Profile";
+import DevWrapper from "../Wrapper/DevWrapper";
 
 function Toggler({ defaultExpanded = false, renderToggle, children }) {
     const [open, setOpen] = useState(defaultExpanded);
@@ -63,20 +63,11 @@ function Toggler({ defaultExpanded = false, renderToggle, children }) {
 }
 
 export default function Sidebar() {
-    const [logout, setLogout] = useState(false);
+    const [mounted, setMounted] = useState(false);
 
-    const router = useRouter();
-
-    const onLogout = () => {
-        setLogout(true);
-
-        fetch("/api/logout", {
-            method: "POST",
-        }).then(() => {
-            router.refresh();
-        });
-        router.refresh();
-    };
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     return (
         <Sheet
@@ -145,11 +136,11 @@ export default function Sidebar() {
                 <Typography level="title-lg">Consulta previa</Typography>
                 <ColorSchemeToggle sx={{ ml: "auto" }} />
             </Box>
-            <Input
+            {/* <Input
                 size="sm"
                 startDecorator={<SearchRoundedIcon />}
                 placeholder="Search"
-            />
+            /> */}
             <Box
                 sx={{
                     minHeight: 0,
@@ -170,34 +161,62 @@ export default function Sidebar() {
                         "--ListItem-radius": (theme) => theme.vars.radius.sm,
                     }}
                 >
-                    <ListItem>
-                        <ListItemButton>
-                            <HomeRoundedIcon />
-                            <ListItemContent>
-                                <Typography level="title-sm">Inicio</Typography>
-                            </ListItemContent>
-                        </ListItemButton>
-                    </ListItem>
+                    <DevWrapper>
+                        <ListItem>
+                            <ListItemButton
+                                component="a"
+                                href="/"
+                                selected={
+                                    mounted ? location.pathname == "/" : false
+                                }
+                            >
+                                <HomeRoundedIcon />
+                                <ListItemContent>
+                                    <Typography level="title-sm">
+                                        Inicio
+                                    </Typography>
+                                </ListItemContent>
+                            </ListItemButton>
+                        </ListItem>
 
-                    <ListItem>
-                        <ListItemButton>
-                            <DashboardRoundedIcon />
-                            <ListItemContent>
-                                <Typography level="title-sm">Panel</Typography>
-                            </ListItemContent>
-                        </ListItemButton>
-                    </ListItem>
+                        <ListItem>
+                            <ListItemButton
+                                component="a"
+                                href="/panel"
+                                selected={
+                                    mounted
+                                        ? location.pathname == "/panel"
+                                        : false
+                                }
+                            >
+                                <DashboardRoundedIcon />
+                                <ListItemContent>
+                                    <Typography level="title-sm">
+                                        Panel
+                                    </Typography>
+                                </ListItemContent>
+                            </ListItemButton>
+                        </ListItem>
 
-                    <ListItem>
-                        <ListItemButton selected>
-                            <GroupAddIcon />
-                            <ListItemContent>
-                                <Typography level="title-sm">
-                                    Registros
-                                </Typography>
-                            </ListItemContent>
-                        </ListItemButton>
-                    </ListItem>
+                        <ListItem>
+                            <ListItemButton
+                                component="a"
+                                href="/registros"
+                                selected={
+                                    mounted
+                                        ? location.pathname == "/registros"
+                                        : false
+                                }
+                            >
+                                <GroupAddIcon />
+                                <ListItemContent>
+                                    <Typography level="title-sm">
+                                        Registros
+                                    </Typography>
+                                </ListItemContent>
+                            </ListItemButton>
+                        </ListItem>
+                    </DevWrapper>
 
                     {/* <ListItem nested>
                         <Toggler
@@ -306,7 +325,7 @@ export default function Sidebar() {
                         </Toggler>
                     </ListItem> */}
                 </List>
-                <List
+                {/* <List
                     size="sm"
                     sx={{
                         mt: "auto",
@@ -328,29 +347,10 @@ export default function Sidebar() {
                             Settings
                         </ListItemButton>
                     </ListItem>
-                </List>
+                </List> */}
             </Box>
             <Divider />
-            <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-                <Avatar
-                    variant="outlined"
-                    size="sm"
-                    // src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
-                />
-                <Box sx={{ minWidth: 0, flex: 1 }}>
-                    <Typography level="title-sm">Usuario</Typography>
-                    <Typography level="body-xs">example@example.com</Typography>
-                </Box>
-                <IconButton
-                    size="sm"
-                    variant="plain"
-                    color="neutral"
-                    onClick={onLogout}
-                    loading={logout}
-                >
-                    <LogoutRoundedIcon />
-                </IconButton>
-            </Box>
+            <Profile />
         </Sheet>
     );
 }
