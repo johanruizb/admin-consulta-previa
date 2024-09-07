@@ -1,12 +1,15 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { NextRequest, NextResponse } from "next/server";
+import { getSeconds } from "@/components/utils";
+import { getIronSession } from "iron-session";
+import { NextApiRequest, NextApiResponse } from "next";
+
 // import { ServerResponse } from "http";
 
 /**
  * Handler para la ruta API de Next.js que maneja el inicio de sesión.
  *
- * @param {NextRequest} req - El objeto de solicitud HTTP.
- * @param {NextResponse} res - El objeto de respuesta HTTP.
+ * @param {NextApiRequest} req - El objeto de solicitud HTTP.
+ * @param {NextApiResponse} res - El objeto de respuesta HTTP.
  *
  * @returns {Promise<void>} - Una promesa que se resuelve cuando la operación de inicio de sesión se completa.
  *
@@ -26,29 +29,45 @@ import { NextRequest, NextResponse } from "next/server";
  *   }
  * });
  */
-export default function handler(req, res) {
-    const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
-
+export default async function handler(req, res) {
     const { username, password } = req.body;
-    return fetch(baseURL + "/api/autenticacion/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
-    }).then(async (response) => {
-        if (response.ok) {
-            const { access } = await response.json();
-
-            res.setHeader(
-                "Set-Cookie",
-                `session=${access}; Path=/; HttpOnly; SameSite=Strict`
-            );
-
-            res.status = 200;
-        } else {
-            res.status = 401;
+    const response = await fetch(
+        process.env.NEXT_PUBLIC_BASE_URL + "/api/autenticacion/login",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, password }),
         }
-        res.end();
-    });
+    );
+    if (response.ok) {
+        const session = await getIronSession(req, res, {
+            password: process.env.SESSION_SECRET,
+            cookieName: "session",
+            cookieOptions: {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+                maxAge: getSeconds("7d") - 60,
+            },
+        });
+
+        const { access, refresh, ...data } = await response.json();
+
+        // Informacion de la sesion
+        session.accessToken = access;
+        session.refreshToken = refresh;
+
+        // Informacion del usuario
+        session.fullname = data.full_name;
+        session.username = data.username;
+        session.role = data.role;
+
+        await session.save();
+
+        res.status(200).redirect("/");
+    } else {
+        res.status(401).end();
+    }
 }
