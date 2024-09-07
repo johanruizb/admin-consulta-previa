@@ -1,6 +1,4 @@
 import UnivalleIcon from "@/components/Icons/Univalle";
-import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
-import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import Box from "@mui/joy/Box";
@@ -12,43 +10,13 @@ import GlobalStyles from "@mui/joy/GlobalStyles";
 import IconButton from "@mui/joy/IconButton";
 import Input from "@mui/joy/Input";
 import Stack from "@mui/joy/Stack";
-import { useColorScheme } from "@mui/joy/styles";
 import Typography from "@mui/joy/Typography";
-import { useRouter } from "next/navigation";
-import { Fragment, useEffect, useState } from "react";
+
+import { Fragment, useState } from "react";
+
 import Head from "next/head";
-
-function ColorSchemeToggle(props) {
-    const { onClick, ...other } = props;
-    const { mode, setMode } = useColorScheme();
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => setMounted(true), []);
-
-    if (!mounted) {
-        return null;
-    }
-
-    return (
-        <IconButton
-            aria-label="toggle light/dark mode"
-            size="sm"
-            variant="outlined"
-            disabled={!mounted}
-            onClick={(event) => {
-                setMode(mode === "light" ? "dark" : "light");
-                onClick?.(event);
-            }}
-            {...other}
-        >
-            {mode === "light" ? (
-                <DarkModeRoundedIcon />
-            ) : (
-                <LightModeRoundedIcon />
-            )}
-        </IconButton>
-    );
-}
+import { useRouter } from "next/navigation";
+import ColorSchemeToggle from "@/components/Home/ColorSchemeToggle";
 
 export default function JoySignInSideTemplate() {
     const router = useRouter();
