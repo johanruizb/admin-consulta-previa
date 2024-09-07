@@ -18,6 +18,7 @@ import { Fragment } from "react";
 
 import useSWR from "swr";
 import fetcher from "@/components/fetcher";
+import DevWrapper from "@/components/Wrapper/DevWrapper";
 
 export default function Home() {
     const { data, error, isLoading } = useSWR("api/inscritos", fetcher);
@@ -64,14 +65,16 @@ export default function Home() {
                 <Typography level="h2" component="h1">
                     Personas registradas
                 </Typography>
-                <Button
-                    color="primary"
-                    startDecorator={<DownloadRoundedIcon />}
-                    size="sm"
-                    loading={isLoading}
-                >
-                    Descargar XLSX
-                </Button>
+                <DevWrapper>
+                    <Button
+                        color="primary"
+                        startDecorator={<DownloadRoundedIcon />}
+                        size="sm"
+                        loading={isLoading}
+                    >
+                        Descargar XLSX
+                    </Button>
+                </DevWrapper>
             </Box>
             {isLoading ? (
                 <Stack
