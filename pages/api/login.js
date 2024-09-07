@@ -66,7 +66,7 @@ export default async function handler(req, res) {
 
         await session.save();
 
-        res.status(200).redirect("/");
+        res.status(200).end();
     } else {
         res.status(401).end();
     }
