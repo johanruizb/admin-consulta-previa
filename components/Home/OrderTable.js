@@ -1,8 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import Avatar from "@mui/joy/Avatar";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
-import Checkbox from "@mui/joy/Checkbox";
 import Chip from "@mui/joy/Chip";
 import Divider from "@mui/joy/Divider";
 import Dropdown from "@mui/joy/Dropdown";
@@ -10,7 +8,6 @@ import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import IconButton, { iconButtonClasses } from "@mui/joy/IconButton";
 import Input from "@mui/joy/Input";
-import Link from "@mui/joy/Link";
 import Menu from "@mui/joy/Menu";
 import MenuButton from "@mui/joy/MenuButton";
 import MenuItem from "@mui/joy/MenuItem";
@@ -22,200 +19,18 @@ import Select from "@mui/joy/Select";
 import Sheet from "@mui/joy/Sheet";
 import Table from "@mui/joy/Table";
 import Typography from "@mui/joy/Typography";
-import * as React from "react";
 
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 import BlockIcon from "@mui/icons-material/Block";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import SearchIcon from "@mui/icons-material/Search";
+import { Pagination } from "@mui/material";
+import dayjs from "dayjs";
 
-const rows = [
-    {
-        id: "INV-1234",
-        date: "Feb 3, 2023",
-        status: "Refunded",
-        customer: {
-            initial: "O",
-            name: "Olivia Ryhe",
-            email: "olivia@email.com",
-        },
-    },
-    {
-        id: "INV-1233",
-        date: "Feb 3, 2023",
-        status: "Paid",
-        customer: {
-            initial: "S",
-            name: "Steve Hampton",
-            email: "steve.hamp@email.com",
-        },
-    },
-    {
-        id: "INV-1232",
-        date: "Feb 3, 2023",
-        status: "Refunded",
-        customer: {
-            initial: "C",
-            name: "Ciaran Murray",
-            email: "ciaran.murray@email.com",
-        },
-    },
-    {
-        id: "INV-1231",
-        date: "Feb 3, 2023",
-        status: "Refunded",
-        customer: {
-            initial: "M",
-            name: "Maria Macdonald",
-            email: "maria.mc@email.com",
-        },
-    },
-    {
-        id: "INV-1230",
-        date: "Feb 3, 2023",
-        status: "Cancelled",
-        customer: {
-            initial: "C",
-            name: "Charles Fulton",
-            email: "fulton@email.com",
-        },
-    },
-    {
-        id: "INV-1229",
-        date: "Feb 3, 2023",
-        status: "Cancelled",
-        customer: {
-            initial: "J",
-            name: "Jay Hooper",
-            email: "hooper@email.com",
-        },
-    },
-    {
-        id: "INV-1228",
-        date: "Feb 3, 2023",
-        status: "Refunded",
-        customer: {
-            initial: "K",
-            name: "Krystal Stevens",
-            email: "k.stevens@email.com",
-        },
-    },
-    {
-        id: "INV-1227",
-        date: "Feb 3, 2023",
-        status: "Paid",
-        customer: {
-            initial: "S",
-            name: "Sachin Flynn",
-            email: "s.flyn@email.com",
-        },
-    },
-    {
-        id: "INV-1226",
-        date: "Feb 3, 2023",
-        status: "Cancelled",
-        customer: {
-            initial: "B",
-            name: "Bradley Rosales",
-            email: "brad123@email.com",
-        },
-    },
-    {
-        id: "INV-1225",
-        date: "Feb 3, 2023",
-        status: "Paid",
-        customer: {
-            initial: "O",
-            name: "Olivia Ryhe",
-            email: "olivia@email.com",
-        },
-    },
-    {
-        id: "INV-1224",
-        date: "Feb 3, 2023",
-        status: "Cancelled",
-        customer: {
-            initial: "S",
-            name: "Steve Hampton",
-            email: "steve.hamp@email.com",
-        },
-    },
-    {
-        id: "INV-1223",
-        date: "Feb 3, 2023",
-        status: "Paid",
-        customer: {
-            initial: "C",
-            name: "Ciaran Murray",
-            email: "ciaran.murray@email.com",
-        },
-    },
-    {
-        id: "INV-1221",
-        date: "Feb 3, 2023",
-        status: "Refunded",
-        customer: {
-            initial: "M",
-            name: "Maria Macdonald",
-            email: "maria.mc@email.com",
-        },
-    },
-    {
-        id: "INV-1220",
-        date: "Feb 3, 2023",
-        status: "Paid",
-        customer: {
-            initial: "C",
-            name: "Charles Fulton",
-            email: "fulton@email.com",
-        },
-    },
-    {
-        id: "INV-1219",
-        date: "Feb 3, 2023",
-        status: "Cancelled",
-        customer: {
-            initial: "J",
-            name: "Jay Hooper",
-            email: "hooper@email.com",
-        },
-    },
-    {
-        id: "INV-1218",
-        date: "Feb 3, 2023",
-        status: "Cancelled",
-        customer: {
-            initial: "K",
-            name: "Krystal Stevens",
-            email: "k.stevens@email.com",
-        },
-    },
-    {
-        id: "INV-1217",
-        date: "Feb 3, 2023",
-        status: "Paid",
-        customer: {
-            initial: "S",
-            name: "Sachin Flynn",
-            email: "s.flyn@email.com",
-        },
-    },
-    {
-        id: "INV-1216",
-        date: "Feb 3, 2023",
-        status: "Cancelled",
-        customer: {
-            initial: "B",
-            name: "Bradley Rosales",
-            email: "brad123@email.com",
-        },
-    },
-];
+import { chunk } from "lodash";
+import { Fragment, useMemo, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -254,50 +69,51 @@ function RowMenu() {
         </Dropdown>
     );
 }
-export default function OrderTable() {
-    const [order, setOrder] = React.useState("desc");
-    const [selected, setSelected] = React.useState([]);
-    const [open, setOpen] = React.useState(false);
+export default function OrderTable({ data }) {
+    const [page, setPage] = useState(1);
+    const [filter, setFilter] = useState({});
+    const [open, setOpen] = useState(false);
+
     const renderFilters = () => (
-        <React.Fragment>
+        <Fragment>
             <FormControl size="sm">
-                <FormLabel>Status</FormLabel>
+                <FormLabel>Estado</FormLabel>
                 <Select
                     size="sm"
-                    placeholder="Filter by status"
+                    placeholder="Filtrar por estado"
                     slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
+                    onChange={(e, newValue) => {
+                        setFilter((prev) => ({
+                            ...prev,
+                            info_validada: newValue,
+                        }));
+                    }}
                 >
-                    <Option value="paid">Paid</Option>
-                    <Option value="pending">Pending</Option>
-                    <Option value="refunded">Refunded</Option>
-                    <Option value="cancelled">Cancelled</Option>
+                    <Option value={true}>Validado</Option>
+                    <Option value={false}>No validado</Option>
                 </Select>
             </FormControl>
-            <FormControl size="sm">
-                <FormLabel>Category</FormLabel>
-                <Select size="sm" placeholder="All">
-                    <Option value="all">All</Option>
-                    <Option value="refund">Refund</Option>
-                    <Option value="purchase">Purchase</Option>
-                    <Option value="debit">Debit</Option>
-                </Select>
-            </FormControl>
-            <FormControl size="sm">
-                <FormLabel>Customer</FormLabel>
-                <Select size="sm" placeholder="All">
-                    <Option value="all">All</Option>
-                    <Option value="olivia">Olivia Rhye</Option>
-                    <Option value="steve">Steve Hampton</Option>
-                    <Option value="ciaran">Ciaran Murray</Option>
-                    <Option value="marina">Marina Macdonald</Option>
-                    <Option value="charles">Charles Fulton</Option>
-                    <Option value="jay">Jay Hoper</Option>
-                </Select>
-            </FormControl>
-        </React.Fragment>
+        </Fragment>
     );
+
+    const rows = useMemo(() => {
+        const filtered = [...data]?.filter((row) => {
+            if (filter.info_validada !== undefined)
+                return row.info_validada === filter.info_validada;
+            return row;
+        });
+
+        const chunkedList = chunk(filtered, 50) ?? [];
+
+        return {
+            filtered,
+            chunked: chunkedList,
+            pages: chunkedList.length,
+        };
+    }, [data, filter]);
+
     return (
-        <React.Fragment>
+        <Fragment>
             <Sheet
                 className="SearchAndFilters-mobile"
                 sx={{ display: { xs: "flex", sm: "none" }, my: 1, gap: 1 }}
@@ -323,7 +139,7 @@ export default function OrderTable() {
                     >
                         <ModalClose />
                         <Typography id="filter-modal" level="h2">
-                            Filters
+                            Filtros
                         </Typography>
                         <Divider sx={{ my: 2 }} />
                         <Sheet
@@ -338,7 +154,7 @@ export default function OrderTable() {
                                 color="primary"
                                 onClick={() => setOpen(false)}
                             >
-                                Submit
+                                Aplicar filtros
                             </Button>
                         </Sheet>
                     </ModalDialog>
@@ -358,10 +174,10 @@ export default function OrderTable() {
                 }}
             >
                 <FormControl sx={{ flex: 1 }} size="sm">
-                    <FormLabel>Search for order</FormLabel>
+                    <FormLabel>Buscar</FormLabel>
                     <Input
                         size="sm"
-                        placeholder="Search"
+                        placeholder="Buscar en la tabla"
                         startDecorator={<SearchIcon />}
                     />
                 </FormControl>
@@ -395,203 +211,85 @@ export default function OrderTable() {
                 >
                     <thead>
                         <tr>
-                            <th
-                                style={{
-                                    width: 48,
-                                    textAlign: "center",
-                                    padding: "12px 6px",
-                                }}
-                            >
-                                <Checkbox
-                                    size="sm"
-                                    indeterminate={
-                                        selected.length > 0 &&
-                                        selected.length !== rows.length
-                                    }
-                                    checked={selected.length === rows.length}
-                                    onChange={(event) => {
-                                        setSelected(
-                                            event.target.checked
-                                                ? rows.map((row) => row.id)
-                                                : []
-                                        );
-                                    }}
-                                    color={
-                                        selected.length > 0 ||
-                                        selected.length === rows.length
-                                            ? "primary"
-                                            : undefined
-                                    }
-                                    sx={{ verticalAlign: "text-bottom" }}
-                                />
-                            </th>
-                            <th style={{ width: 120, padding: "12px 6px" }}>
-                                <Link
-                                    underline="none"
-                                    color="primary"
-                                    component="button"
-                                    onClick={() =>
-                                        setOrder(
-                                            order === "asc" ? "desc" : "asc"
-                                        )
-                                    }
-                                    endDecorator={<ArrowDropDownIcon />}
-                                    sx={[
-                                        {
-                                            fontWeight: "lg",
-                                            "& svg": {
-                                                transition: "0.2s",
-                                                transform:
-                                                    order === "desc"
-                                                        ? "rotate(0deg)"
-                                                        : "rotate(180deg)",
-                                            },
-                                        },
-                                        order === "desc"
-                                            ? {
-                                                  "& svg": {
-                                                      transform: "rotate(0deg)",
-                                                  },
-                                              }
-                                            : {
-                                                  "& svg": {
-                                                      transform:
-                                                          "rotate(180deg)",
-                                                  },
-                                              },
-                                    ]}
-                                >
-                                    Invoice
-                                </Link>
+                            <th style={{ width: 140, padding: "12px 6px" }}>
+                                Fecha de registro
                             </th>
                             <th style={{ width: 140, padding: "12px 6px" }}>
-                                Date
-                            </th>
-                            <th style={{ width: 140, padding: "12px 6px" }}>
-                                Status
+                                Estado
                             </th>
                             <th style={{ width: 240, padding: "12px 6px" }}>
-                                Customer
+                                Usuario
                             </th>
-                            <th style={{ width: 140, padding: "12px 6px" }}>
-                                {" "}
+                            <th style={{ width: 160, padding: "12px 6px" }}>
+                                Teléfono
+                            </th>
+                            <th style={{ width: 160, padding: "12px 6px" }}>
+                                Departamento de residencia
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {[...rows]
-                            .sort(getComparator(order, "id"))
-                            .map((row) => (
-                                <tr key={row.id}>
-                                    <td
-                                        style={{
-                                            textAlign: "center",
-                                            width: 120,
-                                        }}
+                        {rows?.chunked[page - 1]?.map((row) => (
+                            <tr key={uuidv4()}>
+                                <td>
+                                    <Typography level="body-xs">
+                                        {dayjs(row.created_at).format(
+                                            "DD, MMM YYYY [a las] HH:mm"
+                                        )}
+                                    </Typography>
+                                </td>
+                                <td>
+                                    <Chip
+                                        variant="soft"
+                                        size="sm"
+                                        startDecorator={
+                                            {
+                                                true: (
+                                                    <CheckRoundedIcon fontSize="small" />
+                                                ),
+                                                false: (
+                                                    <BlockIcon fontSize="small" />
+                                                ),
+                                            }[row.info_validada]
+                                        }
+                                        color={
+                                            {
+                                                true: "success",
+                                                false: "danger",
+                                            }[row.info_validada]
+                                        }
                                     >
-                                        <Checkbox
-                                            size="sm"
-                                            checked={selected.includes(row.id)}
-                                            color={
-                                                selected.includes(row.id)
-                                                    ? "primary"
-                                                    : undefined
-                                            }
-                                            onChange={(event) => {
-                                                setSelected((ids) =>
-                                                    event.target.checked
-                                                        ? ids.concat(row.id)
-                                                        : ids.filter(
-                                                              (itemId) =>
-                                                                  itemId !==
-                                                                  row.id
-                                                          )
-                                                );
-                                            }}
-                                            slotProps={{
-                                                checkbox: {
-                                                    sx: { textAlign: "left" },
-                                                },
-                                            }}
-                                            sx={{
-                                                verticalAlign: "text-bottom",
-                                            }}
-                                        />
-                                    </td>
-                                    <td>
-                                        <Typography level="body-xs">
-                                            {row.id}
-                                        </Typography>
-                                    </td>
-                                    <td>
-                                        <Typography level="body-xs">
-                                            {row.date}
-                                        </Typography>
-                                    </td>
-                                    <td>
-                                        <Chip
-                                            variant="soft"
-                                            size="sm"
-                                            startDecorator={
-                                                {
-                                                    Paid: <CheckRoundedIcon />,
-                                                    Refunded: (
-                                                        <AutorenewRoundedIcon />
-                                                    ),
-                                                    Cancelled: <BlockIcon />,
-                                                }[row.status]
-                                            }
-                                            color={
-                                                {
-                                                    Paid: "success",
-                                                    Refunded: "neutral",
-                                                    Cancelled: "danger",
-                                                }[row.status]
-                                            }
-                                        >
-                                            {row.status}
-                                        </Chip>
-                                    </td>
-                                    <td>
-                                        <Box
-                                            sx={{
-                                                display: "flex",
-                                                gap: 2,
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            <Avatar size="sm">
-                                                {row.customer.initial}
-                                            </Avatar>
-                                            <div>
-                                                <Typography level="body-xs">
-                                                    {row.customer.name}
-                                                </Typography>
-                                                <Typography level="body-xs">
-                                                    {row.customer.email}
-                                                </Typography>
-                                            </div>
-                                        </Box>
-                                    </td>
-                                    <td>
-                                        <Box
-                                            sx={{
-                                                display: "flex",
-                                                gap: 2,
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            <Link
-                                                level="body-xs"
-                                                component="button"
-                                            >
-                                                Download
-                                            </Link>
-                                            <RowMenu />
-                                        </Box>
-                                    </td>
-                                </tr>
-                            ))}
+                                        {row.info_validada
+                                            ? "Validado"
+                                            : "Sin validar"}
+                                    </Chip>
+                                </td>
+                                <td>
+                                    <Typography level="body-xs">
+                                        {row.nombres} {row.apellidos}
+                                    </Typography>
+                                </td>
+                                <td>
+                                    <Typography level="body-xs">
+                                        {row.telefono1}
+                                    </Typography>
+                                </td>
+                                <td>
+                                    <Typography level="body-xs">
+                                        {row.estado_name}
+                                    </Typography>
+                                </td>
+                            </tr>
+                        ))}
+                        {rows.pages === 0 && (
+                            <tr>
+                                <td colSpan={5}>
+                                    <Typography textAlign="center">
+                                        No hay registros.
+                                    </Typography>
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </Table>
             </Sheet>
@@ -605,38 +303,25 @@ export default function OrderTable() {
                         xs: "none",
                         md: "flex",
                     },
+                    ".MuiPagination-root": {
+                        width: "100% !important",
+                    },
                 }}
             >
-                <Button
-                    size="sm"
+                <Pagination
+                    size="medium"
+                    page={page}
+                    count={rows.pages || 1}
                     variant="outlined"
-                    color="neutral"
-                    startDecorator={<KeyboardArrowLeftIcon />}
-                >
-                    Previous
-                </Button>
-
-                <Box sx={{ flex: 1 }} />
-                {["1", "2", "3", "…", "8", "9", "10"].map((page) => (
-                    <IconButton
-                        key={page}
-                        size="sm"
-                        variant={Number(page) ? "outlined" : "plain"}
-                        color="neutral"
-                    >
-                        {page}
-                    </IconButton>
-                ))}
-                <Box sx={{ flex: 1 }} />
-                <Button
-                    size="sm"
-                    variant="outlined"
-                    color="neutral"
-                    endDecorator={<KeyboardArrowRightIcon />}
-                >
-                    Next
-                </Button>
+                    onChange={(_, page) => setPage(page)}
+                    sx={{
+                        ".MuiPagination-ul": {
+                            width: "100%",
+                            justifyContent: "center",
+                        },
+                    }}
+                />
             </Box>
-        </React.Fragment>
+        </Fragment>
     );
 }
