@@ -40,7 +40,8 @@ export default function JoySignInSideTemplate() {
             },
             body: JSON.stringify(data),
         }).then(async (response) => {
-            if (response.ok) router.refresh();
+            if (response.ok) location.reload();
+            // router.refresh();
             else {
                 setLoading(false);
                 const r = JSON.parse(JSON.stringify(response));
