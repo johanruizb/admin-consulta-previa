@@ -14,9 +14,14 @@
         "@mui/icons-material": "^6.0.0",
         "@mui/joy": "^5.0.0-beta.48",
         "@mui/material": "^6.0.0",
+        "dayjs": "^1.11.13",
+        "iron-session": "^8.0.3",
+        "lodash": "^4.17.21",
         "next": "14.2.7",
         "react": "^18",
-        "react-dom": "^18"
+        "react-dom": "^18",
+        "swr": "^2.2.5",
+        "uuid": "^10.0.0"
     },
     "devDependencies": {
         "eslint": "^8",
