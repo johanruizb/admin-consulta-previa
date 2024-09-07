@@ -6,9 +6,6 @@
 import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
-import SupportRoundedIcon from "@mui/icons-material/SupportRounded";
 
 // import Button from "@mui/joy/Button";
 // import Card from "@mui/joy/Card";
@@ -19,7 +16,6 @@ import Box from "@mui/joy/Box";
 import Divider from "@mui/joy/Divider";
 import GlobalStyles from "@mui/joy/GlobalStyles";
 import IconButton from "@mui/joy/IconButton";
-import Input from "@mui/joy/Input";
 import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import ListItemButton, { listItemButtonClasses } from "@mui/joy/ListItemButton";
@@ -31,10 +27,9 @@ import UnivalleIcon from "../Icons/Univalle";
 import { closeSidebar } from "../utils";
 import ColorSchemeToggle from "./ColorSchemeToggle";
 
-import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
-import Profile from "./Profile";
 import DevWrapper from "../Wrapper/DevWrapper";
+import Profile from "./Profile";
 
 function Toggler({ defaultExpanded = false, renderToggle, children }) {
     const [open, setOpen] = useState(defaultExpanded);
