@@ -197,26 +197,25 @@ export default function Sidebar() {
                                 </ListItemContent>
                             </ListItemButton>
                         </ListItem>
-
-                        <ListItem>
-                            <ListItemButton
-                                component="a"
-                                href="/registros"
-                                selected={
-                                    mounted
-                                        ? location.pathname == "/registros"
-                                        : false
-                                }
-                            >
-                                <GroupAddIcon />
-                                <ListItemContent>
-                                    <Typography level="title-sm">
-                                        Registros
-                                    </Typography>
-                                </ListItemContent>
-                            </ListItemButton>
-                        </ListItem>
                     </DevWrapper>
+                    <ListItem>
+                        <ListItemButton
+                            component="a"
+                            href="/registros"
+                            selected={
+                                mounted
+                                    ? location.pathname == "/registros"
+                                    : false
+                            }
+                        >
+                            <GroupAddIcon />
+                            <ListItemContent>
+                                <Typography level="title-sm">
+                                    Registros
+                                </Typography>
+                            </ListItemContent>
+                        </ListItemButton>
+                    </ListItem>
 
                     {/* <ListItem nested>
                         <Toggler
