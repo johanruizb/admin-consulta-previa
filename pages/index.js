@@ -1,19 +1,19 @@
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
-import Button from "@mui/joy/Button";
 import Link from "@mui/joy/Link";
 import Typography from "@mui/joy/Typography";
 
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 
 import Layout from "@/components/Home/Layout";
-import OrderList from "@/components/Home/OrderList";
-import OrderTable from "@/components/Home/OrderTable";
+import useDevRouter from "@/hooks/useDevRouter";
+
 import Head from "next/head";
 
 export default function Home() {
+    useDevRouter();
+
     return (
         <Layout>
             <Head>
@@ -29,25 +29,11 @@ export default function Home() {
                     <Link
                         underline="none"
                         color="neutral"
-                        href="#some-link"
+                        href="/"
                         aria-label="Home"
                     >
                         <HomeRoundedIcon />
                     </Link>
-                    <Link
-                        underline="hover"
-                        color="neutral"
-                        href="#some-link"
-                        sx={{ fontSize: 12, fontWeight: 500 }}
-                    >
-                        Dashboard
-                    </Link>
-                    <Typography
-                        color="primary"
-                        sx={{ fontWeight: 500, fontSize: 12 }}
-                    >
-                        Orders
-                    </Typography>
                 </Breadcrumbs>
             </Box>
             <Box
@@ -62,18 +48,9 @@ export default function Home() {
                 }}
             >
                 <Typography level="h2" component="h1">
-                    Orders
+                    Inicio
                 </Typography>
-                <Button
-                    color="primary"
-                    startDecorator={<DownloadRoundedIcon />}
-                    size="sm"
-                >
-                    Download PDF
-                </Button>
             </Box>
-            <OrderTable />
-            <OrderList />
         </Layout>
     );
 }
