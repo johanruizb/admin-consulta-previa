@@ -29,3 +29,27 @@ export function toggleSidebar() {
         }
     }
 }
+
+/**
+ * Obtiene el número y la unidad de tiempo de una cadena dada.
+ *
+ * @param {string} until - La cadena que contiene el número y la unidad de tiempo.
+ * @returns {Object} El número de segundos desde "now" y el tiempo "until" en el futuro.
+ */
+export function getSeconds(until) {
+    const unit = until.charAt(until.length - 1);
+    const number = parseFloat(until);
+
+    const conversion = {
+        s: 1,
+        m: 60,
+        h: 3600,
+        d: 86400,
+        M: 2592000,
+    };
+
+    if (conversion[unit] === undefined) return 0;
+
+    const result = number * conversion[unit];
+    return result;
+}
