@@ -30,6 +30,7 @@ import ColorSchemeToggle from "./ColorSchemeToggle";
 import { Fragment, useEffect, useState } from "react";
 import DevWrapper from "../Wrapper/DevWrapper";
 import Profile from "./Profile";
+import { useRouter } from "next/navigation";
 
 function Toggler({ defaultExpanded = false, renderToggle, children }) {
     const [open, setOpen] = useState(defaultExpanded);
@@ -58,11 +59,18 @@ function Toggler({ defaultExpanded = false, renderToggle, children }) {
 }
 
 export default function Sidebar() {
+    const router = useRouter();
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         setMounted(true);
     }, []);
+
+    const handleRouteChange = (url, replace = false) => {
+        router.prefetch(url);
+        if (replace) router.replace(url, undefined, { shallow: true });
+        else router.push(url, undefined, { shallow: true });
+    };
 
     return (
         <Sheet
@@ -160,7 +168,8 @@ export default function Sidebar() {
                         <ListItem>
                             <ListItemButton
                                 component="a"
-                                href="/"
+                                // href="/"
+                                onClick={() => handleRouteChange("/")}
                                 selected={
                                     mounted ? location.pathname == "/" : false
                                 }
@@ -173,30 +182,27 @@ export default function Sidebar() {
                                 </ListItemContent>
                             </ListItemButton>
                         </ListItem>
-
-                        <ListItem>
-                            <ListItemButton
-                                component="a"
-                                href="/panel"
-                                selected={
-                                    mounted
-                                        ? location.pathname == "/panel"
-                                        : false
-                                }
-                            >
-                                <DashboardRoundedIcon />
-                                <ListItemContent>
-                                    <Typography level="title-sm">
-                                        Panel
-                                    </Typography>
-                                </ListItemContent>
-                            </ListItemButton>
-                        </ListItem>
                     </DevWrapper>
                     <ListItem>
                         <ListItemButton
                             component="a"
-                            href="/registros"
+                            // href="/panel"
+                            onClick={() => handleRouteChange("/panel")}
+                            selected={
+                                mounted ? location.pathname == "/panel" : false
+                            }
+                        >
+                            <DashboardRoundedIcon />
+                            <ListItemContent>
+                                <Typography level="title-sm">Panel</Typography>
+                            </ListItemContent>
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemButton
+                            component="a"
+                            // href="/registros"
+                            onClick={() => handleRouteChange("/registros")}
                             selected={
                                 mounted
                                     ? location.pathname == "/registros"
