@@ -6,6 +6,8 @@ import {
     extendTheme as materialExtendTheme,
     ThemeProvider,
 } from "@mui/material/styles";
+import createCache from "@emotion/cache";
+import { CacheProvider } from "@emotion/react";
 
 const customTheme = extendTheme({
     colorSchemeSelector: "media",
@@ -16,16 +18,20 @@ const materialTheme = materialExtendTheme({
     colorSchemeSelector: "data",
 });
 
+const cache = createCache({ key: "css", prepend: true });
+
 export default function App({ Component, pageProps }) {
     return (
-        <JoyCssVarsProvider theme={customTheme} defaultMode="system">
-            <ThemeProvider
-                theme={{ [MATERIAL_THEME_ID]: materialTheme }}
-                defaultMode="system"
-            >
-                <CssBaseline enableColorScheme />
-                <Component {...pageProps} />
-            </ThemeProvider>
-        </JoyCssVarsProvider>
+        <CacheProvider value={cache}>
+            <JoyCssVarsProvider theme={customTheme} defaultMode="system">
+                <ThemeProvider
+                    theme={{ [MATERIAL_THEME_ID]: materialTheme }}
+                    defaultMode="system"
+                >
+                    <CssBaseline enableColorScheme />
+                    <Component {...pageProps} />
+                </ThemeProvider>
+            </JoyCssVarsProvider>
+        </CacheProvider>
     );
 }
