@@ -20,7 +20,31 @@ export default function ColorSchemeToggle(props) {
     if (!mounted || !mode) {
         // prevent server-side rendering mismatch
         // because `mode` is undefined on the server.
-        return null;
+        return (
+            <IconButton
+                data-screenshot="toggle-mode"
+                size="sm"
+                variant="outlined"
+                color="neutral"
+                onClick={() => {
+                    setMaterialMode(mode === "dark" ? "light" : "dark");
+                    setJoyMode(mode === "dark" ? "light" : "dark");
+                }}
+                {...other}
+                sx={[
+                    mode === "dark"
+                        ? { "& > *:first-of-type": { display: "none" } }
+                        : { "& > *:first-of-type": { display: "initial" } },
+                    mode === "light"
+                        ? { "& > *:last-child": { display: "none" } }
+                        : { "& > *:last-child": { display: "initial" } },
+                    ...(Array.isArray(sx) ? sx : [sx]),
+                ]}
+            >
+                <DarkModeRoundedIcon />
+                <LightModeIcon />
+            </IconButton>
+        );
     }
 
     console.log("mode", mode);
