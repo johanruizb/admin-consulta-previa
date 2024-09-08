@@ -53,3 +53,8 @@ export function getSeconds(until) {
     const result = number * conversion[unit];
     return result;
 }
+
+export function formatNumber(number, locale = "en-US", options = {}) {
+    const result = new Intl.NumberFormat(locale, options).format(number);
+    return result.replace(",", ".");
+}
