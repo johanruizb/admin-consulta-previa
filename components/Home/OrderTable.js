@@ -69,7 +69,7 @@ function RowMenu() {
         </Dropdown>
     );
 }
-export default function OrderTable({ data }) {
+export default function OrderTable({ data, onView }) {
     const [page, setPage] = useState(1);
     const [filter, setFilter] = useState({});
     const [open, setOpen] = useState(false);
@@ -230,7 +230,7 @@ export default function OrderTable({ data }) {
                     </thead>
                     <tbody>
                         {rows?.chunked[page - 1]?.map((row) => (
-                            <tr key={uuidv4()}>
+                            <tr key={uuidv4()} onClick={() => onView(row.id)}>
                                 <td>
                                     <Typography level="body-xs">
                                         {dayjs(row.created_at).format(
