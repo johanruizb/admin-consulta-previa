@@ -19,9 +19,17 @@ import { Fragment } from "react";
 import useSWR from "swr";
 import fetcher from "@/components/fetcher";
 import DevWrapper from "@/components/Wrapper/DevWrapper";
+import { useRouter } from "next/navigation";
 
-export default function Home() {
-    const { data, error, isLoading } = useSWR("api/inscritos", fetcher);
+export default function Registros(props) {
+    const router = useRouter();
+    const { data, isLoading } = useSWR("api/usuarios/inscritos", fetcher);
+
+    const onView = (id) => {
+        router.push(`/registros/${id}`, undefined, { shallow: true });
+    };
+
+    console.log(props);
 
     return (
         <Layout>
@@ -88,7 +96,7 @@ export default function Home() {
                 </Stack>
             ) : (
                 <Fragment>
-                    <OrderTable data={data} />
+                    <OrderTable data={data} onView={onView} />
                     <OrderList />
                 </Fragment>
             )}
