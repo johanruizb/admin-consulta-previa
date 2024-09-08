@@ -3,6 +3,8 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
+        "update": "ncu",
+        "upgrade": "ncu -u --reject eslint && npm install",
         "dev": "next dev -p 2418",
         "build": "next build",
         "start": "next start -p 2418",
@@ -11,20 +13,22 @@
     "dependencies": {
         "@emotion/react": "^11.13.3",
         "@emotion/styled": "^11.13.0",
-        "@mui/icons-material": "^6.0.0",
+        "@mui/icons-material": "^6.0.2",
         "@mui/joy": "^5.0.0-beta.48",
-        "@mui/material": "^6.0.0",
+        "@mui/material": "^6.0.2",
         "dayjs": "^1.11.13",
         "iron-session": "^8.0.3",
         "lodash": "^4.17.21",
-        "next": "14.2.7",
+        "next": "14.2.8",
+        "npm-check-updates": "^17.1.1",
         "react": "^18",
         "react-dom": "^18",
         "swr": "^2.2.5",
         "uuid": "^10.0.0"
     },
     "devDependencies": {
-        "eslint": "^8",
-        "eslint-config-next": "14.2.7"
+        "eslint": "^8.57.0",
+        "eslint-config-next": "^14.2.8",
+        "typescript": "^5.5.4"
     }
 }
