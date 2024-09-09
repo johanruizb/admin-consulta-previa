@@ -1,6 +1,5 @@
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 
-import Avatar from "@mui/joy/Avatar";
 import Box from "@mui/joy/Box";
 import IconButton from "@mui/joy/IconButton";
 import Typography from "@mui/joy/Typography";
@@ -9,12 +8,14 @@ import { useRouter } from "next/router";
 
 import { useState } from "react";
 
-import useSWR from "swr";
-import fetcher from "@/components/fetcher";
 import { Skeleton } from "@mui/joy";
+import useSWR from "swr";
+
+import fetcher from "@/components/fetcher";
+import { getURL } from "../utils";
 
 export default function Profile() {
-    const { data, error, isLoading } = useSWR("api/user", fetcher, {
+    const { data, error, isLoading } = useSWR(getURL("api/user"), fetcher, {
         revalidateIfStale: false,
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
