@@ -20,16 +20,18 @@ import useSWR from "swr";
 import fetcher from "@/components/fetcher";
 import DevWrapper from "@/components/Wrapper/DevWrapper";
 import { useRouter } from "next/navigation";
+import { getURL } from "@/components/utils";
 
-export default function Registros(props) {
+export default function Registros({ children }) {
     const router = useRouter();
-    const { data, isLoading } = useSWR("api/usuarios/inscritos", fetcher);
+    const { data, isLoading } = useSWR(
+        getURL("/api/usuarios/inscritos"),
+        fetcher
+    );
 
     const onView = (id) => {
         router.push(`/registros/${id}`, undefined, { shallow: true });
     };
-
-    console.log(props);
 
     return (
         <Layout>
@@ -100,6 +102,7 @@ export default function Registros(props) {
                     <OrderList />
                 </Fragment>
             )}
+            {children}
         </Layout>
     );
 }
