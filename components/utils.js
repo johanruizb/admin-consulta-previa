@@ -58,3 +58,32 @@ export function formatNumber(number, locale = "en-US", options = {}) {
     const result = new Intl.NumberFormat(locale, options).format(number);
     return result.replace(",", ".");
 }
+
+function getWindow() {
+    if (typeof window !== "undefined") return window;
+    return null;
+}
+
+function joinURL(base, path) {
+    const {
+        location: { hostname },
+    } = getWindow() ?? { location: {} };
+
+    // Asegurarte de que el path no empiece con '/'
+    if (path.startsWith("/")) path = path.slice(1);
+
+    // Crear la URL completa
+    let fullUrl = `${base.replace(/\/$/, "")}/${path}`;
+
+    // Si es producción, reemplazar el esquema con 'https'
+    if (hostname !== "localhost")
+        fullUrl = fullUrl.replace(/^http:\/\//, "https://");
+
+    return fullUrl;
+}
+
+export function getURL(url = "") {
+    const result = joinURL(process.env.NEXT_PUBLIC_ORIGIN_URL, url);
+    // console.log(result);
+    return result;
+}
