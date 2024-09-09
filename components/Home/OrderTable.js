@@ -74,6 +74,8 @@ export default function OrderTable({ data, onView }) {
     const [filter, setFilter] = useState({});
     const [open, setOpen] = useState(false);
 
+    console.log(data);
+
     const renderFilters = () => (
         <Fragment>
             <FormControl size="sm">
@@ -97,7 +99,7 @@ export default function OrderTable({ data, onView }) {
     );
 
     const rows = useMemo(() => {
-        const filtered = [...data]?.filter((row) => {
+        const filtered = [...(data ?? [])]?.filter((row) => {
             if (filter.info_validada !== undefined)
                 return row.info_validada === filter.info_validada;
             return row;
