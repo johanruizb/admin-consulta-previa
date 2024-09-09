@@ -24,7 +24,7 @@ def replace_import(match):
     components = [str(c).strip() for c in match.group(1).split(",")]
     components = [component for component in components if component.strip() != ""]
 
-    imports = "\n".join([f'import {component} from "@mui/material/{component}";' for component in components])
+    imports = "\n".join([f'import {component} from "@mui/joy/{component}";' for component in components])
     return imports
 
 
