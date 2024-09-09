@@ -13,7 +13,8 @@ import OrderList from "@/components/Home/OrderList";
 import OrderTable from "@/components/Home/OrderTable";
 import Head from "next/head";
 
-import { CircularProgress, Stack } from "@mui/joy";
+import CircularProgress from "@mui/joy/CircularProgress";
+import Stack from "@mui/joy/Stack";
 import { Fragment } from "react";
 
 import useSWR from "swr";

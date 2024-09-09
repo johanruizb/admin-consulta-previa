@@ -12,17 +12,17 @@ import { NextRequest, NextResponse } from "next/server";
  *
  * Ejemplo de uso en una solicitud HTTP POST
  * @example
- * fetch('/api/login', {
- *   method: 'POST',
+ * fetch("/api/login", {
+ *   method: "POST",
  *   headers: {
- *     'Content-Type': 'application/json'
+ *     "Content-Type": "application/json"
  *   },
- *   body: JSON.stringify({ username: 'usuario', password: 'contraseña' })
+ *   body: JSON.stringify({ username: "usuario", password: "contraseña" })
  * }).then(response => {
  *   if (response.ok) {
- *     console.log('Inicio de sesión exitoso');
+ *     console.log("Inicio de sesión exitoso");
  *   } else {
- *     console.error('Error en el inicio de sesión');
+ *     console.error("Error en el inicio de sesión");
  *   }
  * });
  */

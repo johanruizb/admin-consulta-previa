@@ -69,13 +69,13 @@ function joinURL(base, path) {
         location: { hostname },
     } = getWindow() ?? { location: {} };
 
-    // Asegurarte de que el path no empiece con '/'
+    // Asegurarte de que el path no empiece con "/"
     if (path.startsWith("/")) path = path.slice(1);
 
     // Crear la URL completa
     let fullUrl = `${base.replace(/\/$/, "")}/${path}`;
 
-    // Si es producción, reemplazar el esquema con 'https'
+    // Si es producción, reemplazar el esquema con "https"
     if (hostname !== "localhost")
         fullUrl = fullUrl.replace(/^http:\/\//, "https://");
 

@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 
 import { useState } from "react";
 
-import { Skeleton } from "@mui/joy";
+import Skeleton from "@mui/joy/Skeleton";
 import useSWR from "swr";
 
 import fetcher from "@/components/fetcher";

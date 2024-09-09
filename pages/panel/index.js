@@ -1,4 +1,7 @@
-import { Card, CardContent, CircularProgress, Skeleton } from "@mui/joy";
+import Card from "@mui/joy/Card";
+import CardContent from "@mui/joy/CardContent";
+import CircularProgress from "@mui/joy/CircularProgress";
+import Skeleton from "@mui/joy/Skeleton";
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Link from "@mui/joy/Link";

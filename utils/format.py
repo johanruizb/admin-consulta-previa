@@ -46,11 +46,11 @@ def convert_imports(file_path):
 
 project_path = [os.path.abspath("components"), os.path.abspath("pages")]
 
-if not os.path.exists(project_path):
-    raise Exception("La carpeta del proyecto no existe.")
-
 for path in project_path:
-    for root, dirs, files in os.walk(project_path):
+    if not os.path.exists(path):
+        raise Exception("La carpeta del proyecto no existe.")
+
+    for root, dirs, files in os.walk(path):
         for file_name in files:
             if file_name.endswith(".js"):
                 file_path = os.path.join(root, file_name)

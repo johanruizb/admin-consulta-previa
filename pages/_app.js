@@ -1,6 +1,9 @@
 import "@/styles/globals.css";
-import { CssBaseline, extendTheme } from "@mui/joy";
-import { CssVarsProvider as JoyCssVarsProvider } from "@mui/joy/styles";
+import CssBaseline from "@mui/joy/CssBaseline";
+import {
+    CssVarsProvider as JoyCssVarsProvider,
+    extendTheme,
+} from "@mui/joy/styles";
 import {
     THEME_ID as MATERIAL_THEME_ID,
     extendTheme as materialExtendTheme,

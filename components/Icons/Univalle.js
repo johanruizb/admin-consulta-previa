@@ -1,4 +1,4 @@
-import { SvgIcon } from "@mui/joy";
+import SvgIcon from "@mui/joy/SvgIcon";
 
 export default function UnivalleIcon(props) {
     return (

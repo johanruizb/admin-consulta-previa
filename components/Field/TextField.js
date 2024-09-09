@@ -1,4 +1,7 @@
-import { FormControl, FormHelperText, FormLabel, Input } from "@mui/joy";
+import FormControl from "@mui/joy/FormControl";
+import FormHelperText from "@mui/joy/FormHelperText";
+import FormLabel from "@mui/joy/FormLabel";
+import Input from "@mui/joy/Input";
 import { Controller, useFormContext } from "react-hook-form";
 
 export default function TextField({ inputProps }) {
