@@ -41,7 +41,7 @@ function Custom({ autoHideDuration = 6000 }) {
         return () => {
             clearInterval(interval.current);
         };
-        // react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [config.open]);
 
     return (
