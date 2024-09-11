@@ -6,7 +6,7 @@ import Input from "@mui/joy/Input";
 import { Controller, useFormContext } from "react-hook-form";
 
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import { IconButton } from "@mui/joy";
+import IconButton from "@mui/joy/IconButton";
 import { getURL } from "../utils";
 
 export default function FileField({ inputProps }) {
