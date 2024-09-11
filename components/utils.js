@@ -56,7 +56,7 @@ export function getSeconds(until) {
 
 export function formatNumber(number, locale = "en-US", options = {}) {
     const result = new Intl.NumberFormat(locale, options).format(number);
-    return result.replace(",", ".");
+    return result?.replace(",", ".");
 }
 
 function getWindow() {
@@ -73,11 +73,11 @@ function joinURL(base, path) {
     if (path.startsWith("/")) path = path.slice(1);
 
     // Crear la URL completa
-    let fullUrl = `${base.replace(/\/$/, "")}/${path}`;
+    let fullUrl = `${base?.replace(/\/$/, "")}/${path}`;
 
     // Si es producción, reemplazar el esquema con "https"
     if (hostname !== "localhost")
-        fullUrl = fullUrl.replace(/^http:\/\//, "https://");
+        fullUrl = fullUrl?.replace(/^http:\/\//, "https://");
 
     return fullUrl;
 }
