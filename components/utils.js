@@ -87,3 +87,7 @@ export function getURL(url = "") {
     // console.log(result);
     return result;
 }
+
+export const format = (template, values) => {
+    return template.replace(/\$(\d+)/g, (match, index) => values[index - 1]);
+};
