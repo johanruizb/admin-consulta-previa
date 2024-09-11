@@ -1,3 +1,5 @@
+"use client";
+
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Button from "@mui/joy/Button";
@@ -18,13 +20,17 @@ import Stack from "@mui/joy/Stack";
 import { Fragment } from "react";
 
 import useSWR from "swr";
+
 import fetcher from "@/components/fetcher";
-import DevWrapper from "@/components/Wrapper/DevWrapper";
-import { useRouter } from "next/navigation";
 import { getURL } from "@/components/utils";
+import DevWrapper from "@/components/Wrapper/DevWrapper";
+
+import Alert from "@/components/Alert";
+import { useRouter } from "next/navigation";
 
 export default function Registros({ children }) {
     const router = useRouter();
+
     const { data, isLoading } = useSWR(
         getURL("/api/usuarios/inscritos"),
         fetcher
@@ -36,8 +42,9 @@ export default function Registros({ children }) {
 
     return (
         <Layout>
+            <Alert />
             <Head>
-                <title>Inicio - Consulta previa</title>
+                <title>Personas registradas - Consulta previa</title>
             </Head>
             <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Breadcrumbs
