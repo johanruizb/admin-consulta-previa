@@ -44,6 +44,30 @@ def convert_imports(file_path):
         unmodified_files += 1
 
 
+def replace_import_mui(match):
+    components = [str(c).strip() for c in match.group(1).split(",")]
+    components = [component for component in components if component.strip() != ""]
+
+    imports = "\n".join([f'import {component} from "@mui/material/{component}";' for component in components])
+    return imports
+
+
+def convert_imports_mui(file_path):
+    global modified_files, unmodified_files
+    pattern = r"import {([^}]*)} from \"@mui/material\";"
+
+    with open(file_path, "r", errors="ignore", encoding="utf-8") as file:
+        code = file.read()
+
+    if re.search(pattern, code):
+        converted_code = re.sub(pattern, replace_import_mui, code)
+        with open(file_path, "w", errors="ignore", encoding="utf-8") as file:
+            file.write(converted_code)
+        modified_files += 1
+    else:
+        unmodified_files += 1
+
+
 project_path = [os.path.abspath("components"), os.path.abspath("pages")]
 
 for path in project_path:
@@ -56,6 +80,7 @@ for path in project_path:
                 file_path = os.path.join(root, file_name)
                 convert_quotes(file_path)
                 convert_imports(file_path)
+                convert_imports_mui(file_path)
 
 if modified_files == 0:
     print("No se encontraron archivos para modificar.")
