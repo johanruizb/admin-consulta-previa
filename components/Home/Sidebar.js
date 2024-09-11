@@ -67,7 +67,6 @@ export default function Sidebar() {
     }, []);
 
     const handleRouteChange = (url, replace = false) => {
-        router.prefetch(url);
         if (replace) router.replace(url, undefined, { shallow: true });
         else router.push(url, undefined, { shallow: true });
     };
