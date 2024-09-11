@@ -5,8 +5,6 @@ import Input from "@mui/joy/Input";
 import { Controller, useFormContext } from "react-hook-form";
 
 export default function TextField({ inputProps }) {
-    console.log("TextField » inputProps", inputProps);
-
     const { control } = useFormContext();
 
     const {
@@ -29,6 +27,7 @@ export default function TextField({ inputProps }) {
                         <FormLabel>{fieldProps.label}</FormLabel>
                         <Input
                             {...field}
+                            value={field.value ?? ""}
                             onChange={(e) => {
                                 onChangeField?.(e, onChangeController) ||
                                     onChangeController(e);
