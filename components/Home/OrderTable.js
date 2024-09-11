@@ -25,7 +25,7 @@ import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import SearchIcon from "@mui/icons-material/Search";
-import { Pagination } from "@mui/material";
+import Pagination from "@mui/material/Pagination";
 import dayjs from "dayjs";
 
 import { chunk } from "lodash";
