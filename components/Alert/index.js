@@ -41,6 +41,7 @@ function Custom({ autoHideDuration = 6000 }) {
         return () => {
             clearInterval(interval.current);
         };
+        // react-hooks/exhaustive-deps
     }, [config.open]);
 
     return (
