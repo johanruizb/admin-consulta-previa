@@ -1,4 +1,3 @@
-import UnivalleIcon from "@/components/Icons/Univalle";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import Box from "@mui/joy/Box";
@@ -15,11 +14,11 @@ import Typography from "@mui/joy/Typography";
 import { Fragment, useState } from "react";
 
 import Head from "next/head";
-import { useRouter } from "next/navigation";
+
 import ColorSchemeToggle from "@/components/Home/ColorSchemeToggle";
+import UnivalleIcon from "@/components/Icons/Univalle";
 
 export default function JoySignInSideTemplate() {
-    const router = useRouter();
     const [show, setShow] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -41,7 +40,6 @@ export default function JoySignInSideTemplate() {
             body: JSON.stringify(data),
         }).then(async (response) => {
             if (response.ok) location.reload();
-            // router.refresh();
             else {
                 setLoading(false);
                 const r = JSON.parse(JSON.stringify(response));
