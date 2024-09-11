@@ -3,7 +3,7 @@ import Alert from "@mui/joy/Alert";
 
 import Close from "@mui/icons-material/Close";
 
-import { IconButton } from "@mui/joy";
+import IconButton from "@mui/joy/IconButton";
 import { useEffect, useRef, useState } from "react";
 import { useSessionStorage } from "@uidotdev/usehooks";
 
