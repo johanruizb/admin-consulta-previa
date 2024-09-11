@@ -74,8 +74,6 @@ export default function OrderTable({ data, onView }) {
     const [filter, setFilter] = useState({});
     const [open, setOpen] = useState(false);
 
-    console.log(data);
-
     const renderFilters = () => (
         <Fragment>
             <FormControl size="sm">
@@ -216,17 +214,23 @@ export default function OrderTable({ data, onView }) {
                             <th style={{ width: 140, padding: "12px 6px" }}>
                                 Fecha de registro
                             </th>
-                            <th style={{ width: 140, padding: "12px 6px" }}>
-                                Estado
+                            <th style={{ width: 120, padding: "12px 6px" }}>
+                                Tipo de documento
                             </th>
-                            <th style={{ width: 240, padding: "12px 6px" }}>
-                                Usuario
+                            <th style={{ width: 120, padding: "12px 6px" }}>
+                                Número de documento
                             </th>
-                            <th style={{ width: 160, padding: "12px 6px" }}>
+                            <th style={{ width: 180, padding: "12px 6px" }}>
+                                Nombre completo
+                            </th>
+                            <th style={{ width: 100, padding: "12px 6px" }}>
                                 Teléfono
                             </th>
                             <th style={{ width: 160, padding: "12px 6px" }}>
                                 Departamento de residencia
+                            </th>
+                            <th style={{ width: 100, padding: "12px 6px" }}>
+                                Estado
                             </th>
                         </tr>
                     </thead>
@@ -234,10 +238,35 @@ export default function OrderTable({ data, onView }) {
                         {rows?.chunked[page - 1]?.map((row) => (
                             <tr key={uuidv4()} onClick={() => onView(row.id)}>
                                 <td>
-                                    <Typography level="body-xs">
+                                    <Typography level="body-sm">
                                         {dayjs(row.created_at).format(
-                                            "DD, MMM YYYY [a las] HH:mm"
+                                            "DD/MM/YYYY HH:mm:ss A"
                                         )}
+                                    </Typography>
+                                </td>
+                                <td>
+                                    <Typography level="body-sm">
+                                        {row.tipo_doc_name}
+                                    </Typography>
+                                </td>
+                                <td>
+                                    <Typography level="body-sm">
+                                        {row.num_doc}
+                                    </Typography>
+                                </td>
+                                <td>
+                                    <Typography level="body-sm">
+                                        {row.nombres} {row.apellidos}
+                                    </Typography>
+                                </td>
+                                <td>
+                                    <Typography level="body-sm">
+                                        {row.telefono1}
+                                    </Typography>
+                                </td>
+                                <td>
+                                    <Typography level="body-sm">
+                                        {row.estado_name}
                                     </Typography>
                                 </td>
                                 <td>
@@ -265,21 +294,6 @@ export default function OrderTable({ data, onView }) {
                                             ? "Validado"
                                             : "Sin validar"}
                                     </Chip>
-                                </td>
-                                <td>
-                                    <Typography level="body-xs">
-                                        {row.nombres} {row.apellidos}
-                                    </Typography>
-                                </td>
-                                <td>
-                                    <Typography level="body-xs">
-                                        {row.telefono1}
-                                    </Typography>
-                                </td>
-                                <td>
-                                    <Typography level="body-xs">
-                                        {row.estado_name}
-                                    </Typography>
                                 </td>
                             </tr>
                         ))}
