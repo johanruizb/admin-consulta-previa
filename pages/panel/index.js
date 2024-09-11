@@ -1,10 +1,10 @@
+import Box from "@mui/joy/Box";
+import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import CircularProgress from "@mui/joy/CircularProgress";
-import Skeleton from "@mui/joy/Skeleton";
-import Box from "@mui/joy/Box";
-import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Link from "@mui/joy/Link";
+import Skeleton from "@mui/joy/Skeleton";
 import Typography from "@mui/joy/Typography";
 
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
@@ -22,8 +22,8 @@ import "dayjs/locale/es";
 
 import { useEffect, useState } from "react";
 
-import { formatNumber } from "@/components/utils";
 import fetcher from "@/components/fetcher";
+import { formatNumber } from "@/components/utils";
 
 import useSWR from "swr";
 
@@ -54,7 +54,7 @@ export default function Panel() {
     return (
         <Layout>
             <Head>
-                <title>Inicio - Consulta previa</title>
+                <title>Panel de estadísticas - Consulta previa</title>
             </Head>
             <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Breadcrumbs
