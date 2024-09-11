@@ -5,7 +5,8 @@ import Modal from "@mui/joy/Modal";
 import ModalDialog from "@mui/joy/ModalDialog";
 import Stack from "@mui/joy/Stack";
 
-import { Backdrop, useMediaQuery } from "@mui/material";
+import Backdrop from "@mui/material/Backdrop";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import Grid from "@mui/material/Grid2";
 
 import CloseIcon from "@mui/icons-material/Close";
