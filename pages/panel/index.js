@@ -10,7 +10,7 @@ import Typography from "@mui/joy/Typography";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 
-import { Stack } from "@mui/material";
+import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid2";
 
 import Layout from "@/components/Home/Layout";
