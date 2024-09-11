@@ -47,8 +47,6 @@ export default function ColorSchemeToggle(props) {
         );
     }
 
-    console.log("mode", mode);
-
     return (
         <IconButton
             data-screenshot="toggle-mode"
