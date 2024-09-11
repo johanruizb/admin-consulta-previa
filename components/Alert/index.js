@@ -1,11 +1,10 @@
-"use client";
 import Alert from "@mui/joy/Alert";
+import IconButton from "@mui/joy/IconButton";
 
 import Close from "@mui/icons-material/Close";
 
-import IconButton from "@mui/joy/IconButton";
-import { useEffect, useRef, useState } from "react";
 import { useSessionStorage } from "@uidotdev/usehooks";
+import { useEffect, useRef, useState } from "react";
 
 export default function CustomAlert({ autoHideDuration = 6000 }) {
     const [mounted, setMounted] = useState(false);

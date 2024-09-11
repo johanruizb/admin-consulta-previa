@@ -1,5 +1,3 @@
-"use client";
-
 import Button from "@mui/joy/Button";
 import DialogContent from "@mui/joy/DialogContent";
 import DialogTitle from "@mui/joy/DialogTitle";
