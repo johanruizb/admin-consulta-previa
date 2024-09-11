@@ -1,11 +1,12 @@
-import { Option, Select as JoySelect } from "@mui/joy";
+import Option from "@mui/joy/Option";
+import Select from "@mui/joy/Select";
 import FormControl from "@mui/joy/FormControl";
 import FormHelperText from "@mui/joy/FormHelperText";
 import FormLabel from "@mui/joy/FormLabel";
 
 import { Controller, useFormContext } from "react-hook-form";
 
-export default function Select({ inputProps }) {
+export default function CustomSelect({ inputProps }) {
     const { control } = useFormContext();
 
     const {
@@ -26,7 +27,7 @@ export default function Select({ inputProps }) {
                         required={controllerProps.rules?.required?.value}
                     >
                         <FormLabel>{fieldProps.label}</FormLabel>
-                        <JoySelect
+                        <Select
                             {...field}
                             onChange={(e, newValue) => {
                                 onChangeField?.(newValue, onChangeController) ||
@@ -38,7 +39,7 @@ export default function Select({ inputProps }) {
                                     {option.label}
                                 </Option>
                             ))}
-                        </JoySelect>
+                        </Select>
                         <FormHelperText>{error?.message ?? " "}</FormHelperText>
                     </FormControl>
                 );
