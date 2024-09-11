@@ -1,7 +1,7 @@
 import ReportIcon from "@mui/icons-material/Report";
 
 import CircularProgress from "@mui/joy/CircularProgress";
-import Select as JoySelect from "@mui/joy/Select as JoySelect";
+import { default as JoySelect } from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
 import FormControl from "@mui/joy/FormControl";
 import FormHelperText from "@mui/joy/FormHelperText";
