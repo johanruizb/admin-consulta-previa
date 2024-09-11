@@ -24,7 +24,8 @@ import fetcher from "@/components/fetcher";
 import FormularioVerificacion from "@/components/Form/constants";
 import { getURL } from "@/components/utils";
 
-import { CircularProgress, DialogActions } from "@mui/joy";
+import CircularProgress from "@mui/joy/CircularProgress";
+import DialogActions from "@mui/joy/DialogActions";
 
 import { useSessionStorage } from "@uidotdev/usehooks";
 
@@ -148,8 +149,8 @@ function View({ defaultValues }) {
                         </DialogTitle>
                         <DialogContent>
                             {validado
-                                ? 'La persona ya ha sido validada. Si hay algún error, edita los campos necesarios y presiona el botón "Guardar".'
-                                : 'Si hay algún error, edita los campos necesarios. Cuando la información sea correcta presiona el botón "Validar".'}
+                                ? `La persona ya ha sido validada. Si hay algún error, edita los campos necesarios y presiona el botón "Guardar".`
+                                : `Si hay algún error, edita los campos necesarios. Cuando la información sea correcta presiona el botón "Validar".`}
                             <form
                                 onSubmit={(event) => {
                                     event.preventDefault();
