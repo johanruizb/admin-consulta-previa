@@ -107,7 +107,7 @@ export default function Registros({ children }) {
             ) : (
                 <Fragment>
                     <OrderTable data={data} onView={onView} />
-                    <OrderList />
+                    <OrderList data={data} onView={onView} />
                 </Fragment>
             )}
             {children}
