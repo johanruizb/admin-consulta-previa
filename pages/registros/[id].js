@@ -1,4 +1,6 @@
 import Button from "@mui/joy/Button";
+import CircularProgress from "@mui/joy/CircularProgress";
+import DialogActions from "@mui/joy/DialogActions";
 import DialogContent from "@mui/joy/DialogContent";
 import DialogTitle from "@mui/joy/DialogTitle";
 import Modal from "@mui/joy/Modal";
@@ -6,8 +8,8 @@ import ModalDialog from "@mui/joy/ModalDialog";
 import Stack from "@mui/joy/Stack";
 
 import Backdrop from "@mui/material/Backdrop";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import Grid from "@mui/material/Grid2";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon from "@mui/icons-material/Save";
@@ -22,9 +24,6 @@ import useSWRImmutable from "swr/immutable";
 import fetcher from "@/components/fetcher";
 import FormularioVerificacion from "@/components/Form/constants";
 import { getURL } from "@/components/utils";
-
-import CircularProgress from "@mui/joy/CircularProgress";
-import DialogActions from "@mui/joy/DialogActions";
 
 import { useSessionStorage } from "@uidotdev/usehooks";
 
@@ -165,10 +164,15 @@ function View({ defaultValues }) {
                                                         Component,
                                                         ...inputProps
                                                     } = slotProps;
+
+                                                    const { name } =
+                                                        inputProps?.controller ??
+                                                        {};
+
                                                     return Component ? (
-                                                        slotProps.controller
-                                                            .name ===
-                                                        "genero_otro" ? (
+                                                        name ===
+                                                            "genero_otro" ||
+                                                        name === undefined ? (
                                                             <Component
                                                                 key={index}
                                                                 inputProps={
