@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
 import Chip from "@mui/joy/Chip";
 import Divider from "@mui/joy/Divider";
 import Dropdown from "@mui/joy/Dropdown";
@@ -11,9 +10,6 @@ import Input from "@mui/joy/Input";
 import Menu from "@mui/joy/Menu";
 import MenuButton from "@mui/joy/MenuButton";
 import MenuItem from "@mui/joy/MenuItem";
-import Modal from "@mui/joy/Modal";
-import ModalClose from "@mui/joy/ModalClose";
-import ModalDialog from "@mui/joy/ModalDialog";
 import Option from "@mui/joy/Option";
 import Select from "@mui/joy/Select";
 import Sheet from "@mui/joy/Sheet";
@@ -22,14 +18,16 @@ import Typography from "@mui/joy/Typography";
 
 import BlockIcon from "@mui/icons-material/Block";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "@mui/material/Pagination";
+
 import dayjs from "dayjs";
 
 import { chunk } from "lodash";
+
 import { Fragment, useMemo, useState } from "react";
+
 import { v4 as uuidv4 } from "uuid";
 
 function descendingComparator(a, b, orderBy) {
@@ -72,29 +70,6 @@ function RowMenu() {
 export default function OrderTable({ data, onView }) {
     const [page, setPage] = useState(1);
     const [filter, setFilter] = useState({});
-    const [open, setOpen] = useState(false);
-
-    const renderFilters = () => (
-        <Fragment>
-            <FormControl size="sm">
-                <FormLabel>Estado</FormLabel>
-                <Select
-                    size="sm"
-                    placeholder="Filtrar por estado"
-                    slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
-                    onChange={(e, newValue) => {
-                        setFilter((prev) => ({
-                            ...prev,
-                            info_validada: newValue,
-                        }));
-                    }}
-                >
-                    <Option value={true}>Validado</Option>
-                    <Option value={false}>No validado</Option>
-                </Select>
-            </FormControl>
-        </Fragment>
-    );
 
     const rows = useMemo(() => {
         const filtered = [...(data ?? [])]?.filter((row) => {
@@ -114,52 +89,6 @@ export default function OrderTable({ data, onView }) {
 
     return (
         <Fragment>
-            <Sheet
-                className="SearchAndFilters-mobile"
-                sx={{ display: { xs: "flex", sm: "none" }, my: 1, gap: 1 }}
-            >
-                <Input
-                    size="sm"
-                    placeholder="Search"
-                    startDecorator={<SearchIcon />}
-                    sx={{ flexGrow: 1 }}
-                />
-                <IconButton
-                    size="sm"
-                    variant="outlined"
-                    color="neutral"
-                    onClick={() => setOpen(true)}
-                >
-                    <FilterAltIcon />
-                </IconButton>
-                <Modal open={open} onClose={() => setOpen(false)}>
-                    <ModalDialog
-                        aria-labelledby="filter-modal"
-                        layout="fullscreen"
-                    >
-                        <ModalClose />
-                        <Typography id="filter-modal" level="h2">
-                            Filtros
-                        </Typography>
-                        <Divider sx={{ my: 2 }} />
-                        <Sheet
-                            sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: 2,
-                            }}
-                        >
-                            {renderFilters()}
-                            <Button
-                                color="primary"
-                                onClick={() => setOpen(false)}
-                            >
-                                Aplicar filtros
-                            </Button>
-                        </Sheet>
-                    </ModalDialog>
-                </Modal>
-            </Sheet>
             <Box
                 className="SearchAndFilters-tabletUp"
                 sx={{
@@ -181,7 +110,23 @@ export default function OrderTable({ data, onView }) {
                         startDecorator={<SearchIcon />}
                     />
                 </FormControl>
-                {renderFilters()}
+                <FormControl size="sm">
+                    <FormLabel>Estado</FormLabel>
+                    <Select
+                        size="sm"
+                        placeholder="Filtrar por estado"
+                        slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
+                        onChange={(e, newValue) => {
+                            setFilter((prev) => ({
+                                ...prev,
+                                info_validada: newValue,
+                            }));
+                        }}
+                    >
+                        <Option value={true}>Validado</Option>
+                        <Option value={false}>No validado</Option>
+                    </Select>
+                </FormControl>
             </Box>
             <Sheet
                 className="OrderTableContainer"
@@ -236,7 +181,11 @@ export default function OrderTable({ data, onView }) {
                     </thead>
                     <tbody>
                         {rows?.chunked[page - 1]?.map((row) => (
-                            <tr key={uuidv4()} onClick={() => onView(row.id)}>
+                            <tr
+                                key={uuidv4()}
+                                onClick={() => onView(row.id)}
+                                className="pointer-row"
+                            >
                                 <td>
                                     <Typography level="body-sm">
                                         {dayjs(row.created_at).format(
