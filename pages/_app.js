@@ -1,4 +1,6 @@
 import "@/styles/globals.css";
+import "@/styles/OrderTable.css";
+
 import CssBaseline from "@mui/joy/CssBaseline";
 import {
     CssVarsProvider as JoyCssVarsProvider,
