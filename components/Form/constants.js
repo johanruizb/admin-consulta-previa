@@ -5,6 +5,7 @@ import PhoneField from "../Field/PhoneField";
 import Select from "../Field/Select";
 import TextField from "../Field/TextField";
 import CustomAsyncSelect from "./CustomAsyncSelect";
+import EmptyField from "./EmptyField";
 import OtroGenero from "./OtroGenero";
 
 const FormularioVerificacion = [
@@ -114,6 +115,9 @@ const FormularioVerificacion = [
             required: true,
         },
         url: "/api/ubicacion/paises",
+    },
+    {
+        Component: EmptyField,
     },
     {
         Component: FileField,
