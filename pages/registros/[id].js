@@ -170,8 +170,10 @@ function View({ defaultValues }) {
                                                         {};
 
                                                     return Component ? (
-                                                        name ===
-                                                            "genero_otro" ||
+                                                        [
+                                                            "genero_otro",
+                                                            "otra_conectividad",
+                                                        ].includes(name) ||
                                                         name === undefined ? (
                                                             <Component
                                                                 key={index}
