@@ -1,11 +1,12 @@
 import AsyncSelect from "../Field/AsyncSelect";
-import DateField from "../Field/DateField";
+import BirthdayField from "../Field/BirthdayField";
 import FileField from "../Field/FileField";
 import PhoneField from "../Field/PhoneField";
 import Select from "../Field/Select";
 import TextField from "../Field/TextField";
 import CustomAsyncSelect from "./CustomAsyncSelect";
 import EmptyField from "./EmptyField";
+import OtraConectividad from "./OtraConectividad";
 import OtroGenero from "./OtroGenero";
 
 const FormularioVerificacion = [
@@ -71,11 +72,15 @@ const FormularioVerificacion = [
                 },
                 {
                     value: 2,
-                    label: "(TI) Tarjeta de identidad",
+                    label: "(CE) Cédula de extranjería",
                 },
                 {
                     value: 3,
-                    label: "(CE) Cédula de extranjería",
+                    label: "(PA) Pasaporte",
+                },
+                {
+                    value: 4,
+                    label: "(PR) Permiso de residencia",
                 },
             ],
             label: "Tipo de documento de identidad",
@@ -138,7 +143,7 @@ const FormularioVerificacion = [
         },
     },
     {
-        Component: DateField,
+        Component: BirthdayField,
         controller: {
             name: "fecha_nac",
             defaultValue: "",
@@ -566,23 +571,46 @@ const FormularioVerificacion = [
             options: [
                 {
                     value: "nula",
-                    label: "NULA",
+                    label: "Sin conexión",
                 },
                 {
                     value: "baja",
-                    label: "BAJA",
+                    label: "Solo con wifi público",
                 },
                 {
                     value: "media",
-                    label: "MEDIA",
+                    label: "Por intervalos de tiempo con dificultad",
                 },
                 {
                     value: "plena",
-                    label: "PLENA",
+                    label: "Todo el día sin dificultad",
+                },
+                {
+                    value: "otra",
+                    label: "Otra (especificar)",
                 },
             ],
             label: "Conectividad",
             required: true,
+        },
+    },
+    {
+        Component: OtraConectividad,
+        controller: {
+            name: "otra_conectividad",
+            defaultValue: "",
+            rules: {
+                required: {
+                    value: true,
+                    message: "Este campo no puede estar vacio",
+                },
+            },
+        },
+        field: {
+            label: "Otra conectividad (especificar)",
+            required: true,
+            onChange: (e, onChangeController) =>
+                onChangeController((e.target.value || "").toUpperCase()),
         },
     },
 ];
