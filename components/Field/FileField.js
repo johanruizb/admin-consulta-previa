@@ -68,8 +68,6 @@ const CustomImage = forwardRef(function CustomImage({ url }, ref) {
                             right: "50%",
                             top: "50%",
                             transform: "translate(50%, -50%)",
-                            // width: "50px !important",
-                            // height: "50px !important",
                         }}
                         onClick={handleClick}
                     >
