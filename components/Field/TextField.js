@@ -9,7 +9,12 @@ export default function TextField({ inputProps }) {
 
     const {
         controller: controllerProps,
-        field: { InputProps, onChange: onChangeField, ...fieldProps },
+        field: {
+            InputProps,
+            onChange: onChangeField,
+            label: fieldLabel,
+            ...fieldProps
+        },
     } = inputProps;
 
     return (
@@ -24,7 +29,7 @@ export default function TextField({ inputProps }) {
                         error={Boolean(error?.type || error?.types)}
                         required={controllerProps.rules?.required?.value}
                     >
-                        <FormLabel>{fieldProps.label}</FormLabel>
+                        <FormLabel>{fieldLabel}</FormLabel>
                         <Input
                             {...field}
                             value={field.value ?? ""}
@@ -32,6 +37,7 @@ export default function TextField({ inputProps }) {
                                 onChangeField?.(e, onChangeController) ||
                                     onChangeController(e);
                             }}
+                            {...fieldProps}
                         />
                         <FormHelperText>{error?.message ?? " "}</FormHelperText>
                     </FormControl>
