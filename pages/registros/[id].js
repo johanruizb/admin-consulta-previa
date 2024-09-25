@@ -162,6 +162,10 @@ function View({ defaultValues }) {
                                                 (slotProps, index) => {
                                                     const {
                                                         Component,
+                                                        size = {
+                                                            xs: 12,
+                                                            md: 6,
+                                                        },
                                                         ...inputProps
                                                     } = slotProps;
 
@@ -184,10 +188,7 @@ function View({ defaultValues }) {
                                                         ) : (
                                                             <Grid
                                                                 key={index}
-                                                                size={{
-                                                                    xs: 12,
-                                                                    md: 6,
-                                                                }}
+                                                                size={size}
                                                             >
                                                                 <Component
                                                                     inputProps={
