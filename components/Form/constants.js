@@ -329,7 +329,7 @@ const FormularioVerificacion = [
     {
         Component: TextField,
         controller: {
-            name: "entityName",
+            name: "entidad",
             defaultValue: "",
         },
         field: {
@@ -515,7 +515,7 @@ const FormularioVerificacion = [
     {
         Component: Select,
         controller: {
-            name: "estrato",
+            name: "zona",
             defaultValue: "",
             rules: {
                 required: {
@@ -527,31 +527,15 @@ const FormularioVerificacion = [
         field: {
             options: [
                 {
-                    value: 1,
-                    label: "Estrato 1",
+                    value: "rural",
+                    label: "Rural",
                 },
                 {
-                    value: 2,
-                    label: "Estrato 2",
-                },
-                {
-                    value: 3,
-                    label: "Estrato 3",
-                },
-                {
-                    value: 4,
-                    label: "Estrato 4",
-                },
-                {
-                    value: 5,
-                    label: "Estrato 5",
-                },
-                {
-                    value: 6,
-                    label: "Estrato 6",
+                    value: "urbana",
+                    label: "Urbana",
                 },
             ],
-            label: "Estrato",
+            label: "Zona de residencia",
             required: true,
         },
     },
@@ -612,6 +596,19 @@ const FormularioVerificacion = [
             onChange: (e, onChangeController) =>
                 onChangeController((e.target.value || "").toUpperCase()),
         },
+    },
+    {
+        Component: TextField,
+        controller: {
+            name: "continuar_curso_120",
+            defaultValue: "",
+        },
+        field: {
+            label: "Le interesa seguir fortaleciendo sus conocimiento y competencias sobre Consulta Previa a través de un diplomado virtual gratuito de 120 horas certificado por la Universidad del Valle.",
+            onChange: (e) => {},
+            readOnly: true,
+        },
+        size: 12,
     },
 ];
 
