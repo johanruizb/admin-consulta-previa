@@ -600,6 +600,19 @@ const FormularioVerificacion = [
     {
         Component: TextField,
         controller: {
+            name: "curso_inscrito_label",
+            defaultValue: "",
+        },
+        field: {
+            label: "Curso inscrito",
+            onChange: (e) => {},
+            readOnly: true,
+        },
+        size: 6,
+    },
+    {
+        Component: TextField,
+        controller: {
             name: "continuar_curso_120",
             defaultValue: "",
         },
