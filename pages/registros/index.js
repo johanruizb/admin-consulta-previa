@@ -94,7 +94,7 @@ export default function Registros({ children }) {
                     <Stack direction="row" spacing={1.25 / 2}>
                         <Card variant="outlined">
                             <CardContent>
-                                <Typography level="title-lg">
+                                <Typography level="title-md">
                                     Personas registradas
                                 </Typography>
                                 <Stack
@@ -102,7 +102,7 @@ export default function Registros({ children }) {
                                     justifyContent="center"
                                     alignItems="center"
                                 >
-                                    <Typography level="h2">
+                                    <Typography level="h3">
                                         {inscritosIsLoading ? (
                                             <CircularProgress size="sm" />
                                         ) : (
@@ -118,25 +118,18 @@ export default function Registros({ children }) {
                         </Card>
                         <Card variant="outlined">
                             <CardContent>
-                                <Typography level="title-lg">
+                                <Typography level="title-md">
                                     Personas validadas (
-                                    <Skeleton
-                                        loading={isLoading}
-                                        variant="inline"
-                                        width="24px"
-                                        height="24px"
-                                    >
-                                        {inscritos?.percentage ? (
-                                            <CountUp
-                                                end={inscritos?.percentage}
-                                                decimals={2}
-                                                duration={0.25}
-                                                separator="."
-                                            />
-                                        ) : (
-                                            0
-                                        )}
-                                    </Skeleton>
+                                    {inscritos?.percentage ? (
+                                        <CountUp
+                                            end={inscritos?.percentage}
+                                            decimals={2}
+                                            duration={0.25}
+                                            separator="."
+                                        />
+                                    ) : (
+                                        0
+                                    )}
                                     %)
                                 </Typography>
                                 <Stack
@@ -151,7 +144,7 @@ export default function Registros({ children }) {
                                         justifyContent="center"
                                         spacing={1.25}
                                     >
-                                        <Typography level="h2">
+                                        <Typography level="h3">
                                             {inscritosIsLoading ? (
                                                 <CircularProgress size="sm" />
                                             ) : (
