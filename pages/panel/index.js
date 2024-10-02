@@ -25,14 +25,17 @@ import "dayjs/locale/es";
 import { useEffect, useState } from "react";
 
 import fetcher from "@/components/fetcher";
-import { formatNumber } from "@/components/utils";
+import { formatNumber, getURL } from "@/components/utils";
 
 import useSWR from "swr";
 
 dayjs.locale("es");
 
 export default function Panel() {
-    const { data, isLoading } = useSWR("api/usuarios/estadisticas", fetcher);
+    const { data, isLoading } = useSWR(
+        getURL("api/usuarios/estadisticas"),
+        fetcher
+    );
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -96,12 +99,12 @@ export default function Panel() {
                     Panel de estadísticas
                 </Typography>
             </Box>
-            <Grid container spacing={1.25}>
+            <Grid container spacing={1.25 / 2}>
                 <Grid size={{ xs: 12, md: 4 }}>
                     <Card
-                        variant="plain"
+                        variant="outlined"
                         sx={{
-                            width: "100%",
+                            // width: "100%",
                             height: "100%",
                         }}
                     >
@@ -148,9 +151,9 @@ export default function Panel() {
                 </Grid>
                 <Grid size={{ xs: 12, md: 4 }}>
                     <Card
-                        variant="plain"
+                        variant="outlined"
                         sx={{
-                            width: "100%",
+                            // width: "100%",
                             height: "100%",
                         }}
                     >
@@ -197,9 +200,9 @@ export default function Panel() {
                 </Grid>
                 <Grid size={{ xs: 12, md: 4 }}>
                     <Card
-                        variant="plain"
+                        variant="outlined"
                         sx={{
-                            width: "100%",
+                            // width: "100%",
                             height: "100%",
                         }}
                     >
@@ -227,11 +230,48 @@ export default function Panel() {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid size={{ xs: 12, md: 4 }}>
+                <Grid
+                    size={{ md: 12 }}
+                    sx={{
+                        display: { xs: "none", md: "block" },
+                    }}
+                >
                     <Card
-                        variant="plain"
+                        variant="outlined"
                         sx={{
-                            width: "100%",
+                            // width: "100%",
+                            height: "100%",
+                        }}
+                    >
+                        <CardContent>
+                            <Typography level="title-lg">
+                                Personas por rol
+                            </Typography>
+                            <PieChart
+                                series={[
+                                    {
+                                        data: data?.rol ?? [],
+                                        startAngle: -180,
+                                        endAngle: 0,
+                                        arcLabel: (item) => `${item.value}`,
+                                    },
+                                ]}
+                                height={150}
+                                // width="100%"
+                                sx={{
+                                    [`& .${pieArcLabelClasses.root}`]: {
+                                        fontWeight: "bold",
+                                    },
+                                }}
+                            />
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid size={{ xs: 12, md: 6 }}>
+                    <Card
+                        variant="outlined"
+                        sx={{
+                            // width: "100%",
                             height: "100%",
                         }}
                     >
@@ -264,11 +304,11 @@ export default function Panel() {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid size={{ xs: 12, md: 4 }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                     <Card
-                        variant="plain"
+                        variant="outlined"
                         sx={{
-                            width: "100%",
+                            // width: "100%",
                             height: "100%",
                         }}
                     >
@@ -301,48 +341,11 @@ export default function Panel() {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid size={{ xs: 12, md: 4 }}>
-                    <Card
-                        variant="plain"
-                        sx={{
-                            width: "100%",
-                            height: "100%",
-                        }}
-                    >
-                        <CardContent>
-                            <Typography level="title-lg">
-                                Personas por rol
-                            </Typography>
-                            <PieChart
-                                series={[
-                                    {
-                                        data: data?.rol ?? [],
-                                        // innerRadius: 50,
-                                        // outerRadius: 80,
-                                        paddingAngle: 5,
-                                        cornerRadius: 5,
-                                        // startAngle: -45,
-                                        // endAngle: 225,
-                                        arcLabel: (item) => `${item.value}`,
-                                        arcLabelMinAngle: 35,
-                                        arcLabelRadius: "60%",
-                                    },
-                                ]}
-                                height={150}
-                                sx={{
-                                    [`& .${pieArcLabelClasses.root}`]: {
-                                        fontWeight: "bold",
-                                    },
-                                }}
-                            />
-                        </CardContent>
-                    </Card>
-                </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
                     <Card
-                        variant="plain"
+                        variant="outlined"
                         sx={{
-                            width: "100%",
+                            // width: "100%",
                             height: "100%",
                         }}
                     >
@@ -377,9 +380,9 @@ export default function Panel() {
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
                     <Card
-                        variant="plain"
+                        variant="outlined"
                         sx={{
-                            width: "100%",
+                            // width: "100%",
                             height: "100%",
                         }}
                     >
