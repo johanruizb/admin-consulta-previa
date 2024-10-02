@@ -29,6 +29,7 @@ function Layout({ children }) {
                         flexDirection: "column",
                         minWidth: 0,
                         height: "100dvh",
+                        ml: { md: "var(--Sidebar-width)" },
                         gap: 1,
                     }}
                 >
