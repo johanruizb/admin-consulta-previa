@@ -22,13 +22,20 @@ import { Fragment } from "react";
 import useSWR from "swr";
 
 import fetcher from "@/components/fetcher";
-import { getURL } from "@/components/utils";
+import { formatNumber, getURL } from "@/components/utils";
 import DevWrapper from "@/components/Wrapper/DevWrapper";
 
 import Alert from "@/components/Alert";
+import { Card, CardContent, Skeleton } from "@mui/joy";
 import { useRouter } from "next/navigation";
 
+import CountUp from "react-countup";
+
 export default function Registros({ children }) {
+    const { data: inscritos, isLoading: inscritosIsLoading } = useSWR(
+        getURL("api/usuarios/estadisticas"),
+        fetcher
+    );
     const router = useRouter();
 
     const { data, isLoading } = useSWR(
@@ -80,9 +87,76 @@ export default function Registros({ children }) {
                     justifyContent: "space-between",
                 }}
             >
-                <Typography level="h2" component="h1">
-                    Personas registradas
-                </Typography>
+                <Stack spacing={1.25}>
+                    <Typography level="h2" component="h1">
+                        Registros
+                    </Typography>
+                    <Stack direction="row" spacing={1.25 / 2}>
+                        <Card variant="outlined">
+                            <CardContent>
+                                <Typography level="title-lg">
+                                    Personas registradas
+                                </Typography>
+                                <Stack
+                                    flex={1}
+                                    justifyContent="center"
+                                    alignItems="center"
+                                >
+                                    <Typography level="h2">
+                                        {inscritosIsLoading ? (
+                                            <CircularProgress size="sm" />
+                                        ) : inscritos?.total ? (
+                                            <CountUp
+                                                end={inscritos?.total}
+                                                duration={1.25}
+                                                separator="."
+                                            />
+                                        ) : (
+                                            0
+                                        )}
+                                    </Typography>
+                                </Stack>
+                            </CardContent>
+                        </Card>
+                        <Card variant="outlined">
+                            <CardContent>
+                                <Typography level="title-lg">
+                                    Personas validadas (
+                                    <Skeleton
+                                        loading={isLoading}
+                                        variant="inline"
+                                        width="24px"
+                                        height="24px"
+                                    >
+                                        {inscritos?.percentage}
+                                    </Skeleton>
+                                    %)
+                                </Typography>
+                                <Stack
+                                    flex={1}
+                                    spacing={0}
+                                    justifyContent="center"
+                                >
+                                    <Stack
+                                        direction="row"
+                                        // alignItems="center"
+                                        alignItems="baseline"
+                                        justifyContent="center"
+                                        spacing={1.25}
+                                    >
+                                        <Typography level="h2">
+                                            {inscritosIsLoading ? (
+                                                <CircularProgress size="sm" />
+                                            ) : (
+                                                formatNumber(inscritos?.total)
+                                            )}
+                                        </Typography>
+                                    </Stack>
+                                </Stack>
+                            </CardContent>
+                        </Card>
+                    </Stack>
+                </Stack>
                 <DevWrapper>
                     <Button
                         color="primary"
