@@ -105,14 +105,12 @@ export default function Registros({ children }) {
                                     <Typography level="h2">
                                         {inscritosIsLoading ? (
                                             <CircularProgress size="sm" />
-                                        ) : inscritos?.total ? (
+                                        ) : (
                                             <CountUp
                                                 end={inscritos?.total}
                                                 duration={1.25}
                                                 separator="."
                                             />
-                                        ) : (
-                                            0
                                         )}
                                     </Typography>
                                 </Stack>
@@ -128,7 +126,16 @@ export default function Registros({ children }) {
                                         width="24px"
                                         height="24px"
                                     >
-                                        {inscritos?.percentage}
+                                        {inscritos?.percentage ? (
+                                            <CountUp
+                                                end={inscritos?.percentage}
+                                                decimals={2}
+                                                duration={0.25}
+                                                separator="."
+                                            />
+                                        ) : (
+                                            0
+                                        )}
                                     </Skeleton>
                                     %)
                                 </Typography>
@@ -148,7 +155,11 @@ export default function Registros({ children }) {
                                             {inscritosIsLoading ? (
                                                 <CircularProgress size="sm" />
                                             ) : (
-                                                formatNumber(inscritos?.total)
+                                                <CountUp
+                                                    end={inscritos?.validated}
+                                                    duration={1.25}
+                                                    separator="."
+                                                />
                                             )}
                                         </Typography>
                                     </Stack>
