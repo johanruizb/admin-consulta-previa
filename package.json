@@ -24,6 +24,7 @@
         "next": "^14.2.13",
         "npm-check-updates": "^17.1.1",
         "react": "^18",
+        "react-countup": "^6.5.3",
         "react-dom": "^18",
         "react-hook-form": "^7.53.0",
         "react-imask": "^7.6.1",
