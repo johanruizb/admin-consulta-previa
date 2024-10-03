@@ -38,16 +38,18 @@ export default function Wrapper() {
     const router = useRouter();
     const { id } = router.query;
 
-    const { data: values } = useSWR(
-        getURL("/api/usuarios/inscritos/" + id),
-        fetcher
-    );
+    const {
+        data: values,
+        isValidating,
+        isLoading,
+    } = useSWR(getURL("/api/usuarios/inscritos/" + id), fetcher);
 
     useEffect(() => {
         setMounted(true);
     }, []);
 
-    const ready = mounted && values && !permissionIsLoading;
+    const ready =
+        mounted && !permissionIsLoading && !isValidating && !isLoading;
 
     return ready ? (
         hasPermission("usuario.change_persona") ? (
