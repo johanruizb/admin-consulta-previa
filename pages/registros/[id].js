@@ -19,14 +19,13 @@ import { useRouter } from "next/router";
 import { Fragment, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
-import useSWRImmutable from "swr/immutable";
-
 import fetcher from "@/components/fetcher";
 import FormularioVerificacion from "@/components/Form/constants";
 import { getURL } from "@/components/utils";
 
 import { useSessionStorage } from "@uidotdev/usehooks";
 
+import useSWR from "swr";
 import Registros from ".";
 
 export default function Wrapper() {
@@ -34,7 +33,7 @@ export default function Wrapper() {
     const router = useRouter();
     const { id } = router.query;
 
-    const { data: values } = useSWRImmutable(
+    const { data: values } = useSWR(
         getURL("/api/usuarios/inscritos/" + id),
         fetcher
     );
@@ -101,8 +100,16 @@ function View({ defaultValues }) {
             }),
         })
             .then(async (response) => {
-                openAlert(await response.json(), "solid", "success");
-                router.back();
+                if (response.ok) {
+                    openAlert(await response.json(), "solid", "success");
+                    router.back();
+                } else {
+                    openAlert(
+                        `Se ha producido un error (${response.statusText})`,
+                        "solid",
+                        "error"
+                    );
+                }
             })
             .catch((error) => {
                 openAlert(
