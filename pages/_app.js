@@ -1,18 +1,19 @@
+import PermissionProvider from "@/components/Home/permissionContext/PermissionProvider";
 import "@/styles/globals.css";
 import "@/styles/OrderTable.css";
 
+import createCache from "@emotion/cache";
+import { CacheProvider } from "@emotion/react";
 import CssBaseline from "@mui/joy/CssBaseline";
 import {
-    CssVarsProvider as JoyCssVarsProvider,
     extendTheme,
+    CssVarsProvider as JoyCssVarsProvider,
 } from "@mui/joy/styles";
 import {
     THEME_ID as MATERIAL_THEME_ID,
     extendTheme as materialExtendTheme,
     ThemeProvider,
 } from "@mui/material/styles";
-import createCache from "@emotion/cache";
-import { CacheProvider } from "@emotion/react";
 
 const customTheme = extendTheme({
     colorSchemeSelector: "media",
@@ -34,7 +35,9 @@ export default function App({ Component, pageProps }) {
                     defaultMode="system"
                 >
                     <CssBaseline enableColorScheme />
-                    <Component {...pageProps} />
+                    <PermissionProvider>
+                        <Component {...pageProps} />
+                    </PermissionProvider>
                 </ThemeProvider>
             </JoyCssVarsProvider>
         </CacheProvider>
