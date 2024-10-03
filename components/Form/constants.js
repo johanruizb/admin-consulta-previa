@@ -410,16 +410,16 @@ const FormularioVerificacion = [
             required: true,
         },
     },
-    {
-        Component: PhoneField,
-        controller: {
-            name: "whatsapp",
-            defaultValue: "",
-        },
-        field: {
-            label: "Número de WhatsApp",
-        },
-    },
+    // {
+    //     Component: PhoneField,
+    //     controller: {
+    //         name: "whatsapp",
+    //         defaultValue: "",
+    //     },
+    //     field: {
+    //         label: "Número de WhatsApp",
+    //     },
+    // },
     {
         Component: TextField,
         controller: {
@@ -478,23 +478,23 @@ const FormularioVerificacion = [
         dependencies: ["estado_res"],
         url: "/api/ubicacion/ciudades/$1",
     },
-    {
-        Component: TextField,
-        controller: {
-            name: "direccion",
-            defaultValue: "",
-            rules: {
-                required: {
-                    value: true,
-                    message: "Este campo no puede estar vacio",
-                },
-            },
-        },
-        field: {
-            label: "Dirección de residencia",
-            required: true,
-        },
-    },
+    // {
+    //     Component: TextField,
+    //     controller: {
+    //         name: "direccion",
+    //         defaultValue: "",
+    //         rules: {
+    //             required: {
+    //                 value: true,
+    //                 message: "Este campo no puede estar vacio",
+    //             },
+    //         },
+    //     },
+    //     field: {
+    //         label: "Dirección de residencia",
+    //         required: true,
+    //     },
+    // },
     {
         Component: TextField,
         controller: {
