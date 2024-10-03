@@ -29,6 +29,8 @@ import { chunk } from "lodash";
 import { Fragment, useMemo, useState } from "react";
 
 import { v4 as uuidv4 } from "uuid";
+import usePermissionContext from "./permissionContext/usePermission";
+import { CircularProgress } from "@mui/joy";
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -68,6 +70,9 @@ function RowMenu() {
     );
 }
 export default function OrderTable({ data, onView }) {
+    const { isLoading: permissionIsLoading, hasPermission } =
+        usePermissionContext();
+
     const [page, setPage] = useState(1);
     const [filter, setFilter] = useState({});
 
@@ -140,123 +145,130 @@ export default function OrderTable({ data, onView }) {
                     minHeight: 0,
                 }}
             >
-                <Table
-                    aria-labelledby="tableTitle"
-                    stickyHeader
-                    hoverRow
-                    sx={{
-                        "--TableCell-headBackground":
-                            "var(--joy-palette-background-level1)",
-                        "--Table-headerUnderlineThickness": "1px",
-                        "--TableRow-hoverBackground":
-                            "var(--joy-palette-background-level1)",
-                        "--TableCell-paddingY": "4px",
-                        "--TableCell-paddingX": "8px",
-                    }}
-                >
-                    <thead>
-                        <tr>
-                            <th style={{ width: 140, padding: "12px 6px" }}>
-                                Fecha de registro
-                            </th>
-                            <th style={{ width: 120, padding: "12px 6px" }}>
-                                Tipo de documento
-                            </th>
-                            <th style={{ width: 120, padding: "12px 6px" }}>
-                                Número de documento
-                            </th>
-                            <th style={{ width: 180, padding: "12px 6px" }}>
-                                Nombre completo
-                            </th>
-                            <th style={{ width: 100, padding: "12px 6px" }}>
-                                Teléfono
-                            </th>
-                            <th style={{ width: 160, padding: "12px 6px" }}>
-                                Departamento de residencia
-                            </th>
-                            <th style={{ width: 100, padding: "12px 6px" }}>
-                                Estado
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {rows?.chunked[page - 1]?.map((row) => (
-                            <tr
-                                key={uuidv4()}
-                                onClick={() => onView(row.id)}
-                                className="pointer-row"
-                            >
-                                <td>
-                                    <Typography level="body-sm">
-                                        {dayjs(row.created_at).format(
-                                            "DD/MM/YYYY HH:mm:ss A"
-                                        )}
-                                    </Typography>
-                                </td>
-                                <td>
-                                    <Typography level="body-sm">
-                                        {row.tipo_doc_name}
-                                    </Typography>
-                                </td>
-                                <td>
-                                    <Typography level="body-sm">
-                                        {row.num_doc}
-                                    </Typography>
-                                </td>
-                                <td>
-                                    <Typography level="body-sm">
-                                        {row.nombres} {row.apellidos}
-                                    </Typography>
-                                </td>
-                                <td>
-                                    <Typography level="body-sm">
-                                        {row.telefono1}
-                                    </Typography>
-                                </td>
-                                <td>
-                                    <Typography level="body-sm">
-                                        {row.estado_name}
-                                    </Typography>
-                                </td>
-                                <td>
-                                    <Chip
-                                        variant="soft"
-                                        size="sm"
-                                        startDecorator={
-                                            {
-                                                true: (
-                                                    <CheckRoundedIcon fontSize="small" />
-                                                ),
-                                                false: (
-                                                    <BlockIcon fontSize="small" />
-                                                ),
-                                            }[row.info_validada]
-                                        }
-                                        color={
-                                            {
-                                                true: "success",
-                                                false: "danger",
-                                            }[row.info_validada]
-                                        }
-                                    >
-                                        {row.info_validada
-                                            ? "Validado"
-                                            : "Sin validar"}
-                                    </Chip>
-                                </td>
-                            </tr>
-                        ))}
-                        {rows.pages === 0 && (
+                {permissionIsLoading ? (
+                    <CircularProgress />
+                ) : (
+                    <Table
+                        aria-labelledby="tableTitle"
+                        stickyHeader
+                        hoverRow
+                        sx={{
+                            "--TableCell-headBackground":
+                                "var(--joy-palette-background-level1)",
+                            "--Table-headerUnderlineThickness": "1px",
+                            "--TableRow-hoverBackground":
+                                "var(--joy-palette-background-level1)",
+                            "--TableCell-paddingY": "4px",
+                            "--TableCell-paddingX": "8px",
+                        }}
+                    >
+                        <thead>
                             <tr>
-                                <td colSpan={5}>
-                                    <Typography textAlign="center">
-                                        No hay registros.
-                                    </Typography>
-                                </td>
+                                <th style={{ width: 140, padding: "12px 6px" }}>
+                                    Fecha de registro
+                                </th>
+                                <th style={{ width: 120, padding: "12px 6px" }}>
+                                    Tipo de documento
+                                </th>
+                                <th style={{ width: 120, padding: "12px 6px" }}>
+                                    Número de documento
+                                </th>
+                                <th style={{ width: 180, padding: "12px 6px" }}>
+                                    Nombre completo
+                                </th>
+                                <th style={{ width: 100, padding: "12px 6px" }}>
+                                    Teléfono
+                                </th>
+                                <th style={{ width: 160, padding: "12px 6px" }}>
+                                    Departamento de residencia
+                                </th>
+                                <th style={{ width: 100, padding: "12px 6px" }}>
+                                    Estado
+                                </th>
                             </tr>
-                        )}
-                    </tbody>
-                </Table>
+                        </thead>
+                        <tbody>
+                            {rows?.chunked[page - 1]?.map((row) => (
+                                <tr
+                                    key={uuidv4()}
+                                    // onClick={() => onView(row.id)}
+                                    className="pointer-row"
+                                    {...(hasPermission("usuario.change_persona")
+                                        ? { onClick: () => onView(row.id) }
+                                        : {})}
+                                >
+                                    <td>
+                                        <Typography level="body-sm">
+                                            {dayjs(row.created_at).format(
+                                                "DD/MM/YYYY HH:mm:ss A"
+                                            )}
+                                        </Typography>
+                                    </td>
+                                    <td>
+                                        <Typography level="body-sm">
+                                            {row.tipo_doc_name}
+                                        </Typography>
+                                    </td>
+                                    <td>
+                                        <Typography level="body-sm">
+                                            {row.num_doc}
+                                        </Typography>
+                                    </td>
+                                    <td>
+                                        <Typography level="body-sm">
+                                            {row.nombres} {row.apellidos}
+                                        </Typography>
+                                    </td>
+                                    <td>
+                                        <Typography level="body-sm">
+                                            {row.telefono1}
+                                        </Typography>
+                                    </td>
+                                    <td>
+                                        <Typography level="body-sm">
+                                            {row.estado_name}
+                                        </Typography>
+                                    </td>
+                                    <td>
+                                        <Chip
+                                            variant="soft"
+                                            size="sm"
+                                            startDecorator={
+                                                {
+                                                    true: (
+                                                        <CheckRoundedIcon fontSize="small" />
+                                                    ),
+                                                    false: (
+                                                        <BlockIcon fontSize="small" />
+                                                    ),
+                                                }[row.info_validada]
+                                            }
+                                            color={
+                                                {
+                                                    true: "success",
+                                                    false: "danger",
+                                                }[row.info_validada]
+                                            }
+                                        >
+                                            {row.info_validada
+                                                ? "Validado"
+                                                : "Sin validar"}
+                                        </Chip>
+                                    </td>
+                                </tr>
+                            ))}
+                            {rows.pages === 0 && (
+                                <tr>
+                                    <td colSpan={5}>
+                                        <Typography textAlign="center">
+                                            No hay registros.
+                                        </Typography>
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </Table>
+                )}
             </Sheet>
             <Box
                 className="Pagination-laptopUp"

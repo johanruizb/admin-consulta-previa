@@ -15,11 +15,11 @@ import fetcher from "@/components/fetcher";
 import { getURL } from "../utils";
 
 export default function Profile() {
-    const { data, error, isLoading } = useSWR(getURL("api/user"), fetcher, {
-        revalidateIfStale: false,
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false,
-    });
+    const {
+        data: user,
+        error,
+        isLoading,
+    } = useSWR(getURL("api/user"), fetcher);
 
     const [logout, setLogout] = useState(false);
     const router = useRouter();
@@ -51,7 +51,7 @@ export default function Profile() {
                             height: "9px",
                         }}
                     >
-                        {data?.fullname ?? data?.username}
+                        {user?.fullname ?? user?.username}
                     </Skeleton>
                 </Typography>
                 <Typography level="body-xs">
@@ -63,7 +63,7 @@ export default function Profile() {
                             height: "9px",
                         }}
                     >
-                        {data?.role}
+                        {user?.role}
                     </Skeleton>
                 </Typography>
             </Box>

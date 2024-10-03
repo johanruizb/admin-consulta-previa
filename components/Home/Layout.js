@@ -5,6 +5,7 @@ import { CssVarsProvider } from "@mui/joy/styles";
 import Header from "@/components/Home/Header";
 import Sidebar from "@/components/Home/Sidebar";
 
+
 function Layout({ children }) {
     return (
         <CssVarsProvider disableTransitionOnChange>

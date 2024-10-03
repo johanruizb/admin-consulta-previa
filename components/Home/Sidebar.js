@@ -27,10 +27,12 @@ import UnivalleIcon from "../Icons/Univalle";
 import { closeSidebar } from "../utils";
 import ColorSchemeToggle from "./ColorSchemeToggle";
 
+import { CircularProgress } from "@mui/material";
+import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 import DevWrapper from "../Wrapper/DevWrapper";
+import usePermissionContext from "./permissionContext/usePermission";
 import Profile from "./Profile";
-import { useRouter } from "next/navigation";
 
 function Toggler({ defaultExpanded = false, renderToggle, children }) {
     const [open, setOpen] = useState(defaultExpanded);
@@ -59,6 +61,8 @@ function Toggler({ defaultExpanded = false, renderToggle, children }) {
 }
 
 export default function Sidebar() {
+    const { isLoading, hasPermission } = usePermissionContext();
+
     const router = useRouter();
     const [mounted, setMounted] = useState(false);
 
@@ -154,177 +158,177 @@ export default function Sidebar() {
                     [`& .${listItemButtonClasses.root}`]: {
                         gap: 1.5,
                     },
+                    ...(isLoading && {
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }),
                 }}
             >
-                <List
-                    size="sm"
-                    sx={{
-                        gap: 1,
-                        "--List-nestedInsetStart": "30px",
-                        "--ListItem-radius": (theme) => theme.vars.radius.sm,
-                    }}
-                >
-                    <DevWrapper>
-                        <ListItem>
-                            <ListItemButton
-                                component="a"
-                                // href="/"
-                                onClick={() => handleRouteChange("/")}
-                                selected={
-                                    mounted ? location.pathname == "/" : false
-                                }
-                            >
-                                <HomeRoundedIcon />
-                                <ListItemContent>
-                                    <Typography level="title-sm">
-                                        Inicio
-                                    </Typography>
-                                </ListItemContent>
-                            </ListItemButton>
-                        </ListItem>
-                    </DevWrapper>
-                    <ListItem>
-                        <ListItemButton
-                            component="a"
-                            // href="/panel"
-                            onClick={() => handleRouteChange("/panel")}
-                            selected={
-                                mounted ? location.pathname == "/panel" : false
-                            }
-                        >
-                            <DashboardRoundedIcon />
-                            <ListItemContent>
-                                <Typography level="title-sm">Panel</Typography>
-                            </ListItemContent>
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem>
-                        <ListItemButton
-                            component="a"
-                            // href="/registros"
-                            onClick={() => handleRouteChange("/registros")}
-                            selected={
-                                mounted
-                                    ? location.pathname == "/registros"
-                                    : false
-                            }
-                        >
-                            <GroupAddIcon />
-                            <ListItemContent>
-                                <Typography level="title-sm">
-                                    Registros
-                                </Typography>
-                            </ListItemContent>
-                        </ListItemButton>
-                    </ListItem>
+                {isLoading ? (
+                    <CircularProgress />
+                ) : (
+                    <List
+                        size="sm"
+                        sx={{
+                            gap: 1,
+                            "--List-nestedInsetStart": "30px",
+                            "--ListItem-radius": (theme) =>
+                                theme.vars.radius.sm,
+                        }}
+                    >
+                        <DevWrapper>
+                            <ListItem>
+                                <ListItemButton
+                                    component="a"
+                                    // href="/"
+                                    onClick={() => handleRouteChange("/")}
+                                    selected={
+                                        mounted
+                                            ? location.pathname == "/"
+                                            : false
+                                    }
+                                >
+                                    <HomeRoundedIcon />
+                                    <ListItemContent>
+                                        <Typography level="title-sm">
+                                            Inicio
+                                        </Typography>
+                                    </ListItemContent>
+                                </ListItemButton>
+                            </ListItem>
+                        </DevWrapper>
 
-                    {/* <ListItem nested>
-                        <Toggler
-                            renderToggle={({ open, setOpen }) => (
-                                <ListItemButton onClick={() => setOpen(!open)}>
-                                    <AssignmentRoundedIcon />
+                        <ListItem>
+                            {hasPermission("usuario.view_persona") && (
+                                <ListItemButton
+                                    component="a"
+                                    // href="/registros"
+                                    onClick={() =>
+                                        handleRouteChange("/registros")
+                                    }
+                                    selected={
+                                        mounted
+                                            ? location.pathname == "/registros"
+                                            : false
+                                    }
+                                >
+                                    <GroupAddIcon />
                                     <ListItemContent>
                                         <Typography level="title-sm">
-                                            Tasks
+                                            Registros
                                         </Typography>
                                     </ListItemContent>
-                                    <KeyboardArrowDownIcon
-                                        sx={[
-                                            open
-                                                ? {
-                                                      transform:
-                                                          "rotate(180deg)",
-                                                  }
-                                                : {
-                                                      transform: "none",
-                                                  },
-                                        ]}
-                                    />
                                 </ListItemButton>
                             )}
-                        >
-                            <List sx={{ gap: 0.5 }}>
-                                <ListItem sx={{ mt: 0.5 }}>
-                                    <ListItemButton>All tasks</ListItemButton>
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemButton>Backlog</ListItemButton>
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemButton>In progress</ListItemButton>
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemButton>Done</ListItemButton>
-                                </ListItem>
-                            </List>
-                        </Toggler>
-                    </ListItem>
-                    <ListItem>
-                        <ListItemButton
-                            role="menuitem"
-                            component="a"
-                            href="/joy-ui/getting-started/templates/messages/"
-                        >
-                            <QuestionAnswerRoundedIcon />
-                            <ListItemContent>
-                                <Typography level="title-sm">
-                                    Messages
-                                </Typography>
-                            </ListItemContent>
-                            <Chip size="sm" color="primary" variant="solid">
-                                4
-                            </Chip>
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem nested>
-                        <Toggler
-                            renderToggle={({ open, setOpen }) => (
-                                <ListItemButton onClick={() => setOpen(!open)}>
-                                    <GroupRoundedIcon />
-                                    <ListItemContent>
-                                        <Typography level="title-sm">
-                                            Users
-                                        </Typography>
-                                    </ListItemContent>
-                                    <KeyboardArrowDownIcon
-                                        sx={[
-                                            open
-                                                ? {
-                                                      transform:
-                                                          "rotate(180deg)",
-                                                  }
-                                                : {
-                                                      transform: "none",
-                                                  },
-                                        ]}
-                                    />
-                                </ListItemButton>
-                            )}
-                        >
-                            <List sx={{ gap: 0.5 }}>
-                                <ListItem sx={{ mt: 0.5 }}>
-                                    <ListItemButton
-                                        role="menuitem"
-                                        component="a"
-                                        href="/joy-ui/getting-started/templates/profile-dashboard/"
-                                    >
-                                        My profile
-                                    </ListItemButton>
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemButton>
-                                        Create a new user
-                                    </ListItemButton>
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemButton>
-                                        Roles & permission
-                                    </ListItemButton>
-                                </ListItem>
-                            </List>
-                        </Toggler>
-                    </ListItem> */}
-                </List>
+                        </ListItem>
+                        {/* <ListItem nested>
+                                                <Toggler
+                                                    renderToggle={({ open, setOpen }) => (
+                                                        <ListItemButton onClick={() => setOpen(!open)}>
+                                                            <AssignmentRoundedIcon />
+                                                            <ListItemContent>
+                                                                <Typography level="title-sm">
+                                                                    Tasks
+                                                                </Typography>
+                                                            </ListItemContent>
+                                                            <KeyboardArrowDownIcon
+                                                                sx={[
+                                                                    open
+                                                                        ? {
+                                                                              transform:
+                                                                                  "rotate(180deg)",
+                                                                          }
+                                                                        : {
+                                                                              transform: "none",
+                                                                          },
+                                                                ]}
+                                                            />
+                                                        </ListItemButton>
+                                                    )}
+                                                >
+                                                    <List sx={{ gap: 0.5 }}>
+                                                        <ListItem sx={{ mt: 0.5 }}>
+                                                            <ListItemButton>All tasks</ListItemButton>
+                                                        </ListItem>
+                                                        <ListItem>
+                                                            <ListItemButton>Backlog</ListItemButton>
+                                                        </ListItem>
+                                                        <ListItem>
+                                                            <ListItemButton>In progress</ListItemButton>
+                                                        </ListItem>
+                                                        <ListItem>
+                                                            <ListItemButton>Done</ListItemButton>
+                                                        </ListItem>
+                                                    </List>
+                                                </Toggler>
+                                            </ListItem>
+                                            <ListItem>
+                                                <ListItemButton
+                                                    role="menuitem"
+                                                    component="a"
+                                                    href="/joy-ui/getting-started/templates/messages/"
+                                                >
+                                                    <QuestionAnswerRoundedIcon />
+                                                    <ListItemContent>
+                                                        <Typography level="title-sm">
+                                                            Messages
+                                                        </Typography>
+                                                    </ListItemContent>
+                                                    <Chip size="sm" color="primary" variant="solid">
+                                                        4
+                                                    </Chip>
+                                                </ListItemButton>
+                                            </ListItem>
+                                            <ListItem nested>
+                                                <Toggler
+                                                    renderToggle={({ open, setOpen }) => (
+                                                        <ListItemButton onClick={() => setOpen(!open)}>
+                                                            <GroupRoundedIcon />
+                                                            <ListItemContent>
+                                                                <Typography level="title-sm">
+                                                                    Users
+                                                                </Typography>
+                                                            </ListItemContent>
+                                                            <KeyboardArrowDownIcon
+                                                                sx={[
+                                                                    open
+                                                                        ? {
+                                                                              transform:
+                                                                                  "rotate(180deg)",
+                                                                          }
+                                                                        : {
+                                                                              transform: "none",
+                                                                          },
+                                                                ]}
+                                                            />
+                                                        </ListItemButton>
+                                                    )}
+                                                >
+                                                    <List sx={{ gap: 0.5 }}>
+                                                        <ListItem sx={{ mt: 0.5 }}>
+                                                            <ListItemButton
+                                                                role="menuitem"
+                                                                component="a"
+                                                                href="/joy-ui/getting-started/templates/profile-dashboard/"
+                                                            >
+                                                                My profile
+                                                            </ListItemButton>
+                                                        </ListItem>
+                                                        <ListItem>
+                                                            <ListItemButton>
+                                                                Create a new user
+                                                            </ListItemButton>
+                                                        </ListItem>
+                                                        <ListItem>
+                                                            <ListItemButton>
+                                                                Roles & permission
+                                                            </ListItemButton>
+                                                        </ListItem>
+                                                    </List>
+                                                </Toggler>
+                                            </ListItem> */}
+                    </List>
+                )}
                 {/* <List
                     size="sm"
                     sx={{
