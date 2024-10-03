@@ -26,6 +26,8 @@ import { getURL } from "@/components/utils";
 import { useSessionStorage } from "@uidotdev/usehooks";
 
 import useSWR from "swr";
+import useSWRImmutable from "swr/immutable";
+
 import Registros from ".";
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 import Navigate from "@/components/Navigate";
@@ -42,7 +44,9 @@ export default function Wrapper() {
         data: values,
         isValidating,
         isLoading,
-    } = useSWR(getURL("/api/usuarios/inscritos/" + id), fetcher);
+    } = useSWRImmutable(getURL("/api/usuarios/inscritos/" + id), fetcher, {
+        revalidateOnMount: true,
+    });
 
     useEffect(() => {
         setMounted(true);
