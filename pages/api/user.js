@@ -15,8 +15,18 @@ export default async function handler(req, res) {
         cookieName: "session",
     });
 
-    if (!session?.accessToken) return res.status(401).end();
+    const response = await fetch(
+        process.env.NEXT_PUBLIC_BASE_URL + "/api/autenticacion/usuario",
+        {
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + session.accessToken,
+                "Content-Type": "application/json",
+            },
+        }
+    );
 
-    const { fullname, username, role } = session;
-    res.status(200).json({ fullname, username, role });
+    res.status(response.status).json(
+        (await response.json()) || response.statusText
+    );
 }
