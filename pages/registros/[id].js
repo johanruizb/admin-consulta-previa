@@ -27,8 +27,13 @@ import { useSessionStorage } from "@uidotdev/usehooks";
 
 import useSWR from "swr";
 import Registros from ".";
+import usePermissionContext from "@/components/Home/permissionContext/usePermission";
+import Navigate from "@/components/Navigate";
 
 export default function Wrapper() {
+    const { isLoading: permissionIsLoading, hasPermission } =
+        usePermissionContext();
+
     const [mounted, setMounted] = useState(false);
     const router = useRouter();
     const { id } = router.query;
@@ -42,8 +47,14 @@ export default function Wrapper() {
         setMounted(true);
     }, []);
 
-    return values && mounted ? (
-        <View defaultValues={values} />
+    const ready = mounted && values && !permissionIsLoading;
+
+    return ready ? (
+        hasPermission("usuario.change_persona") ? (
+            <View defaultValues={values} />
+        ) : (
+            <Navigate to="/registros" replace />
+        )
     ) : (
         <Stack
             open
