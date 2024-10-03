@@ -19,6 +19,7 @@
         "@mui/x-charts": "^7.18.0",
         "@uidotdev/usehooks": "^2.4.1",
         "dayjs": "^1.11.13",
+        "fuse.js": "^7.0.0",
         "iron-session": "^8.0.3",
         "lodash": "^4.17.21",
         "next": "^14.2.13",
