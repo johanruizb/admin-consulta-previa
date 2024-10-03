@@ -17,21 +17,25 @@ import Head from "next/head";
 
 import CircularProgress from "@mui/joy/CircularProgress";
 import Stack from "@mui/joy/Stack";
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 
 import useSWR from "swr";
 
 import fetcher from "@/components/fetcher";
-import { formatNumber, getURL } from "@/components/utils";
+import { getURL } from "@/components/utils";
 import DevWrapper from "@/components/Wrapper/DevWrapper";
 
 import Alert from "@/components/Alert";
-import { Card, CardContent, Skeleton } from "@mui/joy";
+import { Card, CardContent } from "@mui/joy";
 import { useRouter } from "next/navigation";
 
 import CountUp from "react-countup";
+import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 
 export default function Registros({ children }) {
+    const { isLoading: permissionIsLoading, hasPermission } =
+        usePermissionContext();
+
     const { data: inscritos, isLoading: inscritosIsLoading } = useSWR(
         getURL("api/usuarios/estadisticas"),
         fetcher
@@ -46,6 +50,12 @@ export default function Registros({ children }) {
     const onView = (id) => {
         router.push(`/registros/${id}`, undefined, { shallow: true });
     };
+
+    useEffect(() => {
+        if (!permissionIsLoading && !hasPermission("usuario.view_persona")) {
+            router.replace("/");
+        }
+    }, [permissionIsLoading, hasPermission]);
 
     return (
         <Layout>
