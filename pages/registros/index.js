@@ -38,7 +38,8 @@ export default function Registros({ children }) {
 
     const { data: inscritos, isLoading: inscritosIsLoading } = useSWR(
         getURL("api/usuarios/estadisticas"),
-        fetcher
+        fetcher,
+        { revalidateOnMount: true }
     );
     const router = useRouter();
 
@@ -89,7 +90,7 @@ export default function Registros({ children }) {
             <Box
                 sx={{
                     display: "flex",
-                    mb: 1,
+                    // mb: 1,
                     gap: 1,
                     flexDirection: { xs: "column", sm: "row" },
                     alignItems: { xs: "start", sm: "center" },
