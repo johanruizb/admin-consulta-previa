@@ -37,17 +37,10 @@ export default async function handler(req, res) {
             },
         });
 
-        const { access, refresh, ...data } = await response.json();
+        const { access } = await response.json();
 
         // Informacion de la sesion
         session.accessToken = access;
-        // session.refreshToken = refresh;
-
-        // Informacion del usuario
-        session.fullname = data.full_name || data.username;
-        // session.username = data.username;
-        session.role = data.role;
-
         await session.save();
 
         res.status(200).end();
