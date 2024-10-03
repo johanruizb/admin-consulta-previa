@@ -34,7 +34,7 @@ export default async function handler(req, res) {
             }
         );
         const result = await response.json();
-        res.status(response.status).json(result);
+        res.status(response.status).json(result || response.statusText);
     } else if (req.method === "GET") {
         const response = await fetch(
             process.env.NEXT_PUBLIC_BASE_URL + "/api/usuarios/inscritos/" + id,
