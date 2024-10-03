@@ -1,7 +1,6 @@
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { getSeconds } from "./components/utils";
 
 // 1. Specify protected and public routes
 const publicRoutes = ["/login"];
