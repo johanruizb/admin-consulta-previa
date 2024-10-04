@@ -369,6 +369,8 @@ export default function Page() {
                                         container
                                         // flexDirection="row"
                                         alignItems="center"
+                                        alignContent="center"
+                                        spacing={0.25}
                                         flex={1}
                                         sx={{
                                             height: "100%",
