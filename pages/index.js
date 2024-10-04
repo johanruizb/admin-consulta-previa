@@ -244,6 +244,11 @@ export default function Page() {
                             <CustomPie
                                 data={data?.rol}
                                 slotProps={{
+                                    item: {
+                                        root: {
+                                            size: { xs: 12, lg: 6 },
+                                        },
+                                    },
                                     pie: {
                                         root: {
                                             sx: {
