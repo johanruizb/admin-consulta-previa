@@ -229,12 +229,7 @@ export default function Page() {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid
-                    size={{ md: 12 }}
-                    sx={{
-                        display: { xs: "none", md: "block" },
-                    }}
-                >
+                <Grid size={{ md: 12 }}>
                     <Card
                         variant="outlined"
                         sx={{
@@ -298,14 +293,6 @@ export default function Page() {
                                     item: {
                                         root: {
                                             size: 12,
-                                        },
-                                        stack: {
-                                            sx: {
-                                                justifyContent: {
-                                                    xs: "center",
-                                                    md: "normal",
-                                                },
-                                            },
                                         },
                                     },
                                 }}
