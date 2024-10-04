@@ -42,6 +42,18 @@ const COLORS = [
     "#7f7f7f",
     "#bcbd22",
     "#17becf",
+    "#a6cee3",
+    "#1f78b4",
+    "#b2df8a",
+    "#33a02c",
+    "#fb9a99",
+    "#e31a1c",
+    "#fdbf6f",
+    "#ff7f00",
+    "#cab2d6",
+    "#6a3d9a",
+    "#ffff99",
+    "#b15928",
 ];
 
 export default function Page() {
@@ -348,33 +360,51 @@ export default function Page() {
                                         }}
                                     />
                                 </Box>
-                                <Stack flexDirection="row" flex={1}>
-                                    {data?.edad?.map((item, index) => (
-                                        <Stack
-                                            key={index}
-                                            direction="row"
-                                            alignItems="center"
-                                            // justifyContent="space-between"
-                                            spacing={1.25}
-                                            flex={1}
-                                        >
-                                            <Box
-                                                component="span"
-                                                sx={{
-                                                    width: 20,
-                                                    height: 20,
-                                                    // borderRadius: 10,
-                                                    backgroundColor:
-                                                        COLORS[index],
-                                                }}
-                                            />
-                                            <Typography level="body" noWrap>
-                                                {item.label} (
-                                                {formatNumber(item.value)})
-                                            </Typography>
-                                        </Stack>
-                                    ))}
-                                </Stack>
+                                <Box
+                                    sx={{
+                                        width: { xs: "100%", md: "60%" },
+                                    }}
+                                >
+                                    <Grid
+                                        container
+                                        flexDirection="row"
+                                        flex={1}
+                                    >
+                                        {data?.edad?.map((item, index) => (
+                                            <Grid size={6}>
+                                                <Stack
+                                                    key={index}
+                                                    direction="row"
+                                                    alignItems="center"
+                                                    // justifyContent="space-between"
+                                                    spacing={1.25}
+                                                    flex={1}
+                                                >
+                                                    <Box
+                                                        component="span"
+                                                        sx={{
+                                                            width: 20,
+                                                            height: 20,
+                                                            // borderRadius: 10,
+                                                            backgroundColor:
+                                                                COLORS[index],
+                                                        }}
+                                                    />
+                                                    <Typography
+                                                        level="body"
+                                                        noWrap
+                                                    >
+                                                        {item.label} (
+                                                        {formatNumber(
+                                                            item.value
+                                                        )}
+                                                        )
+                                                    </Typography>
+                                                </Stack>
+                                            </Grid>
+                                        ))}
+                                    </Grid>
+                                </Box>
                             </Stack>
                         </CardContent>
                     </Card>
