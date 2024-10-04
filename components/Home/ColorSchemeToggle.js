@@ -4,8 +4,38 @@ import IconButton from "@mui/joy/IconButton";
 
 import { useEffect, useState } from "react";
 
+import { CircularProgress, Tooltip } from "@mui/joy";
 import { useColorScheme as useJoyColorScheme } from "@mui/joy/styles";
 import { useColorScheme as useMaterialColorScheme } from "@mui/material/styles";
+
+import ComputerIcon from "@mui/icons-material/Computer";
+import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
+
+function getIcon(mode) {
+    switch (mode) {
+        case "dark":
+            return <DarkModeRoundedIcon />;
+        case "light":
+            return <LightModeIcon />;
+        case "system":
+            return <ComputerIcon />;
+        default:
+            return <QuestionMarkIcon />;
+    }
+}
+
+function getLegend(mode) {
+    switch (mode) {
+        case "dark":
+            return "Modo oscuro";
+        case "light":
+            return "Modo claro";
+        case "system":
+            return "Preferencia del sistema";
+        default:
+            return "Desconocido";
+    }
+}
 
 export default function ColorSchemeToggle(props) {
     const { onClick, sx, ...other } = props;
@@ -18,8 +48,6 @@ export default function ColorSchemeToggle(props) {
     }, []);
 
     if (!mounted || !mode) {
-        // prevent server-side rendering mismatch
-        // because `mode` is undefined on the server.
         return (
             <IconButton
                 data-screenshot="toggle-mode"
@@ -31,45 +59,28 @@ export default function ColorSchemeToggle(props) {
                     setJoyMode(mode === "dark" ? "light" : "dark");
                 }}
                 {...other}
-                sx={[
-                    mode === "dark"
-                        ? { "& > *:first-of-type": { display: "none" } }
-                        : { "& > *:first-of-type": { display: "initial" } },
-                    mode === "light"
-                        ? { "& > *:last-child": { display: "none" } }
-                        : { "& > *:last-child": { display: "initial" } },
-                    ...(Array.isArray(sx) ? sx : [sx]),
-                ]}
             >
-                <DarkModeRoundedIcon />
-                <LightModeIcon />
+                <CircularProgress />
             </IconButton>
         );
     }
 
     return (
-        <IconButton
-            data-screenshot="toggle-mode"
-            size="sm"
-            variant="outlined"
-            color="neutral"
-            onClick={() => {
-                setMaterialMode(mode === "dark" ? "light" : "dark");
-                setJoyMode(mode === "dark" ? "light" : "dark");
-            }}
-            {...other}
-            sx={[
-                mode === "dark"
-                    ? { "& > *:first-of-type": { display: "none" } }
-                    : { "& > *:first-of-type": { display: "initial" } },
-                mode === "light"
-                    ? { "& > *:last-child": { display: "none" } }
-                    : { "& > *:last-child": { display: "initial" } },
-                ...(Array.isArray(sx) ? sx : [sx]),
-            ]}
-        >
-            <DarkModeRoundedIcon />
-            <LightModeIcon />
-        </IconButton>
+        <Tooltip title={getLegend(mode)} arrow>
+            <IconButton
+                data-screenshot="toggle-mode"
+                size="sm"
+                variant="outlined"
+                color="neutral"
+                onClick={() => {
+                    setMaterialMode(mode === "dark" ? "light" : "dark");
+                    setJoyMode(mode === "dark" ? "light" : "dark");
+                }}
+                {...other}
+                sx={[...(Array.isArray(sx) ? sx : [sx])]}
+            >
+                {getIcon(mode)}
+            </IconButton>
+        </Tooltip>
     );
 }
