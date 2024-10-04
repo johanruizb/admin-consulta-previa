@@ -316,7 +316,7 @@ export default function Page() {
                                             "& > *:first-of-type": {
                                                 "& > *:first-of-type": {
                                                     transform:
-                                                        "translateX(50px)",
+                                                        "translateY(-50px) scale(1.5)",
                                                 },
                                             },
                                         },
@@ -367,11 +367,21 @@ export default function Page() {
                                 >
                                     <Grid
                                         container
-                                        flexDirection="row"
+                                        // flexDirection="row"
+                                        alignItems="center"
                                         flex={1}
+                                        sx={{
+                                            height: "100%",
+                                        }}
                                     >
                                         {data?.edad?.map((item, index) => (
-                                            <Grid size={6} key={index}>
+                                            <Grid
+                                                size={6}
+                                                key={index}
+                                                sx={{
+                                                    height: "fit-content !important",
+                                                }}
+                                            >
                                                 <Stack
                                                     direction="row"
                                                     alignItems="center"
@@ -387,11 +397,15 @@ export default function Page() {
                                                             // borderRadius: 10,
                                                             backgroundColor:
                                                                 COLORS[index],
+                                                            mr: "5px !important",
                                                         }}
                                                     />
                                                     <Typography
                                                         level="body"
                                                         noWrap
+                                                        sx={{
+                                                            ml: "0 !important",
+                                                        }}
                                                     >
                                                         {item.label} (
                                                         {formatNumber(
