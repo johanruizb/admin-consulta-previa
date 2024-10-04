@@ -371,9 +371,8 @@ export default function Page() {
                                         flex={1}
                                     >
                                         {data?.edad?.map((item, index) => (
-                                            <Grid size={6}>
+                                            <Grid size={6} key={index}>
                                                 <Stack
-                                                    key={index}
                                                     direction="row"
                                                     alignItems="center"
                                                     // justifyContent="space-between"
