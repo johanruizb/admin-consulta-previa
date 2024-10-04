@@ -31,6 +31,8 @@ import useSWRImmutable from "swr/immutable";
 import Registros from ".";
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 import Navigate from "@/components/Navigate";
+import { Box, List, ListItem, ListItemContent } from "@mui/joy";
+import dayjs from "dayjs";
 
 export default function Wrapper() {
     const { isLoading: permissionIsLoading, hasPermission } =
@@ -228,6 +230,39 @@ function View({ defaultValues }) {
                                     </FormProvider>
                                 </Stack>
                             </form>
+                            <Box
+                                sx={{
+                                    mt: "20px",
+                                }}
+                            >
+                                <DialogTitle>Historial de cambios</DialogTitle>
+                                <List>
+                                    {defaultValues.historial.map(
+                                        (item, index) => (
+                                            <ListItem>
+                                                <ListItemContent>
+                                                    {dayjs(
+                                                        item.history_date
+                                                    ).format(
+                                                        "DD/MM/YYYY HH:mm:ss A"
+                                                    )}{" "}
+                                                    » {item.history_type}{" "}
+                                                    {item.has_user
+                                                        ? `por ${
+                                                              item.history_user_fullname
+                                                                  ? item.history_user_fullname +
+                                                                    " (" +
+                                                                    item.history_user_username +
+                                                                    ")"
+                                                                  : item.history_user_username
+                                                          }`
+                                                        : ""}
+                                                </ListItemContent>
+                                            </ListItem>
+                                        )
+                                    )}
+                                </List>
+                            </Box>
                         </DialogContent>
                         <DialogActions
                             sx={{
