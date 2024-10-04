@@ -82,6 +82,10 @@ const FormularioVerificacion = [
                     value: 4,
                     label: "(PR) Permiso de residencia",
                 },
+                {
+                    value: 5,
+                    label: "(TI) Tarjeta de identidad",
+                },
             ],
             label: "Tipo de documento de identidad",
             required: true,
