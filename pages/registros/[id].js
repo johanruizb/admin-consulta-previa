@@ -239,7 +239,7 @@ function View({ defaultValues }) {
                                 <List>
                                     {defaultValues.historial.map(
                                         (item, index) => (
-                                            <ListItem>
+                                            <ListItem key={index}>
                                                 <ListItemContent>
                                                     {dayjs(
                                                         item.history_date
