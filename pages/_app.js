@@ -29,10 +29,10 @@ const cache = createCache({ key: "css", prepend: true });
 export default function App({ Component, pageProps }) {
     return (
         <CacheProvider value={cache}>
-            <JoyCssVarsProvider theme={customTheme} defaultMode="system">
+            <JoyCssVarsProvider theme={customTheme} defaultMode="light">
                 <ThemeProvider
                     theme={{ [MATERIAL_THEME_ID]: materialTheme }}
-                    defaultMode="system"
+                    defaultMode="light"
                 >
                     <CssBaseline enableColorScheme />
                     <PermissionProvider>

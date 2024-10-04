@@ -40,12 +40,16 @@ function getLegend(mode) {
 export default function ColorSchemeToggle(props) {
     const { onClick, sx, ...other } = props;
     const { mode, setMode: setMaterialMode } = useMaterialColorScheme();
-    const { setMode: setJoyMode } = useJoyColorScheme();
+    const { mode: joyMode, setMode: setJoyMode } = useJoyColorScheme();
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         setMounted(true);
     }, []);
+
+    useEffect(() => {
+        if (mounted && mode !== joyMode) setMaterialMode(joyMode);
+    }, [mounted]);
 
     if (!mounted || !mode) {
         return (
@@ -64,6 +68,9 @@ export default function ColorSchemeToggle(props) {
             </IconButton>
         );
     }
+
+    console.log("ColorSchemeToggle » mode", mode);
+    console.log("ColorSchemeToggle » joyMode", joyMode);
 
     return (
         <Tooltip title={getLegend(mode)} arrow>
