@@ -13,8 +13,6 @@ import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import Grid from "@mui/material/Grid2";
 import Stack from "@mui/material/Stack";
 
-import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
-
 import Layout from "@/components/Home/Layout";
 
 import Head from "next/head";
@@ -26,9 +24,9 @@ import { useEffect, useState } from "react";
 
 import fetcher from "@/components/fetcher";
 import { formatNumber, getURL } from "@/components/utils";
+import CustomPie from "@/components/Panel/CustomPie";
 
 import useSWR from "swr";
-import CustomPie from "@/components/Panel/CustomPie";
 
 dayjs.locale("es");
 
