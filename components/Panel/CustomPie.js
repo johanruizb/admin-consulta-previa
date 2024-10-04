@@ -152,7 +152,7 @@ export default function CustomPie({ data = [], slotProps = {} }) {
                                 >
                                     <Typography
                                         level="body"
-                                        noWrap
+                                        // noWrap
                                         sx={{
                                             ml: "0 !important",
                                         }}
