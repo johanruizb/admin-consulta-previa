@@ -327,20 +327,7 @@ export default function Page() {
                                 Personas interesadas en continuar con el curso
                                 de 120 horas
                             </Typography>
-                            <CustomPie
-                                data={data?.continuar_curso}
-                                slotProps={{
-                                    item: {
-                                        root: { size: 12 },
-                                        stack: {
-                                            justifyContent: {
-                                                xs: "center",
-                                                md: "normal",
-                                            },
-                                        },
-                                    },
-                                }}
-                            />
+                            <CustomPie data={data?.continuar_curso} />
                         </CardContent>
                     </Card>
                 </Grid>
