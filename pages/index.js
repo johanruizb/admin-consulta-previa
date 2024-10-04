@@ -339,11 +339,11 @@ export default function Page() {
                                                 data: data?.edad ?? [],
                                                 arcLabel: (item) =>
                                                     `${item.value}`,
-                                                // arcLabelMinAngle: 35,
-                                                // arcLabelRadius: "60%",
+                                                arcLabelMinAngle: 35,
+                                                arcLabelRadius: "60%",
                                                 paddingAngle: 5,
-                                                innerRadius: 60,
-                                                outerRadius: 80,
+                                                // innerRadius: 60,
+                                                // outerRadius: 80,
                                             },
                                         ]}
                                         height={200}
