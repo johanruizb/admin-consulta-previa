@@ -9,22 +9,6 @@ import { NextRequest, NextResponse } from "next/server";
  * @param {NextResponse} res - El objeto de respuesta HTTP.
  *
  * @returns {Promise<void>} - Una promesa que se resuelve cuando la operación de inicio de sesión se completa.
- *
- * Ejemplo de uso en una solicitud HTTP POST
- * @example
- * fetch("/api/login", {
- *   method: "POST",
- *   headers: {
- *     "Content-Type": "application/json"
- *   },
- *   body: JSON.stringify({ username: "usuario", password: "contraseña" })
- * }).then(response => {
- *   if (response.ok) {
- *     console.log("Inicio de sesión exitoso");
- *   } else {
- *     console.error("Error en el inicio de sesión");
- *   }
- * });
  */
 export default async function handler(req, res) {
     // Eliminar la cookie de sesión

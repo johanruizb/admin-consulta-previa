@@ -69,9 +69,6 @@ export default function ColorSchemeToggle(props) {
         );
     }
 
-    console.log("ColorSchemeToggle » mode", mode);
-    console.log("ColorSchemeToggle » joyMode", joyMode);
-
     return (
         <Tooltip title={getLegend(mode)} arrow>
             <IconButton

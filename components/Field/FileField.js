@@ -20,7 +20,6 @@ const CustomImage = forwardRef(function CustomImage({ url }, ref) {
 
     useEffect(() => {
         fetch(getURL("api/" + url)).then((response) => {
-            console.log(response);
             response.blob().then((blob) => {
                 const url = window.URL.createObjectURL(blob);
                 setObjectURL(url);
@@ -89,7 +88,6 @@ export default function FileField({ inputProps }) {
 
     const onClick = (url) => {
         fetch(getURL("api/" + url)).then((response) => {
-            console.log(response);
             response.blob().then((blob) => {
                 const url = window.URL.createObjectURL(blob);
                 const w = window.open(url);
