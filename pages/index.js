@@ -341,7 +341,7 @@ export default function Page() {
                                                     `${item.value}`,
                                                 arcLabelMinAngle: 35,
                                                 arcLabelRadius: "60%",
-                                                paddingAngle: 5,
+                                                // paddingAngle: 5,
                                                 // innerRadius: 60,
                                                 // outerRadius: 80,
                                             },
