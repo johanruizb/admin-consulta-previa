@@ -31,6 +31,19 @@ import useSWR from "swr";
 
 dayjs.locale("es");
 
+const COLORS = [
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+];
+
 export default function Page() {
     const { data, isLoading } = useSWR(
         getURL("api/usuarios/estadisticas"),
@@ -279,28 +292,90 @@ export default function Page() {
                             <Typography level="title-lg">
                                 Personas por rangos de edad
                             </Typography>
-                            <PieChart
-                                series={[
-                                    {
-                                        data: data?.edad ?? [],
-                                        // innerRadius: 50,
-                                        // outerRadius: 80,
-                                        // paddingAngle: 5,
-                                        // cornerRadius: 5,
-                                        // startAngle: -45,
-                                        // endAngle: 225,
-                                        arcLabel: (item) => `${item.value}`,
-                                        arcLabelMinAngle: 35,
-                                        arcLabelRadius: "60%",
-                                    },
-                                ]}
-                                height={250}
+                            <Stack
+                                flexDirection="row"
+                                flexWrap="wrap"
+                                flex={1}
                                 sx={{
-                                    [`& .${pieArcLabelClasses.root}`]: {
-                                        fontWeight: "bold",
+                                    "& > *:first-of-type": {
+                                        "& > *:first-of-type": {
+                                            width: "200px !important",
+                                            flexGrow: "unset !important",
+                                            "& > *:first-of-type": {
+                                                "& > *:first-of-type": {
+                                                    transform:
+                                                        "translateX(50px)",
+                                                },
+                                            },
+                                        },
                                     },
                                 }}
-                            />
+                            >
+                                <Box
+                                    sx={{
+                                        width: { xs: "100%", md: "40%" },
+                                        // height: "100%",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <PieChart
+                                        colors={COLORS}
+                                        series={[
+                                            {
+                                                data: data?.edad ?? [],
+                                                arcLabel: (item) =>
+                                                    `${item.value}`,
+                                                // arcLabelMinAngle: 35,
+                                                // arcLabelRadius: "60%",
+                                                paddingAngle: 5,
+                                                innerRadius: 60,
+                                                outerRadius: 80,
+                                            },
+                                        ]}
+                                        height={200}
+                                        width={250}
+                                        sx={{
+                                            [`& .${pieArcLabelClasses.root}`]: {
+                                                fontWeight: "bold",
+                                            },
+                                        }}
+                                        slotProps={{
+                                            legend: {
+                                                hidden: true,
+                                            },
+                                        }}
+                                    />
+                                </Box>
+                                <Stack flexDirection="row" flex={1}>
+                                    {data?.edad?.map((item, index) => (
+                                        <Stack
+                                            key={index}
+                                            direction="row"
+                                            alignItems="center"
+                                            // justifyContent="space-between"
+                                            spacing={1.25}
+                                            flex={1}
+                                        >
+                                            <Box
+                                                component="span"
+                                                sx={{
+                                                    width: 20,
+                                                    height: 20,
+                                                    // borderRadius: 10,
+                                                    backgroundColor:
+                                                        COLORS[index],
+                                                }}
+                                            />
+                                            <Typography level="body" noWrap>
+                                                {item.label} (
+                                                {formatNumber(item.value)})
+                                            </Typography>
+                                        </Stack>
+                                    ))}
+                                </Stack>
+                            </Stack>
                         </CardContent>
                     </Card>
                 </Grid>
