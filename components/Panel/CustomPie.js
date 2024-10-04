@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/es";
 
 import { formatNumber } from "@/components/utils";
+import { Tooltip } from "@mui/joy";
 
 dayjs.locale("es");
 
@@ -143,15 +144,23 @@ export default function CustomPie({ data = [], slotProps = {} }) {
                                         mr: "5px !important",
                                     }}
                                 />
-                                <Typography
-                                    level="body"
-                                    noWrap
-                                    sx={{
-                                        ml: "0 !important",
-                                    }}
+                                <Tooltip
+                                    title={`${item.label} (${formatNumber(
+                                        item.value
+                                    )})`}
+                                    arrow
                                 >
-                                    {item.label} ({formatNumber(item.value)})
-                                </Typography>
+                                    <Typography
+                                        level="body"
+                                        noWrap
+                                        sx={{
+                                            ml: "0 !important",
+                                        }}
+                                    >
+                                        {item.label} ({formatNumber(item.value)}
+                                        )
+                                    </Typography>
+                                </Tooltip>
                             </Stack>
                         </Grid>
                     ))}
