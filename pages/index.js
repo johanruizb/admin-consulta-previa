@@ -28,33 +28,9 @@ import fetcher from "@/components/fetcher";
 import { formatNumber, getURL } from "@/components/utils";
 
 import useSWR from "swr";
+import CustomPie from "@/components/Panel/CustomPie";
 
 dayjs.locale("es");
-
-const COLORS = [
-    "#1f77b4",
-    "#ff7f0e",
-    "#2ca02c",
-    "#d62728",
-    "#9467bd",
-    "#8c564b",
-    "#e377c2",
-    "#7f7f7f",
-    "#bcbd22",
-    "#17becf",
-    "#a6cee3",
-    "#1f78b4",
-    "#b2df8a",
-    "#33a02c",
-    "#fb9a99",
-    "#e31a1c",
-    "#fdbf6f",
-    "#ff7f00",
-    "#cab2d6",
-    "#6a3d9a",
-    "#ffff99",
-    "#b15928",
-];
 
 export default function Page() {
     const { data, isLoading } = useSWR(
@@ -272,20 +248,18 @@ export default function Page() {
                             <Typography level="title-lg">
                                 Personas por rol
                             </Typography>
-                            <PieChart
-                                series={[
-                                    {
-                                        data: data?.rol ?? [],
-                                        startAngle: -180,
-                                        endAngle: 0,
-                                        arcLabel: (item) => `${item.value}`,
-                                    },
-                                ]}
-                                height={250}
-                                // width="100%"
-                                sx={{
-                                    [`& .${pieArcLabelClasses.root}`]: {
-                                        fontWeight: "bold",
+                            <CustomPie
+                                data={data?.rol}
+                                slotProps={{
+                                    pie: {
+                                        root: {
+                                            sx: {
+                                                width: {
+                                                    xs: "100%",
+                                                    md: "20%",
+                                                },
+                                            },
+                                        },
                                     },
                                 }}
                             />
@@ -304,123 +278,7 @@ export default function Page() {
                             <Typography level="title-lg">
                                 Personas por rangos de edad
                             </Typography>
-                            <Stack
-                                flexDirection="row"
-                                flexWrap="wrap"
-                                flex={1}
-                                sx={{
-                                    "& > *:first-of-type": {
-                                        "& > *:first-of-type": {
-                                            width: "200px !important",
-                                            flexGrow: "unset !important",
-                                            "& > *:first-of-type": {
-                                                "& > *:first-of-type": {
-                                                    transform:
-                                                        "translateY(-50px) scale(1.5)",
-                                                },
-                                            },
-                                        },
-                                    },
-                                }}
-                            >
-                                <Box
-                                    sx={{
-                                        width: { xs: "100%", md: "40%" },
-                                        // height: "100%",
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <PieChart
-                                        colors={COLORS}
-                                        series={[
-                                            {
-                                                data: data?.edad ?? [],
-                                                arcLabel: (item) =>
-                                                    `${item.value}`,
-                                                arcLabelMinAngle: 35,
-                                                arcLabelRadius: "60%",
-                                                // paddingAngle: 5,
-                                                // innerRadius: 60,
-                                                // outerRadius: 80,
-                                            },
-                                        ]}
-                                        height={200}
-                                        width={250}
-                                        sx={{
-                                            [`& .${pieArcLabelClasses.root}`]: {
-                                                fontWeight: "bold",
-                                            },
-                                        }}
-                                        slotProps={{
-                                            legend: {
-                                                hidden: true,
-                                            },
-                                        }}
-                                    />
-                                </Box>
-                                <Box
-                                    sx={{
-                                        width: { xs: "100%", md: "60%" },
-                                    }}
-                                >
-                                    <Grid
-                                        container
-                                        // flexDirection="row"
-                                        alignItems="center"
-                                        alignContent="center"
-                                        spacing={0.25}
-                                        flex={1}
-                                        sx={{
-                                            height: "100%",
-                                        }}
-                                    >
-                                        {data?.edad?.map((item, index) => (
-                                            <Grid
-                                                size={6}
-                                                key={index}
-                                                sx={{
-                                                    height: "fit-content !important",
-                                                }}
-                                            >
-                                                <Stack
-                                                    direction="row"
-                                                    alignItems="center"
-                                                    // justifyContent="space-between"
-                                                    spacing={1.25}
-                                                    flex={1}
-                                                >
-                                                    <Box
-                                                        component="span"
-                                                        sx={{
-                                                            width: 20,
-                                                            height: 20,
-                                                            // borderRadius: 10,
-                                                            backgroundColor:
-                                                                COLORS[index],
-                                                            mr: "5px !important",
-                                                        }}
-                                                    />
-                                                    <Typography
-                                                        level="body"
-                                                        noWrap
-                                                        sx={{
-                                                            ml: "0 !important",
-                                                        }}
-                                                    >
-                                                        {item.label} (
-                                                        {formatNumber(
-                                                            item.value
-                                                        )}
-                                                        )
-                                                    </Typography>
-                                                </Stack>
-                                            </Grid>
-                                        ))}
-                                    </Grid>
-                                </Box>
-                            </Stack>
+                            <CustomPie data={data?.edad} />
                         </CardContent>
                     </Card>
                 </Grid>
@@ -436,28 +294,7 @@ export default function Page() {
                             <Typography level="title-lg">
                                 Personas por genero
                             </Typography>
-                            <PieChart
-                                series={[
-                                    {
-                                        data: data?.genero ?? [],
-                                        // innerRadius: 50,
-                                        // outerRadius: 80,
-                                        // paddingAngle: 5,
-                                        // cornerRadius: 5,
-                                        // startAngle: -45,
-                                        // endAngle: 225,
-                                        arcLabel: (item) => `${item.value}`,
-                                        arcLabelMinAngle: 35,
-                                        arcLabelRadius: "60%",
-                                    },
-                                ]}
-                                height={250}
-                                sx={{
-                                    [`& .${pieArcLabelClasses.root}`]: {
-                                        fontWeight: "bold",
-                                    },
-                                }}
-                            />
+                            <CustomPie data={data?.genero} />
                         </CardContent>
                     </Card>
                 </Grid>
@@ -473,28 +310,7 @@ export default function Page() {
                             <Typography level="title-lg">
                                 Personas por zona
                             </Typography>
-                            <PieChart
-                                series={[
-                                    {
-                                        data: data?.zona ?? [],
-                                        // innerRadius: 50,
-                                        // outerRadius: 80,
-                                        // paddingAngle: 5,
-                                        // cornerRadius: 5,
-                                        // startAngle: -45,
-                                        // endAngle: 225,
-                                        arcLabel: (item) => `${item.value}`,
-                                        arcLabelMinAngle: 35,
-                                        arcLabelRadius: "60%",
-                                    },
-                                ]}
-                                height={250}
-                                sx={{
-                                    [`& .${pieArcLabelClasses.root}`]: {
-                                        fontWeight: "bold",
-                                    },
-                                }}
-                            />
+                            <CustomPie data={data?.zona} />
                         </CardContent>
                     </Card>
                 </Grid>
@@ -511,25 +327,17 @@ export default function Page() {
                                 Personas interesadas en continuar con el curso
                                 de 120 horas
                             </Typography>
-                            <PieChart
-                                series={[
-                                    {
-                                        data: data?.continuar_curso ?? [],
-                                        // innerRadius: 50,
-                                        // outerRadius: 80,
-                                        // paddingAngle: 5,
-                                        // cornerRadius: 5,
-                                        // startAngle: -45,
-                                        // endAngle: 225,
-                                        arcLabel: (item) => `${item.value}`,
-                                        arcLabelMinAngle: 35,
-                                        arcLabelRadius: "60%",
-                                    },
-                                ]}
-                                height={250}
-                                sx={{
-                                    [`& .${pieArcLabelClasses.root}`]: {
-                                        fontWeight: "bold",
+                            <CustomPie
+                                data={data?.continuar_curso}
+                                slotProps={{
+                                    item: {
+                                        root: { size: 12 },
+                                        stack: {
+                                            justifyContent: {
+                                                xs: "center",
+                                                md: "normal",
+                                            },
+                                        },
                                     },
                                 }}
                             />
