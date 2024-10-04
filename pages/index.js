@@ -292,7 +292,24 @@ export default function Page() {
                             <Typography level="title-lg">
                                 Personas por genero
                             </Typography>
-                            <CustomPie data={data?.genero} />
+                            <CustomPie
+                                data={data?.genero}
+                                slotProps={{
+                                    item: {
+                                        root: {
+                                            size: 12,
+                                        },
+                                        stack: {
+                                            sx: {
+                                                justifyContent: {
+                                                    xs: "center",
+                                                    md: "normal",
+                                                },
+                                            },
+                                        },
+                                    },
+                                }}
+                            />
                         </CardContent>
                     </Card>
                 </Grid>
