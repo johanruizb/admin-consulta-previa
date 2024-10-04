@@ -64,8 +64,6 @@ function AsyncSelect({ inputProps }) {
         <Controller
             control={control}
             render={({ field, fieldState: { error } }) => {
-                console.log("field.value", field.value);
-
                 return (
                     <FormControl
                         error={Boolean(error?.type || error?.types)}

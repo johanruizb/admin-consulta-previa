@@ -84,7 +84,6 @@ function joinURL(base, path) {
 
 export function getURL(url = "") {
     const result = joinURL(process.env.NEXT_PUBLIC_ORIGIN_URL, url);
-    // console.log(result);
     return result;
 }
 
