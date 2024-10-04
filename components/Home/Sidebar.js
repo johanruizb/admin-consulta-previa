@@ -3,7 +3,6 @@
 // import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
 // import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 // import QuestionAnswerRoundedIcon from "@mui/icons-material/QuestionAnswerRounded";
-import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 
@@ -30,7 +29,6 @@ import ColorSchemeToggle from "./ColorSchemeToggle";
 import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
-import DevWrapper from "../Wrapper/DevWrapper";
 import usePermissionContext from "./permissionContext/usePermission";
 import Profile from "./Profile";
 
@@ -176,27 +174,23 @@ export default function Sidebar() {
                                 theme.vars.radius.sm,
                         }}
                     >
-                        <DevWrapper>
-                            <ListItem>
-                                <ListItemButton
-                                    component="a"
-                                    // href="/"
-                                    onClick={() => handleRouteChange("/")}
-                                    selected={
-                                        mounted
-                                            ? location.pathname == "/"
-                                            : false
-                                    }
-                                >
-                                    <HomeRoundedIcon />
-                                    <ListItemContent>
-                                        <Typography level="title-sm">
-                                            Inicio
-                                        </Typography>
-                                    </ListItemContent>
-                                </ListItemButton>
-                            </ListItem>
-                        </DevWrapper>
+                        <ListItem>
+                            <ListItemButton
+                                component="a"
+                                // href="/"
+                                onClick={() => handleRouteChange("/")}
+                                selected={
+                                    mounted ? location.pathname == "/" : false
+                                }
+                            >
+                                <HomeRoundedIcon />
+                                <ListItemContent>
+                                    <Typography level="title-sm">
+                                        Inicio
+                                    </Typography>
+                                </ListItemContent>
+                            </ListItemButton>
+                        </ListItem>
 
                         <ListItem>
                             {hasPermission("usuario.view_persona") && (
