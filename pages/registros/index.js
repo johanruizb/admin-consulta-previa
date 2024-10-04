@@ -98,90 +98,74 @@ export default function Registros({ children }) {
                     justifyContent: "space-between",
                 }}
             >
-                <Stack spacing={1.25}>
-                    <Typography level="h2" component="h1">
-                        Registros
-                    </Typography>
-                    <Stack direction="row" spacing={1.25 / 2}>
-                        <Card variant="outlined">
-                            <CardContent>
-                                <Typography level="title-md">
-                                    Personas registradas
+                <Typography level="h2" component="h1">
+                    Registros
+                </Typography>
+                <Stack direction="row" spacing={1.25 / 2}>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Typography level="title-md">
+                                Personas registradas
+                            </Typography>
+                            <Stack
+                                flex={1}
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                <Typography level="h3">
+                                    {inscritosIsLoading ? (
+                                        <CircularProgress size="sm" />
+                                    ) : (
+                                        <CountUp
+                                            end={inscritos?.total}
+                                            duration={1.25}
+                                            separator="."
+                                        />
+                                    )}
                                 </Typography>
+                            </Stack>
+                        </CardContent>
+                    </Card>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Typography level="title-md">
+                                Personas validadas (
+                                {inscritos?.percentage ? (
+                                    <CountUp
+                                        end={inscritos?.percentage}
+                                        decimals={2}
+                                        duration={0.25}
+                                        separator="."
+                                    />
+                                ) : (
+                                    0
+                                )}
+                                %)
+                            </Typography>
+                            <Stack flex={1} spacing={0} justifyContent="center">
                                 <Stack
-                                    flex={1}
+                                    direction="row"
+                                    // alignItems="center"
+                                    alignItems="baseline"
                                     justifyContent="center"
-                                    alignItems="center"
+                                    spacing={1.25}
                                 >
                                     <Typography level="h3">
                                         {inscritosIsLoading ? (
                                             <CircularProgress size="sm" />
                                         ) : (
                                             <CountUp
-                                                end={inscritos?.total}
+                                                end={inscritos?.validated}
                                                 duration={1.25}
                                                 separator="."
                                             />
                                         )}
                                     </Typography>
                                 </Stack>
-                            </CardContent>
-                        </Card>
-                        <Card variant="outlined">
-                            <CardContent>
-                                <Typography level="title-md">
-                                    Personas validadas (
-                                    {inscritos?.percentage ? (
-                                        <CountUp
-                                            end={inscritos?.percentage}
-                                            decimals={2}
-                                            duration={0.25}
-                                            separator="."
-                                        />
-                                    ) : (
-                                        0
-                                    )}
-                                    %)
-                                </Typography>
-                                <Stack
-                                    flex={1}
-                                    spacing={0}
-                                    justifyContent="center"
-                                >
-                                    <Stack
-                                        direction="row"
-                                        // alignItems="center"
-                                        alignItems="baseline"
-                                        justifyContent="center"
-                                        spacing={1.25}
-                                    >
-                                        <Typography level="h3">
-                                            {inscritosIsLoading ? (
-                                                <CircularProgress size="sm" />
-                                            ) : (
-                                                <CountUp
-                                                    end={inscritos?.validated}
-                                                    duration={1.25}
-                                                    separator="."
-                                                />
-                                            )}
-                                        </Typography>
-                                    </Stack>
-                                </Stack>
-                            </CardContent>
-                        </Card>
-                    </Stack>
+                            </Stack>
+                        </CardContent>
+                    </Card>
                 </Stack>
-                <DevWrapper>
-                    <Button
-                        color="primary"
-                        startDecorator={<DownloadRoundedIcon />}
-                        size="sm"
-                        loading={isLoading}
-                    >
-                        Descargar XLSX
-                    </Button>
-                </DevWrapper>
             </Box>
             {isLoading ? (
                 <Stack
