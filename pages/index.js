@@ -93,7 +93,13 @@ export default function Page() {
                     Estadísticas
                 </Typography>
             </Box>
-            <Grid container spacing={1.25 / 2}>
+            <Grid
+                container
+                spacing={1.25 / 2}
+                sx={{
+                    pb: "10px",
+                }}
+            >
                 <Grid size={{ xs: 12, md: 4 }}>
                     <Card
                         variant="outlined"
@@ -250,7 +256,7 @@ export default function Page() {
                                         arcLabel: (item) => `${item.value}`,
                                     },
                                 ]}
-                                height={150}
+                                height={250}
                                 // width="100%"
                                 sx={{
                                     [`& .${pieArcLabelClasses.root}`]: {
@@ -279,8 +285,8 @@ export default function Page() {
                                         data: data?.edad ?? [],
                                         // innerRadius: 50,
                                         // outerRadius: 80,
-                                        paddingAngle: 5,
-                                        cornerRadius: 5,
+                                        // paddingAngle: 5,
+                                        // cornerRadius: 5,
                                         // startAngle: -45,
                                         // endAngle: 225,
                                         arcLabel: (item) => `${item.value}`,
@@ -288,7 +294,7 @@ export default function Page() {
                                         arcLabelRadius: "60%",
                                     },
                                 ]}
-                                height={150}
+                                height={250}
                                 sx={{
                                     [`& .${pieArcLabelClasses.root}`]: {
                                         fontWeight: "bold",
@@ -316,8 +322,8 @@ export default function Page() {
                                         data: data?.genero ?? [],
                                         // innerRadius: 50,
                                         // outerRadius: 80,
-                                        paddingAngle: 5,
-                                        cornerRadius: 5,
+                                        // paddingAngle: 5,
+                                        // cornerRadius: 5,
                                         // startAngle: -45,
                                         // endAngle: 225,
                                         arcLabel: (item) => `${item.value}`,
@@ -325,7 +331,7 @@ export default function Page() {
                                         arcLabelRadius: "60%",
                                     },
                                 ]}
-                                height={150}
+                                height={250}
                                 sx={{
                                     [`& .${pieArcLabelClasses.root}`]: {
                                         fontWeight: "bold",
@@ -353,8 +359,8 @@ export default function Page() {
                                         data: data?.zona ?? [],
                                         // innerRadius: 50,
                                         // outerRadius: 80,
-                                        paddingAngle: 5,
-                                        cornerRadius: 5,
+                                        // paddingAngle: 5,
+                                        // cornerRadius: 5,
                                         // startAngle: -45,
                                         // endAngle: 225,
                                         arcLabel: (item) => `${item.value}`,
@@ -362,7 +368,7 @@ export default function Page() {
                                         arcLabelRadius: "60%",
                                     },
                                 ]}
-                                height={150}
+                                height={250}
                                 sx={{
                                     [`& .${pieArcLabelClasses.root}`]: {
                                         fontWeight: "bold",
@@ -391,8 +397,8 @@ export default function Page() {
                                         data: data?.continuar_curso ?? [],
                                         // innerRadius: 50,
                                         // outerRadius: 80,
-                                        paddingAngle: 5,
-                                        cornerRadius: 5,
+                                        // paddingAngle: 5,
+                                        // cornerRadius: 5,
                                         // startAngle: -45,
                                         // endAngle: 225,
                                         arcLabel: (item) => `${item.value}`,
@@ -400,7 +406,7 @@ export default function Page() {
                                         arcLabelRadius: "60%",
                                     },
                                 ]}
-                                height={150}
+                                height={250}
                                 sx={{
                                     [`& .${pieArcLabelClasses.root}`]: {
                                         fontWeight: "bold",
