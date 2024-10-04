@@ -7,7 +7,7 @@ import Link from "@mui/joy/Link";
 import Typography from "@mui/joy/Typography";
 
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 
 import Layout from "@/components/Home/Layout";
@@ -23,14 +23,14 @@ import useSWR from "swr";
 
 import fetcher from "@/components/fetcher";
 import { getURL } from "@/components/utils";
-import DevWrapper from "@/components/Wrapper/DevWrapper";
 
 import Alert from "@/components/Alert";
 import { Card, CardContent } from "@mui/joy";
 import { useRouter } from "next/navigation";
 
-import CountUp from "react-countup";
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
+import CountUp from "react-countup";
+import ExportUsers from "@/components/Registros/ExportUsers";
 
 export default function Registros({ children }) {
     const { isLoading: permissionIsLoading, hasPermission } =
@@ -98,9 +98,12 @@ export default function Registros({ children }) {
                     justifyContent: "space-between",
                 }}
             >
-                <Typography level="h2" component="h1">
-                    Registros
-                </Typography>
+                <Stack spacing={1.25 / 2}>
+                    <Typography level="h2" component="h1">
+                        Registros
+                    </Typography>
+                    <ExportUsers />
+                </Stack>
                 <Stack direction="row" spacing={1.25 / 2}>
                     <Card variant="outlined">
                         <CardContent>
