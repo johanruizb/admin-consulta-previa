@@ -25,14 +25,22 @@ import { getURL } from "@/components/utils";
 
 import { useSessionStorage } from "@uidotdev/usehooks";
 
-import useSWR from "swr";
 import useSWRImmutable from "swr/immutable";
 
-import Registros from ".";
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 import Navigate from "@/components/Navigate";
-import { Box, List, ListItem, ListItemContent } from "@mui/joy";
+import {
+    Box,
+    List,
+    ListItem,
+    ListItemContent,
+    ListItemDecorator,
+    Typography,
+} from "@mui/joy";
 import dayjs from "dayjs";
+import Registros from ".";
+
+import { getIconHistory } from "@/components/Registros/functions";
 
 export default function Wrapper() {
     const { isLoading: permissionIsLoading, hasPermission } =
@@ -232,31 +240,47 @@ function View({ defaultValues }) {
                             </form>
                             <Box
                                 sx={{
-                                    mt: "20px",
+                                    mt: "10px",
                                 }}
                             >
                                 <DialogTitle>Historial de cambios</DialogTitle>
-                                <List>
+                                <List
+                                    size="lg"
+                                    variant="outlined"
+                                    sx={{ borderRadius: "sm", mt: "10px" }}
+                                >
                                     {defaultValues.historial.map(
                                         (item, index) => (
                                             <ListItem key={index}>
+                                                <ListItemDecorator>
+                                                    {getIconHistory(
+                                                        item.history_type
+                                                    )}
+                                                </ListItemDecorator>
                                                 <ListItemContent>
-                                                    {dayjs(
-                                                        item.history_date
-                                                    ).format(
-                                                        "DD/MM/YYYY HH:mm:ss A"
-                                                    )}{" "}
-                                                    » {item.history_type}{" "}
-                                                    {item.has_user
-                                                        ? `por ${
-                                                              item.history_user_fullname
-                                                                  ? item.history_user_fullname +
-                                                                    " (" +
-                                                                    item.history_user_username +
-                                                                    ")"
-                                                                  : item.history_user_username
-                                                          }`
-                                                        : ""}
+                                                    <Typography level="title-sm">
+                                                        {item.history_type}{" "}
+                                                        {item.has_user
+                                                            ? `por ${
+                                                                  item.history_user_fullname
+                                                                      ? item.history_user_fullname +
+                                                                        " (" +
+                                                                        item.history_user_username +
+                                                                        ")"
+                                                                      : item.history_user_username
+                                                              }`
+                                                            : ""}
+                                                    </Typography>
+                                                    <Typography
+                                                        level="body-sm"
+                                                        noWrap
+                                                    >
+                                                        {dayjs(
+                                                            item.history_date
+                                                        ).format(
+                                                            "DD/MM/YYYY HH:mm:ss A"
+                                                        )}
+                                                    </Typography>
                                                 </ListItemContent>
                                             </ListItem>
                                         )
