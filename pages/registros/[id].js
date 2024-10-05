@@ -56,6 +56,7 @@ export default function Wrapper() {
         isLoading,
     } = useSWRImmutable(getURL("/api/usuarios/inscritos/" + id), fetcher, {
         revalidateOnMount: true,
+        refreshInterval: false,
     });
 
     useEffect(() => {
