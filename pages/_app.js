@@ -14,6 +14,7 @@ import {
     extendTheme as materialExtendTheme,
     ThemeProvider,
 } from "@mui/material/styles";
+import { SWRConfig } from "swr";
 
 const customTheme = extendTheme({
     colorSchemeSelector: "media",
@@ -36,7 +37,24 @@ export default function App({ Component, pageProps }) {
                 >
                     <CssBaseline enableColorScheme />
                     <PermissionProvider>
-                        <Component {...pageProps} />
+                        <SWRConfig
+                            value={{
+                                revalidateOnMount: true,
+                                revalidateOnFocus: false,
+                                refreshInterval: 15000,
+                                fetcher: async (...args) => {
+                                    const res = await fetch(...args);
+                                    return res.ok
+                                        ? res.json()
+                                        : Promise.reject({
+                                              status: res.status,
+                                              statusText: res.statusText,
+                                          });
+                                },
+                            }}
+                        >
+                            <Component {...pageProps} />
+                        </SWRConfig>
                     </PermissionProvider>
                 </ThemeProvider>
             </JoyCssVarsProvider>
