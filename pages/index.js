@@ -290,7 +290,7 @@ export default function Page() {
                     >
                         <CardContent>
                             <Typography level="title-lg">
-                                Personas por genero
+                                Personas por género
                             </Typography>
                             <CustomPie
                                 data={data?.genero}
