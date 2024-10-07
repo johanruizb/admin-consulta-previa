@@ -40,8 +40,6 @@ export default function App({ Component, pageProps }) {
                         <SWRConfig
                             value={{
                                 revalidateOnMount: true,
-                                revalidateOnFocus: false,
-                                refreshInterval: 15000,
                                 fetcher: async (...args) => {
                                     const res = await fetch(...args);
                                     return res.ok
