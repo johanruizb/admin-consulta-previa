@@ -30,6 +30,8 @@ import useSWR from "swr";
 
 dayjs.locale("es");
 
+import { BarChart } from "@mui/x-charts/BarChart";
+
 export default function Page() {
     const { data, isLoading } = useSWR(
         getURL("api/usuarios/estadisticas"),
@@ -335,6 +337,35 @@ export default function Page() {
                                 de 120 horas
                             </Typography>
                             <CustomPie data={data?.continuar_curso} />
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid size={{ md: 12 }}>
+                    <Card
+                        variant="outlined"
+                        sx={{
+                            // width: "100%",
+                            height: "100%",
+                        }}
+                    >
+                        <CardContent>
+                            <Typography level="title-lg">
+                                Personas por departamento
+                            </Typography>
+
+                            <BarChart
+                                dataset={data?.departamento || []}
+                                xAxis={[
+                                    { scaleType: "band", dataKey: "label" },
+                                ]}
+                                series={[
+                                    {
+                                        dataKey: "value",
+                                        // label: "London",
+                                    },
+                                ]}
+                                height={400}
+                            />
                         </CardContent>
                     </Card>
                 </Grid>
