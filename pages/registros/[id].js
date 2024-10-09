@@ -265,6 +265,8 @@ function View({ defaultValues }) {
                                                                         item.history_user_username +
                                                                         ")"
                                                                       : item.history_user_username
+                                                              } — ${
+                                                                  item.history_user_role
                                                               }`
                                                             : ""}
                                                     </Typography>
