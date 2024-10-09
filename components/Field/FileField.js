@@ -1,37 +1,64 @@
+import {
+    Box,
+    Button,
+    CircularProgress,
+    IconButton,
+    Stack,
+    Tooltip,
+} from "@mui/joy";
 import AspectRatio from "@mui/joy/AspectRatio";
 import FormControl from "@mui/joy/FormControl";
 import FormHelperText from "@mui/joy/FormHelperText";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
-import { Box, CircularProgress, IconButton } from "@mui/joy";
 
 import { Controller, useFormContext } from "react-hook-form";
 
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { getURL } from "../utils";
-import { forwardRef, Fragment, useEffect, useState } from "react";
-import { useHover } from "@uidotdev/usehooks";
 
+import FileUploadIcon from "@mui/icons-material/FileUpload";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import Image from "next/image";
 
-const CustomImage = forwardRef(function CustomImage({ url }, ref) {
+import Image from "next/image";
+import { useDropzone } from "react-dropzone";
+
+const CustomImage = forwardRef(function CustomImage({ url, field }, ref) {
+    const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+        accept: {
+            "image/png": [".png", ".jpg", ".jpeg"],
+        },
+        multiple: false,
+        maxSize: 10 * 1024 * 1024,
+        onDropAccepted: (files) => {
+            field.onChange(files[0]);
+        },
+    });
+
+    const ratioRef = useRef();
+    const inputRef = useRef();
+
     const [objectURL, setObjectURL] = useState();
-    const [hoverRef, hovering] = useHover();
 
     useEffect(() => {
-        fetch(getURL("api/" + url)).then((response) => {
-            response.blob().then((blob) => {
-                const url = window.URL.createObjectURL(blob);
-                setObjectURL(url);
+        if (typeof url === "string")
+            fetch(getURL("api/" + url)).then((response) => {
+                response.blob().then((blob) => {
+                    const url = window.URL.createObjectURL(blob);
+                    setObjectURL(url);
+                });
             });
-        });
+        else if (url instanceof File) {
+            const newURL = window.URL.createObjectURL(url);
+            setObjectURL(newURL);
+        }
 
         return () => {
             if (objectURL) {
                 window.URL.revokeObjectURL(objectURL);
             }
         };
-    }, []);
+    }, [url]);
 
     const handleClick = (e) => {
         e.preventDefault();
@@ -43,36 +70,64 @@ const CustomImage = forwardRef(function CustomImage({ url }, ref) {
         };
     };
 
+    const handleReplace = () => {
+        console.log("Replace » inputRef.current", inputRef.current);
+        inputRef.current.click();
+    };
+
     return (
-        <AspectRatio ratio={16 / 9} ref={hoverRef} onClick={handleClick}>
+        <AspectRatio ratio={16 / 9} ref={ratioRef}>
             <Box>
                 {objectURL ? (
                     <Image
                         src={objectURL}
                         alt="Imagen"
                         ref={ref}
-                        width={hoverRef?.current?.clientWidth ?? 0}
-                        height={hoverRef?.current?.clientHeight ?? 0}
+                        width={ratioRef?.current?.clientWidth ?? 0}
+                        height={ratioRef?.current?.clientHeight ?? 0}
                     />
                 ) : (
                     <CircularProgress variant="solid" color="neutral" />
                 )}
-                {/* <img src={objectURL} alt="Imagen" ref={ref} /> */}
-                {hovering && (
-                    <IconButton
+                <Stack
+                    direction="row"
+                    spacing={1.25}
+                    sx={{
+                        position: "absolute",
+                        right: "50%",
+                        top: "50%",
+                        transform: "translate(50%, -50%)",
+                    }}
+                >
+                    <Tooltip
+                        title="Abrir en nueva pestaña"
+                        arrow
+                        variant="soft"
+                    >
+                        <IconButton
+                            color="primary"
+                            variant="solid"
+                            onClick={handleClick}
+                        >
+                            <OpenInNewIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Button
                         color="primary"
                         variant="solid"
-                        sx={{
-                            position: "absolute",
-                            right: "50%",
-                            top: "50%",
-                            transform: "translate(50%, -50%)",
-                        }}
-                        onClick={handleClick}
+                        onClick={handleReplace}
+                        startDecorator={<FileUploadIcon />}
+                        {...getRootProps()}
                     >
-                        <OpenInNewIcon />
-                    </IconButton>
-                )}
+                        Reemplazar imagen
+                        <input
+                            type="file"
+                            hidden
+                            {...field}
+                            {...getInputProps()}
+                        />
+                    </Button>
+                </Stack>
             </Box>
         </AspectRatio>
     );
@@ -101,7 +156,7 @@ export default function FileField({ inputProps }) {
     return (
         <Controller
             control={control}
-            render={({ field: { value } }) => {
+            render={({ field: { value, ...field } }) => {
                 return (
                     <FormControl
                         sx={{
@@ -119,6 +174,7 @@ export default function FileField({ inputProps }) {
                                 slotProps={{
                                     root: {
                                         url: value,
+                                        field,
                                     },
                                 }}
                             />
