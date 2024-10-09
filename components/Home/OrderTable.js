@@ -24,7 +24,8 @@ import { chunk, debounce } from "lodash";
 
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 
-import { CircularProgress, Stack } from "@mui/joy";
+import CircularProgress from "@mui/joy/CircularProgress";
+import Stack from "@mui/joy/Stack";
 import { v4 as uuidv4 } from "uuid";
 import usePermissionContext from "./permissionContext/usePermission";
 

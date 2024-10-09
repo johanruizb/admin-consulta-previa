@@ -1,11 +1,9 @@
-import {
-    Box,
-    Button,
-    CircularProgress,
-    IconButton,
-    Stack,
-    Tooltip,
-} from "@mui/joy";
+import Box from "@mui/joy/Box";
+import Button from "@mui/joy/Button";
+import CircularProgress from "@mui/joy/CircularProgress";
+import IconButton from "@mui/joy/IconButton";
+import Stack from "@mui/joy/Stack";
+import Tooltip from "@mui/joy/Tooltip";
 import AspectRatio from "@mui/joy/AspectRatio";
 import FormControl from "@mui/joy/FormControl";
 import FormHelperText from "@mui/joy/FormHelperText";

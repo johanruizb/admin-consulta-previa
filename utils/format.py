@@ -68,7 +68,7 @@ def convert_imports_mui(file_path):
         unmodified_files += 1
 
 
-project_path = [os.path.abspath("components"), os.path.abspath("pages")]
+project_path = [os.path.abspath("components"), os.path.abspath("pages"), os.path.abspath("hooks")]
 
 for path in project_path:
     if not os.path.exists(path):

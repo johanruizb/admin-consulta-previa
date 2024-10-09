@@ -4,7 +4,8 @@ import IconButton from "@mui/joy/IconButton";
 
 import { useEffect, useState } from "react";
 
-import { CircularProgress, Tooltip } from "@mui/joy";
+import CircularProgress from "@mui/joy/CircularProgress";
+import Tooltip from "@mui/joy/Tooltip";
 import { useColorScheme as useJoyColorScheme } from "@mui/joy/styles";
 import { useColorScheme as useMaterialColorScheme } from "@mui/material/styles";
 

@@ -29,14 +29,12 @@ import useSWRImmutable from "swr/immutable";
 
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 import Navigate from "@/components/Navigate";
-import {
-    Box,
-    List,
-    ListItem,
-    ListItemContent,
-    ListItemDecorator,
-    Typography,
-} from "@mui/joy";
+import Box from "@mui/joy/Box";
+import List from "@mui/joy/List";
+import ListItem from "@mui/joy/ListItem";
+import ListItemContent from "@mui/joy/ListItemContent";
+import ListItemDecorator from "@mui/joy/ListItemDecorator";
+import Typography from "@mui/joy/Typography";
 import dayjs from "dayjs";
 import Registros from ".";
 

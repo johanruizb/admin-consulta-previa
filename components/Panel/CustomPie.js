@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/es";
 
 import { formatNumber } from "@/components/utils";
-import { Tooltip } from "@mui/joy";
+import Tooltip from "@mui/joy/Tooltip";
 
 dayjs.locale("es");
 

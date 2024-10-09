@@ -1,4 +1,4 @@
-import { Typography } from "@mui/joy";
+import Typography from "@mui/joy/Typography";
 import FormControl from "@mui/joy/FormControl";
 import FormHelperText from "@mui/joy/FormHelperText";
 import FormLabel from "@mui/joy/FormLabel";

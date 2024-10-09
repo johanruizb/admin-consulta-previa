@@ -18,25 +18,23 @@ import Pagination from "@mui/material/Pagination";
 
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
-import { Stack } from "@mui/material";
+import Stack from "@mui/material/Stack";
 
 import dayjs from "dayjs";
 
 import { chunk, cloneDeep, debounce } from "lodash";
 
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
-import {
-    Button,
-    CircularProgress,
-    Link,
-    List,
-    ListDivider,
-    ListItem,
-    ListItemContent,
-    Modal,
-    ModalClose,
-    ModalDialog,
-} from "@mui/joy";
+import Button from "@mui/joy/Button";
+import CircularProgress from "@mui/joy/CircularProgress";
+import Link from "@mui/joy/Link";
+import List from "@mui/joy/List";
+import ListDivider from "@mui/joy/ListDivider";
+import ListItem from "@mui/joy/ListItem";
+import ListItemContent from "@mui/joy/ListItemContent";
+import Modal from "@mui/joy/Modal";
+import ModalClose from "@mui/joy/ModalClose";
+import ModalDialog from "@mui/joy/ModalDialog";
 import usePermissionContext from "./permissionContext/usePermission";
 import Fuse from "fuse.js";
 

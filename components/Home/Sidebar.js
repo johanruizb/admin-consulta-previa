@@ -26,7 +26,7 @@ import UnivalleIcon from "../Icons/Univalle";
 import { closeSidebar } from "../utils";
 import ColorSchemeToggle from "./ColorSchemeToggle";
 
-import { CircularProgress } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 import usePermissionContext from "./permissionContext/usePermission";

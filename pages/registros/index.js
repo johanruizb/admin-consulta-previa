@@ -25,7 +25,8 @@ import fetcher from "@/components/fetcher";
 import { getURL } from "@/components/utils";
 
 import Alert from "@/components/Alert";
-import { Card, CardContent } from "@mui/joy";
+import Card from "@mui/joy/Card";
+import CardContent from "@mui/joy/CardContent";
 import { useRouter } from "next/navigation";
 
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
