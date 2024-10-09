@@ -5,6 +5,7 @@
     "scripts": {
         "update": "ncu",
         "upgrade": "ncu -u --reject eslint && npm install",
+        "format": "py .\\utils\\format.py",
         "dev": "next dev -p 2418",
         "build": "next build",
         "start": "next start -p 2418",
@@ -27,6 +28,7 @@
         "react": "^18",
         "react-countup": "^6.5.3",
         "react-dom": "^18",
+        "react-dropzone": "^14.2.9",
         "react-hook-form": "^7.53.0",
         "react-imask": "^7.6.1",
         "react-simple-maps": "^1.0.0",
