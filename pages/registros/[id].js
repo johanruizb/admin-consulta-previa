@@ -21,7 +21,7 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import fetcher from "@/components/fetcher";
 import FormularioVerificacion from "@/components/Form/constants";
-import { getURL } from "@/components/utils";
+import { convertToFormData, getURL } from "@/components/utils";
 
 import { useSessionStorage } from "@uidotdev/usehooks";
 
@@ -113,19 +113,17 @@ function View({ defaultValues }) {
     const { handleSubmit } = methods;
 
     const onSubmit = (data) => {
+        delete data.historial;
+        const formData = convertToFormData(data);
+
         setLoading(true);
-        delete data.foto_doc1;
-        delete data.foto_doc2;
 
         fetch(getURL("/api/usuarios/inscritos/" + id), {
+            // headers: {
+            //     "Content-Type": "multipart/form-data; boundary=----",
+            // },
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                ...data,
-                info_validada: true,
-            }),
+            body: formData,
         })
             .then(async (response) => {
                 if (response.ok) {
