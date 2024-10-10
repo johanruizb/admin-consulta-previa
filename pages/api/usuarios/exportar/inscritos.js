@@ -48,4 +48,5 @@ export const config = {
     api: {
         responseLimit: false,
     },
+    maxDuration: 30,
 };
