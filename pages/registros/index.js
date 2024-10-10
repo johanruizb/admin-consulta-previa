@@ -102,7 +102,7 @@ export default function Registros({ children }) {
                 <Stack
                     spacing={1.25 / 2}
                     direction={{ xs: "row", md: "column" }}
-                    flex={{ xs: 1, md: "auto" }}
+                    flex={{ xs: 1, md: "unset" }}
                     justifyContent={{ xs: "space-between", md: "normal" }}
                     sx={{
                         width: { xs: "100%", md: "unset" },
