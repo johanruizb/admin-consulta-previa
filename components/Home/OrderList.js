@@ -170,158 +170,163 @@ export default function OrderList({ data, onView }) {
                     </ModalDialog>
                 </Modal>
             </Sheet>
-            {ready ? (
-                <Box sx={{ display: { xs: "block", sm: "none" } }}>
-                    {rows?.chunked[page - 1]?.map((row) => (
-                        <List
-                            key={row.id}
-                            size="sm"
-                            sx={{ "--ListItem-paddingX": 0 }}
-                        >
-                            <ListItem
-                                sx={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    alignItems: "start",
-                                }}
+            <Box sx={{ display: { xs: "block", sm: "none" } }}>
+                {ready ? (
+                    <Fragment>
+                        {rows?.chunked[page - 1]?.map((row) => (
+                            <List
+                                key={row.id}
+                                size="sm"
+                                sx={{ "--ListItem-paddingX": 0 }}
                             >
-                                <ListItemContent
+                                <ListItem
                                     sx={{
                                         display: "flex",
-                                        gap: 2,
+                                        justifyContent: "space-between",
                                         alignItems: "start",
                                     }}
                                 >
-                                    <div>
-                                        <Typography
-                                            gutterBottom
-                                            sx={{ fontWeight: 600 }}
-                                        >
-                                            {row.nombres} {row.apellidos}
-                                        </Typography>
-                                        <Box
-                                            sx={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                gap: 0.5,
-                                                mb: 1,
-                                            }}
-                                        >
-                                            <Typography level="body-xs">
-                                                ({row.tipo_doc_abbreviation}){" "}
-                                                {row.num_doc}
-                                            </Typography>
-                                            <Typography
-                                                level="body-xs"
-                                                sx={{ mx: "5px" }}
-                                            >
-                                                &bull;
-                                            </Typography>
-                                            <Typography level="body-xs">
-                                                {row.telefono1}
-                                            </Typography>
-                                        </Box>
-                                        <Box
-                                            sx={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                justifyContent: "space-between",
-                                                gap: 0.5,
-                                                mb: 1,
-                                            }}
-                                        >
-                                            <Typography level="body-xs">
-                                                {dayjs(row.created_at).format(
-                                                    "DD/MM/YYYY HH:mm:ss A"
-                                                )}
-                                            </Typography>
-                                            <Typography level="body-xs">
-                                                &bull;
-                                            </Typography>
-                                            <Typography level="body-xs">
-                                                {row.estado_name}
-                                            </Typography>
-                                        </Box>
-                                    </div>
-                                </ListItemContent>
-                                <Stack
-                                    sx={{
-                                        display: "flex",
-                                        gap: 1,
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <Chip
-                                        variant="soft"
-                                        size="sm"
-                                        startDecorator={
-                                            {
-                                                true: (
-                                                    <CheckRoundedIcon fontSize="small" />
-                                                ),
-                                                false: (
-                                                    <BlockIcon fontSize="small" />
-                                                ),
-                                            }[row.info_validada]
-                                        }
-                                        color={
-                                            {
-                                                true: "success",
-                                                false: "danger",
-                                            }[row.info_validada]
-                                        }
+                                    <ListItemContent
+                                        sx={{
+                                            display: "flex",
+                                            gap: 2,
+                                            alignItems: "start",
+                                        }}
                                     >
-                                        {row.info_validada
-                                            ? "Validado"
-                                            : "Sin validar"}
-                                    </Chip>
-                                    {hasPermission(
-                                        "usuario.change_persona"
-                                    ) && (
-                                        <Button
-                                            variant="solid"
-                                            color={
-                                                row.info_validada
-                                                    ? "primary"
-                                                    : "success"
+                                        <div>
+                                            <Typography
+                                                gutterBottom
+                                                sx={{ fontWeight: 600 }}
+                                            >
+                                                {row.nombres} {row.apellidos}
+                                            </Typography>
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    gap: 0.5,
+                                                    mb: 1,
+                                                }}
+                                            >
+                                                <Typography level="body-xs">
+                                                    ({row.tipo_doc_abbreviation}
+                                                    ) {row.num_doc}
+                                                </Typography>
+                                                <Typography
+                                                    level="body-xs"
+                                                    sx={{ mx: "5px" }}
+                                                >
+                                                    &bull;
+                                                </Typography>
+                                                <Typography level="body-xs">
+                                                    {row.telefono1}
+                                                </Typography>
+                                            </Box>
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    justifyContent:
+                                                        "space-between",
+                                                    gap: 0.5,
+                                                    mb: 1,
+                                                }}
+                                            >
+                                                <Typography level="body-xs">
+                                                    {dayjs(
+                                                        row.created_at
+                                                    ).format(
+                                                        "DD/MM/YYYY HH:mm:ss A"
+                                                    )}
+                                                </Typography>
+                                                <Typography level="body-xs">
+                                                    &bull;
+                                                </Typography>
+                                                <Typography level="body-xs">
+                                                    {row.estado_name}
+                                                </Typography>
+                                            </Box>
+                                        </div>
+                                    </ListItemContent>
+                                    <Stack
+                                        sx={{
+                                            display: "flex",
+                                            gap: 1,
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <Chip
+                                            variant="soft"
+                                            size="sm"
+                                            startDecorator={
+                                                {
+                                                    true: (
+                                                        <CheckRoundedIcon fontSize="small" />
+                                                    ),
+                                                    false: (
+                                                        <BlockIcon fontSize="small" />
+                                                    ),
+                                                }[row.info_validada]
                                             }
-                                            onClick={() => onView(row.id)}
+                                            color={
+                                                {
+                                                    true: "success",
+                                                    false: "danger",
+                                                }[row.info_validada]
+                                            }
                                         >
                                             {row.info_validada
-                                                ? "Editar"
-                                                : "Validar"}
-                                        </Button>
-                                    )}
-                                </Stack>
-                            </ListItem>
-                            <ListDivider />
-                        </List>
-                    ))}
-                    <Pagination
-                        size="medium"
-                        page={page}
-                        count={rows.pages || 1}
-                        variant="outlined"
-                        onChange={(_, page) => setPage(page)}
-                        sx={{
-                            ".MuiPagination-ul": {
-                                width: "100%",
-                                justifyContent: "center",
-                            },
-                        }}
-                    />
-                </Box>
-            ) : (
-                <Stack
-                    justifyContent="center"
-                    alignContent="center"
-                    alignItems="center"
-                    width="100%"
-                    height="100%"
-                >
-                    <CircularProgress />
-                </Stack>
-            )}
+                                                ? "Validado"
+                                                : "Sin validar"}
+                                        </Chip>
+                                        {hasPermission(
+                                            "usuario.change_persona"
+                                        ) && (
+                                            <Button
+                                                variant="solid"
+                                                color={
+                                                    row.info_validada
+                                                        ? "primary"
+                                                        : "success"
+                                                }
+                                                onClick={() => onView(row.id)}
+                                            >
+                                                {row.info_validada
+                                                    ? "Editar"
+                                                    : "Validar"}
+                                            </Button>
+                                        )}
+                                    </Stack>
+                                </ListItem>
+                                <ListDivider />
+                            </List>
+                        ))}
+                        <Pagination
+                            size="medium"
+                            page={page}
+                            count={rows.pages || 1}
+                            variant="outlined"
+                            onChange={(_, page) => setPage(page)}
+                            sx={{
+                                ".MuiPagination-ul": {
+                                    width: "100%",
+                                    justifyContent: "center",
+                                },
+                            }}
+                        />
+                    </Fragment>
+                ) : (
+                    <Stack
+                        justifyContent="center"
+                        alignContent="center"
+                        alignItems="center"
+                        width="100%"
+                        height="100%"
+                    >
+                        <CircularProgress />
+                    </Stack>
+                )}
+            </Box>
         </Fragment>
     );
 }
