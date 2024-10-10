@@ -59,13 +59,10 @@ export default function ColorSchemeToggle(props) {
                 size="sm"
                 variant="outlined"
                 color="neutral"
-                onClick={() => {
-                    setMaterialMode(mode === "dark" ? "light" : "dark");
-                    setJoyMode(mode === "dark" ? "light" : "dark");
-                }}
                 {...other}
+                sx={[...(Array.isArray(sx) ? sx : [sx])]}
             >
-                <CircularProgress />
+                <CircularProgress size="sm" />
             </IconButton>
         );
     }
