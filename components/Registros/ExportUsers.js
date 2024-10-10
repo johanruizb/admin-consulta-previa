@@ -46,7 +46,7 @@ function Export() {
                     saveAlert({
                         open: true,
                         variant: "solid",
-                        color: "error",
+                        color: "danger",
                         content: `No se pudo exportar el archivo. (${String(
                             response?.statusText ?? response
                         )})`,
@@ -79,9 +79,9 @@ function Export() {
                 saveAlert({
                     open: true,
                     variant: "solid",
-                    color: "error",
+                    color: "danger",
                     content: `No se pudo exportar el archivo. (${String(
-                        error?.statusText ?? error
+                        error?.statusText ?? error ?? "UNKNOWN_ERROR"
                     )})`,
                 });
             })
