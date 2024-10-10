@@ -105,7 +105,7 @@ export default function Registros({ children }) {
                     flex={{ xs: 1, md: "auto" }}
                     justifyContent={{ xs: "space-between", md: "normal" }}
                     sx={{
-                        width: { xs: "100%", md: "auto" },
+                        width: { xs: "100%", md: "unset" },
                     }}
                 >
                     <Typography level="h2" component="h1">
