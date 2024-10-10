@@ -89,11 +89,7 @@ export default function OrderTable({ data, onView }) {
     // const ready = false;
 
     return (
-        <Box
-            sx={{
-                display: { xs: "none", sm: "initial" },
-            }}
-        >
+        <Fragment>
             <Box
                 className="SearchAndFilters-tabletUp"
                 sx={{
@@ -356,10 +352,16 @@ export default function OrderTable({ data, onView }) {
                     alignItems="center"
                     width="100%"
                     height="100%"
+                    sx={{
+                        display: {
+                            xs: "none",
+                            md: "flex",
+                        },
+                    }}
                 >
                     <CircularProgress />
                 </Stack>
             )}
-        </Box>
+        </Fragment>
     );
 }
