@@ -103,6 +103,7 @@ export default function Registros({ children }) {
                     spacing={1.25 / 2}
                     direction={{ xs: "row", md: "column" }}
                     flex={{ xs: 1, md: "auto" }}
+                    justifyContent={{ xs: "space-between", md: "normal" }}
                     sx={{
                         width: { xs: "100%", md: "auto" },
                     }}
