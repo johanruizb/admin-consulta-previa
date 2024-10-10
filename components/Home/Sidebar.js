@@ -1,16 +1,6 @@
-// import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";
-// import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-// import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
-// import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-// import QuestionAnswerRoundedIcon from "@mui/icons-material/QuestionAnswerRounded";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 
-// import Button from "@mui/joy/Button";
-// import Card from "@mui/joy/Card";
-// import Chip from "@mui/joy/Chip";
-// import LinearProgress from "@mui/joy/LinearProgress";
-// import Stack from "@mui/joy/Stack";
 import Box from "@mui/joy/Box";
 import Divider from "@mui/joy/Divider";
 import GlobalStyles from "@mui/joy/GlobalStyles";
@@ -28,35 +18,9 @@ import ColorSchemeToggle from "./ColorSchemeToggle";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import { useRouter } from "next/navigation";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import usePermissionContext from "./permissionContext/usePermission";
 import Profile from "./Profile";
-
-function Toggler({ defaultExpanded = false, renderToggle, children }) {
-    const [open, setOpen] = useState(defaultExpanded);
-
-    return (
-        <Fragment>
-            {renderToggle({ open, setOpen })}
-            <Box
-                sx={[
-                    {
-                        display: "grid",
-                        transition: "0.2s ease",
-                        "& > *": {
-                            overflow: "hidden",
-                        },
-                    },
-                    open
-                        ? { gridTemplateRows: "1fr" }
-                        : { gridTemplateRows: "0fr" },
-                ]}
-            >
-                {children}
-            </Box>
-        </Fragment>
-    );
-}
 
 export default function Sidebar() {
     const { isLoading, hasPermission } = usePermissionContext();
