@@ -14,18 +14,18 @@ export default async function handler(req, res) {
         password: process.env.SESSION_SECRET,
         cookieName: "session",
     });
-
-    const response = await fetch(
-        process.env.NEXT_PUBLIC_BASE_URL + "/api/usuarios/exportar/inscritos",
-        {
-            method: "GET",
-            headers: {
-                Authorization: "Bearer " + session.accessToken,
-            },
-        }
-    );
-
     try {
+        const response = await fetch(
+            process.env.NEXT_PUBLIC_BASE_URL +
+                "/api/usuarios/exportar/inscritos",
+            {
+                method: "GET",
+                headers: {
+                    Authorization: "Bearer " + session.accessToken,
+                },
+            }
+        );
+
         if (!response.ok)
             res.status(response.status).send({
                 status: response.status,
@@ -40,7 +40,7 @@ export default async function handler(req, res) {
             res.status(response.status).send(content);
         }
     } catch (e) {
-        res.status(500).json({ error: e.message });
+        res.status(500).json({ status: 500, statusText: e.message });
     }
 }
 
