@@ -57,7 +57,7 @@ function Export() {
                     reader.onload = () => {
                         const link = document.createElement("a");
                         link.href = reader.result;
-                        link.download = `inscritos-${dayjs().format(
+                        link.download = `Personas inscritas_${dayjs().format(
                             "YYYY-MM-DD HH-mm-ss"
                         )}.xlsx`;
                         link.click();
