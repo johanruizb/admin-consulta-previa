@@ -103,6 +103,9 @@ export default function Registros({ children }) {
                     spacing={1.25 / 2}
                     direction={{ xs: "row", md: "column" }}
                     flex={{ xs: 1, md: "auto" }}
+                    sx={{
+                        width: { xs: "100%", md: "auto" },
+                    }}
                 >
                     <Typography level="h2" component="h1">
                         Registros
