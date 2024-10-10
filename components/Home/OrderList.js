@@ -312,7 +312,13 @@ export default function OrderList({ data, onView }) {
                     />
                 </Box>
             ) : (
-                <Stack>
+                <Stack
+                    justifyContent="center"
+                    alignContent="center"
+                    alignItems="center"
+                    width="100%"
+                    height="100%"
+                >
                     <CircularProgress />
                 </Stack>
             )}

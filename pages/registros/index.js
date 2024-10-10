@@ -99,7 +99,10 @@ export default function Registros({ children }) {
                     justifyContent: "space-between",
                 }}
             >
-                <Stack spacing={1.25 / 2}>
+                <Stack
+                    spacing={1.25 / 2}
+                    direction={{ xs: "row", md: "column" }}
+                >
                     <Typography level="h2" component="h1">
                         Registros
                     </Typography>

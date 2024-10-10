@@ -345,11 +345,11 @@ export default function OrderTable({ data, onView }) {
                 </Fragment>
             ) : (
                 <Stack
-                    alignItems="center"
                     justifyContent="center"
-                    sx={{
-                        height: "100%",
-                    }}
+                    alignContent="center"
+                    alignItems="center"
+                    width="100%"
+                    height="100%"
                 >
                     <CircularProgress />
                 </Stack>
