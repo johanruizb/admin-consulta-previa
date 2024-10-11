@@ -12,6 +12,7 @@ export default function TextField({ inputProps }) {
         field: {
             InputProps,
             onChange: onChangeField,
+            onBlur: onBlurField,
             label: fieldLabel,
             ...fieldProps
         },
@@ -22,7 +23,7 @@ export default function TextField({ inputProps }) {
             control={control}
             render={({ field, fieldState }) => {
                 const { error } = fieldState;
-                const { onChange: onChangeController } = field;
+                const { onChange, onBlur } = field;
 
                 return (
                     <FormControl
@@ -34,8 +35,16 @@ export default function TextField({ inputProps }) {
                             {...field}
                             value={field.value ?? ""}
                             onChange={(e) => {
-                                onChangeField?.(e, onChangeController) ||
-                                    onChangeController(e);
+                                onChangeField?.(e, {
+                                    onChange,
+                                    onBlur,
+                                }) || onChange(e);
+                            }}
+                            onBlur={(e) => {
+                                onBlurField?.(e, {
+                                    onChange,
+                                    onBlur,
+                                }) || onBlur(e);
                             }}
                             {...fieldProps}
                         />
