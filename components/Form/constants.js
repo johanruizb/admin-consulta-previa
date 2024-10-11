@@ -6,6 +6,7 @@ import Select from "../Field/Select";
 import TextField from "../Field/TextField";
 import CustomAsyncSelect from "./CustomAsyncSelect";
 import EmptyField from "./EmptyField";
+import { replaceAllSpaces, toUpperCase } from "./functions";
 import OtraConectividad from "./OtraConectividad";
 import OtroGenero from "./OtroGenero";
 
@@ -27,8 +28,7 @@ const FormularioVerificacion = [
         },
         field: {
             label: "Nombres",
-            onChange: (e, onChangeController) =>
-                onChangeController((e.target.value || "").toUpperCase()),
+            onChange: toUpperCase,
         },
     },
     {
@@ -48,8 +48,7 @@ const FormularioVerificacion = [
         },
         field: {
             label: "Apellidos",
-            onChange: (e, onChangeController) =>
-                onChangeController((e.target.value || "").toUpperCase()),
+            onChange: toUpperCase,
         },
     },
     {
@@ -101,11 +100,17 @@ const FormularioVerificacion = [
                     value: true,
                     message: "Este campo no puede estar vacio",
                 },
+                pattern: {
+                    value: /^[^.,\s]+$/,
+                    message:
+                        "El número de documento no puede tener espacios, puntos o comas",
+                },
             },
         },
         field: {
             label: "Número de documento",
             required: true,
+            onBlur: replaceAllSpaces,
         },
     },
     {
@@ -274,8 +279,7 @@ const FormularioVerificacion = [
         field: {
             label: "Otro (especificar)",
             required: true,
-            onChange: (e, onChangeController) =>
-                onChangeController((e.target.value || "").toUpperCase()),
+            onChange: toUpperCase,
         },
     },
     {
@@ -338,8 +342,7 @@ const FormularioVerificacion = [
         },
         field: {
             label: "Nombre de la entidad u organización que representa",
-            onChange: (e, onChangeController) =>
-                onChangeController((e.target.value || "").toUpperCase()),
+            onChange: toUpperCase,
         },
     },
     {
@@ -443,6 +446,7 @@ const FormularioVerificacion = [
         field: {
             label: "Correo electrónico",
             required: true,
+            onBlur: replaceAllSpaces,
         },
     },
     {
@@ -597,8 +601,7 @@ const FormularioVerificacion = [
         field: {
             label: "Otra conectividad (especificar)",
             required: true,
-            onChange: (e, onChangeController) =>
-                onChangeController((e.target.value || "").toUpperCase()),
+            onChange: toUpperCase,
         },
     },
     {
