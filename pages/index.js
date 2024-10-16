@@ -162,6 +162,9 @@ export default function Page() {
                                 color="primary"
                                 variant="solid"
                                 uncheckedIcon={<Close />}
+                                sx={{
+                                    my: 0.25,
+                                }}
                             />
                         ))
                     )}
