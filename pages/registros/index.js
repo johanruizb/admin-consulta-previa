@@ -38,7 +38,7 @@ export default function Registros({ children }) {
         usePermissionContext();
 
     const { data: inscritos, isLoading: inscritosIsLoading } = useSWR(
-        getURL("api/usuarios/estadisticas"),
+        getURL("api/usuarios/estadisticas/all"),
         fetcher,
         { revalidateOnMount: true }
     );
