@@ -1,16 +1,14 @@
-import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
-import { FormControl, FormLabel } from "@mui/joy";
+import { Checkbox, FormControl, FormLabel } from "@mui/joy";
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import CircularProgress from "@mui/joy/CircularProgress";
 import Link from "@mui/joy/Link";
-import Option from "@mui/joy/Option";
-import Select, { selectClasses } from "@mui/joy/Select";
 import Typography from "@mui/joy/Typography";
 
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
+import Close from "@mui/icons-material/Close";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 
 import Grid from "@mui/material/Grid2";
@@ -35,12 +33,35 @@ import useSWR from "swr";
 
 dayjs.locale("es");
 
+const fetcherWithCurso = ({ url, args: { options } }) => {
+    return fetcher(url, options);
+};
+
 export default function Page() {
-    const [curso, setCurso] = useState("all");
+    const [curso, setCurso] = useState([1, 2, 3, 4]);
+
+    // const fetcherCallback = useCallback(
+    //     (url) =>
+    //         fetcher(url, {
+    //             body: JSON.stringify(curso),
+    //             method: "POST",
+    //         }),
+    //     [curso]
+    // );
 
     const { data, isLoading } = useSWR(
-        getURL("api/usuarios/estadisticas/" + curso),
-        fetcher
+        {
+            url: getURL("api/usuarios/estadisticas"),
+            args: {
+                options: {
+                    method: "POST",
+                    body: JSON.stringify(curso),
+                },
+            },
+        },
+        {
+            fetcher: fetcherWithCurso,
+        }
     );
 
     const { data: cursos, isLoading: cursosIsLoading } = useSWR(
@@ -54,8 +75,14 @@ export default function Page() {
         setMounted(true);
     }, []);
 
-    const handleCursoChange = (event, value) => {
-        setCurso(value);
+    const handleCursoChange = (event) => {
+        const newValue = parseInt(event.target.value);
+
+        if (curso.includes(newValue)) {
+            setCurso((prev) => prev.filter((item) => item !== newValue));
+        } else {
+            setCurso((prev) => [...prev, newValue]);
+        }
     };
 
     if (!mounted) {
@@ -122,37 +149,22 @@ export default function Page() {
                     >
                         Estadísticas por curso
                     </FormLabel>
-                    <Select
-                        defaultValue="all"
-                        indicator={<KeyboardArrowDown />}
-                        sx={{
-                            [`& .${selectClasses.indicator}`]: {
-                                transition: "0.2s",
-                                [`&.${selectClasses.expanded}`]: {
-                                    transform: "rotate(-180deg)",
-                                },
-                            },
-                        }}
-                        slotProps={{
-                            listbox: {
-                                sx: {
-                                    maxWidth: "100vw",
-                                    overflow: "auto", // required for scrolling
-                                },
-                            },
-                        }}
-                        onChange={handleCursoChange}
-                        endDecorator={
-                            cursosIsLoading && <CircularProgress size="sm" />
-                        }
-                    >
-                        <Option value="all">Todos los cursos</Option>
-                        {cursos?.map((curso, index) => (
-                            <Option key={index} value={curso.id}>
-                                {curso.name}
-                            </Option>
-                        ))}
-                    </Select>
+                    {cursosIsLoading ? (
+                        <CircularProgress />
+                    ) : (
+                        cursos?.map((item, index) => (
+                            <Checkbox
+                                key={index}
+                                value={item.id}
+                                label={item.name}
+                                checked={curso.includes(item.id)}
+                                onChange={handleCursoChange}
+                                color="primary"
+                                variant="solid"
+                                uncheckedIcon={<Close />}
+                            />
+                        ))
+                    )}
                 </FormControl>
             </Box>
             {isLoading ? (
