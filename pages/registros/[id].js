@@ -128,11 +128,23 @@ function View({ defaultValues }) {
                     openAlert(await response.json(), "solid", "success");
                     router.back();
                 } else {
-                    openAlert(
-                        `Se ha producido un error (${response.statusText})`,
-                        "solid",
-                        "error"
-                    );
+                    response
+                        .json()
+                        .then((data) => {
+                            openAlert(
+                                data?.message ??
+                                    `Se ha producido un error (${response.statusText})`,
+                                "solid",
+                                "error"
+                            );
+                        })
+                        .catch(() => {
+                            openAlert(
+                                `Se ha producido un error (${response.statusText})`,
+                                "solid",
+                                "error"
+                            );
+                        });
                 }
             })
             .catch((error) => {
