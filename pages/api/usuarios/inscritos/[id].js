@@ -28,30 +28,7 @@ export default async function handler(req, res) {
     const id = parseInt(req.query.id);
     if (!id) {
         res.status(200).end();
-    }
-
-    // else if (req.method === "POST") {
-    //     console.log("typeof req.body", typeof req.body);
-    //     console.log(
-    //         "req.body instanceof FormData",
-    //         req.body instanceof FormData
-    //     );
-
-    //     const response = await fetch(
-    //         process.env.NEXT_PUBLIC_BASE_URL + "/api/usuarios/inscritos/" + id,
-    //         {
-    //             method: "PUT",
-    //             headers: {
-    //                 Authorization: "Bearer " + session.accessToken,
-    //                 "Content-Type": "multipart/form-data; boundary=----",
-    //             },
-    //             body: req.body,
-    //         }
-    //     );
-    //     const result = await response.json();
-    //     res.status(response.status).json(result || response.statusText);
-    // }
-    else if (req.method === "POST") {
+    } else if (req.method === "POST") {
         const formDataBuffer = await buffer(req);
 
         // Hacer la solicitud al servidor Django reenviando el FormData
