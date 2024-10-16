@@ -69,7 +69,6 @@ const CustomImage = forwardRef(function CustomImage({ url, field }, ref) {
     };
 
     const handleReplace = () => {
-        console.log("Replace » inputRef.current", inputRef.current);
         inputRef.current.click();
     };
 
