@@ -10,22 +10,20 @@ import { NextApiRequest, NextApiResponse } from "next";
  * @returns {Promise<void>} - Una promesa que se resuelve cuando la operación de inicio de sesión se completa.
  **/
 export default async function handler(req, res) {
-    const { curso } = req.query;
-
     const session = await getIronSession(req, res, {
         password: process.env.SESSION_SECRET,
         cookieName: "session",
     });
 
     const response = await fetch(
-        process.env.NEXT_PUBLIC_BASE_URL +
-            "/api/usuarios/estadisticas/" +
-            curso,
+        process.env.NEXT_PUBLIC_BASE_URL + "/api/usuarios/estadisticas",
         {
-            method: "GET",
+            method: "POST",
             headers: {
                 Authorization: "Bearer " + session.accessToken,
+                "Content-Type": "application/json",
             },
+            body: req.body,
         }
     );
 
@@ -37,9 +35,3 @@ export default async function handler(req, res) {
         res.status(401).end();
     }
 }
-
-export const config = {
-    api: {
-        responseLimit: false,
-    },
-};
