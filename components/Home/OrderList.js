@@ -144,11 +144,11 @@ export default function OrderList({ data, onView }) {
                                 <Select
                                     size="sm"
                                     placeholder="Filtrar por estado"
-                                    slotProps={{
-                                        button: {
-                                            sx: { whiteSpace: "nowrap" },
-                                        },
-                                    }}
+                                    // slotProps={{
+                                    //     button: {
+                                    //         sx: { whiteSpace: "nowrap" },
+                                    //     },
+                                    // }}
                                     onChange={(e, newValue) => {
                                         setFilter((prev) => ({
                                             ...prev,
