@@ -1,10 +1,13 @@
+import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
+import { FormControl, FormLabel } from "@mui/joy";
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import CircularProgress from "@mui/joy/CircularProgress";
 import Link from "@mui/joy/Link";
-import Skeleton from "@mui/joy/Skeleton";
+import Option from "@mui/joy/Option";
+import Select, { selectClasses } from "@mui/joy/Select";
 import Typography from "@mui/joy/Typography";
 
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
@@ -12,6 +15,8 @@ import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 
 import Grid from "@mui/material/Grid2";
 import Stack from "@mui/material/Stack";
+
+import { BarChart } from "@mui/x-charts/BarChart";
 
 import Layout from "@/components/Home/Layout";
 
@@ -23,25 +28,35 @@ import "dayjs/locale/es";
 import { useEffect, useState } from "react";
 
 import fetcher from "@/components/fetcher";
-import { formatNumber, getURL } from "@/components/utils";
 import CustomPie from "@/components/Panel/CustomPie";
+import { formatNumber, getURL } from "@/components/utils";
 
 import useSWR from "swr";
 
 dayjs.locale("es");
 
-import { BarChart } from "@mui/x-charts/BarChart";
-
 export default function Page() {
+    const [curso, setCurso] = useState("all");
+
     const { data, isLoading } = useSWR(
-        getURL("api/usuarios/estadisticas"),
+        getURL("api/usuarios/estadisticas/" + curso),
         fetcher
     );
+
+    const { data: cursos, isLoading: cursosIsLoading } = useSWR(
+        getURL("api/usuarios/cursos/disponibles"),
+        fetcher
+    );
+
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         setMounted(true);
     }, []);
+
+    const handleCursoChange = (event, value) => {
+        setCurso(value);
+    };
 
     if (!mounted) {
         return (
@@ -93,6 +108,52 @@ export default function Page() {
                 <Typography level="h2" component="h1">
                     Estadísticas
                 </Typography>
+
+                <FormControl
+                    sx={{
+                        flex: { xs: 1, md: 0.5 },
+                        maxWidth: { md: "calc(60% - 152.23px)" },
+                        width: "100%",
+                    }}
+                >
+                    <FormLabel
+                        id="select-field-demo-label"
+                        htmlFor="select-field-demo-button"
+                    >
+                        Estadísticas por curso
+                    </FormLabel>
+                    <Select
+                        defaultValue="all"
+                        indicator={<KeyboardArrowDown />}
+                        sx={{
+                            [`& .${selectClasses.indicator}`]: {
+                                transition: "0.2s",
+                                [`&.${selectClasses.expanded}`]: {
+                                    transform: "rotate(-180deg)",
+                                },
+                            },
+                        }}
+                        slotProps={{
+                            listbox: {
+                                sx: {
+                                    maxWidth: "100vw",
+                                    overflow: "auto", // required for scrolling
+                                },
+                            },
+                        }}
+                        onChange={handleCursoChange}
+                        endDecorator={
+                            cursosIsLoading && <CircularProgress size="sm" />
+                        }
+                    >
+                        <Option value="all">Todos los cursos</Option>
+                        {cursos?.map((curso, index) => (
+                            <Option key={index} value={curso.id}>
+                                {curso.name}
+                            </Option>
+                        ))}
+                    </Select>
+                </FormControl>
             </Box>
             {isLoading ? (
                 <Stack
@@ -104,7 +165,7 @@ export default function Page() {
                 >
                     <CircularProgress />
                 </Stack>
-            ) : (
+            ) : data.has_statistics ? (
                 <Grid
                     container
                     spacing={1.25 / 2}
@@ -135,11 +196,7 @@ export default function Page() {
                                             Hoy
                                         </Typography>
                                         <Typography level="h2">
-                                            {isLoading ? (
-                                                <CircularProgress size="sm" />
-                                            ) : (
-                                                formatNumber(data.today)
-                                            )}
+                                            {formatNumber(data.today)}
                                         </Typography>
                                     </Stack>
                                     <Stack
@@ -152,11 +209,7 @@ export default function Page() {
                                             Total, desde el inicio
                                         </Typography>
                                         <Typography level="h2">
-                                            {isLoading ? (
-                                                <CircularProgress size="sm" />
-                                            ) : (
-                                                formatNumber(data.total)
-                                            )}
+                                            {formatNumber(data.total)}
                                         </Typography>
                                     </Stack>
                                 </Stack>
@@ -173,16 +226,7 @@ export default function Page() {
                         >
                             <CardContent>
                                 <Typography level="title-lg">
-                                    Personas validadas (
-                                    <Skeleton
-                                        loading={isLoading}
-                                        variant="inline"
-                                        width="24px"
-                                        height="24px"
-                                    >
-                                        {data?.percentage}
-                                    </Skeleton>
-                                    %)
+                                    Personas validadas ({data?.percentage} %)
                                 </Typography>
                                 <Stack
                                     flex={1}
@@ -197,21 +241,13 @@ export default function Page() {
                                         spacing={1.25}
                                     >
                                         <Typography level="h2">
-                                            {isLoading ? (
-                                                <CircularProgress size="sm" />
-                                            ) : (
-                                                formatNumber(data.validated)
-                                            )}
+                                            {formatNumber(data.validated)}
                                         </Typography>
                                         <Typography level="body-md">
                                             de
                                         </Typography>
                                         <Typography level="h2">
-                                            {isLoading ? (
-                                                <CircularProgress size="sm" />
-                                            ) : (
-                                                formatNumber(data.total)
-                                            )}
+                                            {formatNumber(data.total)}
                                         </Typography>
                                     </Stack>
                                 </Stack>
@@ -389,6 +425,10 @@ export default function Page() {
                         </Card>
                     </Grid>
                 </Grid>
+            ) : (
+                <Typography level="body-md">
+                    No hay estadísticas disponibles
+                </Typography>
             )}
         </Layout>
     );

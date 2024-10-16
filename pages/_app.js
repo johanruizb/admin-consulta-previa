@@ -1,6 +1,4 @@
 import PermissionProvider from "@/components/Home/permissionContext/PermissionProvider";
-import "@/styles/globals.css";
-import "@/styles/OrderTable.css";
 
 import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
@@ -15,6 +13,10 @@ import {
     ThemeProvider,
 } from "@mui/material/styles";
 import { SWRConfig } from "swr";
+
+import "@/styles/Option.css";
+import "@/styles/globals.css";
+import "@/styles/OrderTable.css";
 
 const customTheme = extendTheme({
     colorSchemeSelector: "media",

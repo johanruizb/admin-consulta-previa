@@ -1,0 +1,7 @@
+.MuiOption-root {
+    max-width: calc(100vw - 32px) !important;
+}
+
+.MuiSelect-listbox {
+    max-width: calc(100vw - 32px) !important;
+}
