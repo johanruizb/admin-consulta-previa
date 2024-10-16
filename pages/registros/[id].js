@@ -135,14 +135,14 @@ function View({ defaultValues }) {
                                 data?.message ??
                                     `Se ha producido un error (${response.statusText})`,
                                 "solid",
-                                "error"
+                                "danger"
                             );
                         })
                         .catch(() => {
                             openAlert(
                                 `Se ha producido un error (${response.statusText})`,
                                 "solid",
-                                "error"
+                                "danger"
                             );
                         });
                 }
@@ -151,7 +151,7 @@ function View({ defaultValues }) {
                 openAlert(
                     `Se ha producido un error (${error.toString()})`,
                     "solid",
-                    "error"
+                    "danger"
                 );
             })
             .finally(() => {
