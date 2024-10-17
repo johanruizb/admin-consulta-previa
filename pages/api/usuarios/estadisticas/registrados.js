@@ -19,10 +19,12 @@ export default async function handler(req, res) {
         process.env.NEXT_PUBLIC_BASE_URL +
             "/api/usuarios/estadisticas/registrados",
         {
-            method: "GET",
+            method: "POST",
             headers: {
                 Authorization: "Bearer " + session.accessToken,
+                "Content-Type": "application/json",
             },
+            body: req.body,
         }
     );
 
