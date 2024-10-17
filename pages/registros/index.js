@@ -38,9 +38,16 @@ export default function Registros({ children }) {
         usePermissionContext();
 
     const { data: inscritos, isLoading: inscritosIsLoading } = useSWR(
-        getURL("api/usuarios/estadisticas/all"),
+        getURL("api/usuarios/estadisticas"),
         fetcher,
-        { revalidateOnMount: true }
+        {
+            revalidateOnMount: true,
+            fetcher: (url) =>
+                fetch(url, {
+                    method: POST,
+                    body: JSON.stringify([1, 2, 3, 4]),
+                }),
+        }
     );
     const router = useRouter();
 
