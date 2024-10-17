@@ -39,14 +39,13 @@ export default function Registros({ children }) {
 
     const { data: inscritos, isLoading: inscritosIsLoading } = useSWR(
         getURL("api/usuarios/estadisticas/registrados"),
-        fetcher,
         {
             revalidateOnMount: true,
             fetcher: (url) =>
                 fetch(url, {
-                    method: POST,
+                    method: "POST",
                     body: JSON.stringify([1, 2, 3, 4]),
-                }),
+                }).then((res) => res.json()),
         }
     );
     const router = useRouter();
@@ -65,6 +64,8 @@ export default function Registros({ children }) {
             router.replace("/");
         }
     }, [permissionIsLoading, hasPermission]);
+
+    console.log(inscritos);
 
     return (
         <Layout>

@@ -27,12 +27,12 @@ export default async function handler(req, res) {
             body: req.body,
         }
     );
-
-    if (response.ok) {
-        const estadisticas = await response.json();
-
-        res.status(200).json(estadisticas);
-    } else {
-        res.status(401).end();
+    try {
+        const result = await response.json();
+        res.status(response.status).json(result);
+    } catch (error) {
+        res.status(response.status).json({
+            message: `${String(error)} (${response.status})`,
+        });
     }
 }
