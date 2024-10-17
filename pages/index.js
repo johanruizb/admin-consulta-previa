@@ -152,21 +152,25 @@ export default function Page() {
                     {cursosIsLoading ? (
                         <CircularProgress />
                     ) : (
-                        cursos?.map((item, index) => (
-                            <Checkbox
-                                key={index}
-                                value={item.id}
-                                label={item.name}
-                                checked={curso.includes(item.id)}
-                                onChange={handleCursoChange}
-                                color="primary"
-                                variant="solid"
-                                uncheckedIcon={<Close />}
-                                sx={{
-                                    my: 0.25,
-                                }}
-                            />
-                        ))
+                        cursos?.map((item, index) => {
+                            const checked = curso.includes(item.id);
+
+                            return (
+                                <Checkbox
+                                    key={index}
+                                    value={item.id}
+                                    label={item.name}
+                                    checked={checked}
+                                    onChange={handleCursoChange}
+                                    color={checked ? "primary" : "warning"}
+                                    variant="solid"
+                                    uncheckedIcon={<Close />}
+                                    sx={{
+                                        my: 0.25,
+                                    }}
+                                />
+                            );
+                        })
                     )}
                 </FormControl>
             </Box>
