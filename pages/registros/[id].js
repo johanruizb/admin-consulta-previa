@@ -100,7 +100,7 @@ function View({ defaultValues }) {
     const sm = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
     const onClose = () => {
-        router.back();
+        router.push("/registros");
     };
 
     const openAlert = (content, variant = "solid", color = "success") => {
