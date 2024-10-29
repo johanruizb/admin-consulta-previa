@@ -394,9 +394,16 @@ const FormularioVerificacion = [
         controller: {
             name: "entidad",
             defaultValue: "",
+            rules: {
+                required: {
+                    value: true,
+                    message: "Este campo no puede estar vacio",
+                },
+            },
         },
         field: {
             label: "Nombre de la entidad u organización que representa",
+            required: true,
             onChange: toUpperCase,
         },
     },
