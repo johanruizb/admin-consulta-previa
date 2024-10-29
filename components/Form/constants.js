@@ -395,6 +395,14 @@ const FormularioVerificacion = [
             name: "entidad",
             defaultValue: "",
             rules: {
+                maxLength: {
+                    value: 300,
+                    message: "El nombre no puede tener más de 300 caracteres",
+                },
+                minLength: {
+                    value: 3,
+                    message: "El nombre no puede tener menos de 3 caracteres",
+                },
                 required: {
                     value: true,
                     message: "Este campo no puede estar vacio",
