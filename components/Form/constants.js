@@ -605,17 +605,24 @@ const FormularioVerificacion = [
         },
     },
     {
-        Component: TextField,
+        Component: Select,
         controller: {
-            name: "curso_inscrito_label",
+            name: "curso_inscrito",
             defaultValue: "",
         },
         field: {
             label: "Curso inscrito",
-            onChange: (e) => {},
-            readOnly: true,
+            options: [
+                {
+                    value: 1,
+                    label: "Curso virtual de autoformación en Consulta Previa - Grupos étnicos (20 horas)",
+                },
+                {
+                    value: 2,
+                    label: "Curso virtual de autoformación en consulta previa para fortalecimiento de capacidades institucionales (20 horas)",
+                },
+            ],
         },
-        size: 6,
     },
     {
         Component: TextField,
