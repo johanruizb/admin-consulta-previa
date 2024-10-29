@@ -337,7 +337,7 @@ export default function OrderTable({ data, onView }) {
                                 ))}
                                 {rows.pages === 0 && (
                                     <tr>
-                                        <td colSpan={5}>
+                                        <td colSpan={7}>
                                             <Typography textAlign="center">
                                                 No hay registros.
                                             </Typography>
