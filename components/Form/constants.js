@@ -377,7 +377,7 @@ const FormularioVerificacion = [
                 },
                 {
                     value: 5,
-                    label: "Contratista del Estado",
+                    label: "Contratista del Ministerio del Interior",
                 },
                 {
                     value: 6,
