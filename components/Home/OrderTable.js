@@ -43,11 +43,16 @@ export default function OrderTable({ data, onView }) {
     const filterData = (d, filter) => {
         let result = cloneDeep(d);
 
-        if (filter.info_validada !== undefined) {
-            result = d.filter(
-                (row) => row.info_validada === filter.info_validada
-            );
-        }
+        result = d.filter((row) => {
+            const curso_inscrito = filter.curso_inscrito
+                ? String(row.curso_inscrito) === String(filter.curso_inscrito)
+                : true;
+            const info_validada = filter.info_validada
+                ? String(row.info_validada) === String(filter.info_validada)
+                : true;
+
+            return curso_inscrito && info_validada;
+        });
 
         if (filter.search !== undefined) {
             const fuse = new Fuse(result, {
@@ -94,8 +99,9 @@ export default function OrderTable({ data, onView }) {
             <Box
                 className="SearchAndFilters-tabletUp"
                 sx={{
-                    borderRadius: "sm",
                     // py: 2,
+                    // pb: 1.25,
+                    borderRadius: "sm",
                     display: { xs: "none", sm: "flex" },
                     flexWrap: "wrap",
                     gap: 1.5,
@@ -135,8 +141,35 @@ export default function OrderTable({ data, onView }) {
                         value={filter.info_validada ?? ""}
                     >
                         <Option value={""}>Todos</Option>
-                        <Option value={true}>Validado</Option>
-                        <Option value={false}>No validado</Option>
+                        <Option value={"true"}>Validado</Option>
+                        <Option value={"false"}>No validado</Option>
+                    </Select>
+                </FormControl>
+                <FormControl size="sm">
+                    <FormLabel>Curso inscrito</FormLabel>
+                    <Select
+                        size="sm"
+                        placeholder="Filtrar por curso inscrito"
+                        slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
+                        onChange={(e, newValue) => {
+                            setFilter((prev) => ({
+                                ...prev,
+                                curso_inscrito:
+                                    newValue !== "" ? newValue : undefined,
+                            }));
+                        }}
+                        value={filter.curso_inscrito ?? ""}
+                    >
+                        <Option value={""}>Todos</Option>
+                        <Option value={1}>
+                            Curso virtual de autoformación en Consulta Previa -
+                            Grupos étnicos (20 horas)
+                        </Option>
+                        <Option value={2}>
+                            Curso virtual de autoformación en consulta previa
+                            para fortalecimiento de capacidades institucionales
+                            (20 horas)
+                        </Option>
                     </Select>
                 </FormControl>
             </Box>
