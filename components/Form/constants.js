@@ -335,17 +335,6 @@ const FormularioVerificacion = [
         },
     },
     {
-        Component: TextField,
-        controller: {
-            name: "entidad",
-            defaultValue: "",
-        },
-        field: {
-            label: "Nombre de la entidad u organización que representa",
-            onChange: toUpperCase,
-        },
-    },
-    {
         Component: Select,
         controller: {
             name: "tipo_cliente",
@@ -398,6 +387,17 @@ const FormularioVerificacion = [
             ],
             label: "De los siguientes roles en cual se reconoce",
             required: true,
+        },
+    },
+    {
+        Component: TextField,
+        controller: {
+            name: "entidad",
+            defaultValue: "",
+        },
+        field: {
+            label: "Nombre de la entidad u organización que representa",
+            onChange: toUpperCase,
         },
     },
     {
