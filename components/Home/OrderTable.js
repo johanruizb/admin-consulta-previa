@@ -63,9 +63,11 @@ export default function OrderTable({ data, onView }) {
                     "telefono1",
                     "estado_name",
                 ],
-                useExtendedSearch: true,
+                // useExtendedSearch: true,
+                threshold: 0.3,
             });
-            result = fuse.search("=" + filter.search).map((item) => item.item);
+            // result = fuse.search("=" + filter.search).map((item) => item.item);
+            result = fuse.search(filter.search).map((item) => item.item);
         }
 
         const chunkedList = chunk(result, 50);
