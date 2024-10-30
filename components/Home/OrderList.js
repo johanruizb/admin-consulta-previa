@@ -22,12 +22,10 @@ import Stack from "@mui/material/Stack";
 
 import dayjs from "dayjs";
 
-import { chunk, cloneDeep, debounce } from "lodash";
+import { debounce } from "lodash";
 
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import Button from "@mui/joy/Button";
 import CircularProgress from "@mui/joy/CircularProgress";
-import Link from "@mui/joy/Link";
 import List from "@mui/joy/List";
 import ListDivider from "@mui/joy/ListDivider";
 import ListItem from "@mui/joy/ListItem";
@@ -35,8 +33,9 @@ import ListItemContent from "@mui/joy/ListItemContent";
 import Modal from "@mui/joy/Modal";
 import ModalClose from "@mui/joy/ModalClose";
 import ModalDialog from "@mui/joy/ModalDialog";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { filterTable } from "./functions";
 import usePermissionContext from "./permissionContext/usePermission";
-import Fuse from "fuse.js";
 
 export default function OrderList({ data, onView }) {
     const { isLoading: permissionIsLoading, hasPermission } =
@@ -49,41 +48,8 @@ export default function OrderList({ data, onView }) {
 
     const [rows, setRows] = useState();
 
-    const filterData = (d, filter) => {
-        let result = cloneDeep(d);
-
-        if (filter.info_validada !== undefined) {
-            result = d.filter(
-                (row) => row.info_validada === filter.info_validada
-            );
-        }
-
-        if (filter.search !== undefined) {
-            const fuse = new Fuse(result, {
-                keys: [
-                    "num_doc",
-                    "nombres",
-                    "apellidos",
-                    "telefono1",
-                    "estado_name",
-                ],
-                useExtendedSearch: true,
-            });
-            result = fuse.search("=" + filter.search).map((item) => item.item);
-        }
-
-        const chunkedList = chunk(result, 50);
-
-        setRows((prev) => ({
-            ...prev,
-            filtered: result,
-            chunked: chunkedList,
-            pages: chunkedList.length,
-        }));
-    };
-
     const debounceFilter = useCallback(
-        debounce((d, f) => filterData(d, f), 300),
+        debounce((d, f) => filterTable(d, f, setRows), 300),
         []
     );
 
@@ -159,6 +125,40 @@ export default function OrderList({ data, onView }) {
                                 >
                                     <Option value={true}>Validado</Option>
                                     <Option value={false}>No validado</Option>
+                                </Select>
+                            </FormControl>
+                            <FormControl size="sm">
+                                <FormLabel>Curso inscrito</FormLabel>
+                                <Select
+                                    size="sm"
+                                    placeholder="Filtrar por curso inscrito"
+                                    slotProps={{
+                                        button: {
+                                            sx: { whiteSpace: "nowrap" },
+                                        },
+                                    }}
+                                    onChange={(e, newValue) => {
+                                        setFilter((prev) => ({
+                                            ...prev,
+                                            curso_inscrito:
+                                                newValue !== ""
+                                                    ? newValue
+                                                    : undefined,
+                                        }));
+                                    }}
+                                    value={filter.curso_inscrito ?? ""}
+                                >
+                                    <Option value={""}>Todos</Option>
+                                    <Option value={1}>
+                                        Curso virtual de autoformación en
+                                        Consulta Previa - Grupos étnicos (20
+                                        horas)
+                                    </Option>
+                                    <Option value={2}>
+                                        Curso virtual de autoformación en
+                                        consulta previa para fortalecimiento de
+                                        capacidades institucionales (20 horas)
+                                    </Option>
                                 </Select>
                             </FormControl>
                             <Button

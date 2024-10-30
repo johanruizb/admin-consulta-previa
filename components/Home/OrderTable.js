@@ -16,11 +16,9 @@ import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "@mui/material/Pagination";
 
-import Fuse from "fuse.js";
-
 import dayjs from "dayjs";
 
-import { chunk, debounce } from "lodash";
+import { debounce } from "lodash";
 
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 
@@ -29,7 +27,7 @@ import Stack from "@mui/joy/Stack";
 import { v4 as uuidv4 } from "uuid";
 import usePermissionContext from "./permissionContext/usePermission";
 
-import { cloneDeep } from "lodash";
+import { filterTable } from "./functions";
 
 export default function OrderTable({ data, onView }) {
     const { isLoading: permissionIsLoading, hasPermission } =
@@ -40,48 +38,8 @@ export default function OrderTable({ data, onView }) {
 
     const [rows, setRows] = useState();
 
-    const filterData = (d, filter) => {
-        let result = cloneDeep(d);
-
-        result = d.filter((row) => {
-            const curso_inscrito = filter.curso_inscrito
-                ? String(row.curso_inscrito) === String(filter.curso_inscrito)
-                : true;
-            const info_validada = filter.info_validada
-                ? String(row.info_validada) === String(filter.info_validada)
-                : true;
-
-            return curso_inscrito && info_validada;
-        });
-
-        if (filter.search !== undefined) {
-            const fuse = new Fuse(result, {
-                keys: [
-                    "num_doc",
-                    "nombres",
-                    "apellidos",
-                    "telefono1",
-                    "estado_name",
-                ],
-                useExtendedSearch: true,
-                // threshold: 0.3,
-            });
-            // result = fuse.search("=" + filter.search).map((item) => item.item);
-            result = fuse.search("'" + filter.search).map((item) => item.item);
-        }
-
-        const chunkedList = chunk(result, 50);
-
-        setRows((prev) => ({
-            ...prev,
-            filtered: result,
-            chunked: chunkedList,
-            pages: chunkedList.length,
-        }));
-    };
-
     const debounceFilter = useCallback(
-        debounce((d, f) => filterData(d, f), 300),
+        debounce((d, f) => filterTable(d, f, setRows), 300),
         []
     );
 
