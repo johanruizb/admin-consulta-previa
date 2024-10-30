@@ -4,7 +4,6 @@ import IconButton from "@mui/joy/IconButton";
 
 import { useEffect, useState } from "react";
 
-import CircularProgress from "@mui/joy/CircularProgress";
 import Tooltip from "@mui/joy/Tooltip";
 import { useColorScheme as useJoyColorScheme } from "@mui/joy/styles";
 import { useColorScheme as useMaterialColorScheme } from "@mui/material/styles";
@@ -52,20 +51,7 @@ export default function ColorSchemeToggle(props) {
         if (mounted && mode !== joyMode) setMaterialMode(joyMode);
     }, [mounted]);
 
-    if (!mounted || !mode) {
-        return (
-            <IconButton
-                data-screenshot="toggle-mode"
-                size="sm"
-                variant="outlined"
-                color="neutral"
-                {...other}
-                sx={[...(Array.isArray(sx) ? sx : [sx])]}
-            >
-                <CircularProgress size="sm" />
-            </IconButton>
-        );
-    }
+    if (!mounted || !mode) return null;
 
     return (
         <Tooltip title={getLegend(mode)} arrow>
