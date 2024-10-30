@@ -65,8 +65,6 @@ export default function Registros({ children }) {
         }
     }, [permissionIsLoading, hasPermission]);
 
-    console.log(inscritos);
-
     return (
         <Layout>
             <Alert />
