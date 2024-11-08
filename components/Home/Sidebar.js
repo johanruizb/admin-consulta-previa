@@ -1,5 +1,6 @@
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import SchoolIcon from "@mui/icons-material/School";
 
 import Box from "@mui/joy/Box";
 import Divider from "@mui/joy/Divider";
@@ -21,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import usePermissionContext from "./permissionContext/usePermission";
 import Profile from "./Profile";
+import DevWrapper from "../Wrapper/DevWrapper";
 
 export default function Sidebar() {
     const { isLoading, hasPermission } = usePermissionContext();
@@ -156,8 +158,8 @@ export default function Sidebar() {
                             </ListItemButton>
                         </ListItem>
 
-                        <ListItem>
-                            {hasPermission("usuario.view_persona") && (
+                        {hasPermission("usuario.view_persona") && (
+                            <ListItem>
                                 <ListItemButton
                                     component="a"
                                     // href="/registros"
@@ -177,8 +179,34 @@ export default function Sidebar() {
                                         </Typography>
                                     </ListItemContent>
                                 </ListItemButton>
+                            </ListItem>
+                        )}
+                        <DevWrapper>
+                            {hasPermission("usuario.view_persona") && (
+                                <ListItem>
+                                    <ListItemButton
+                                        component="a"
+                                        onClick={() =>
+                                            handleRouteChange("/avance-cursos")
+                                        }
+                                        selected={
+                                            mounted
+                                                ? location.pathname ==
+                                                  "/avance-cursos"
+                                                : false
+                                        }
+                                    >
+                                        <SchoolIcon />
+                                        <ListItemContent>
+                                            <Typography level="title-sm">
+                                                Avance de cursos
+                                            </Typography>
+                                        </ListItemContent>
+                                    </ListItemButton>
+                                </ListItem>
                             )}
-                        </ListItem>
+                        </DevWrapper>
+
                         {/* <ListItem nested>
                                                 <Toggler
                                                     renderToggle={({ open, setOpen }) => (
