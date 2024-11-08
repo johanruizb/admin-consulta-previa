@@ -2,7 +2,7 @@ import AsyncSelect from "../Field/AsyncSelect";
 import BirthdayField from "../Field/BirthdayField";
 import FileField from "../Field/FileField";
 import PhoneField from "../Field/PhoneField";
-import Select from "../Field/Select";
+import CustomSelect from "../Field/Select";
 import TextField from "../Field/TextField";
 import CustomAsyncSelect from "./CustomAsyncSelect";
 import EmptyField from "./EmptyField";
@@ -52,7 +52,7 @@ const FormularioVerificacion = [
         },
     },
     {
-        Component: Select,
+        Component: CustomSelect,
         controller: {
             name: "tipo_doc",
             defaultValue: "",
@@ -222,7 +222,7 @@ const FormularioVerificacion = [
         url: "/api/ubicacion/ciudades/$1",
     },
     {
-        Component: Select,
+        Component: CustomSelect,
         controller: {
             name: "genero",
             defaultValue: "",
@@ -283,7 +283,7 @@ const FormularioVerificacion = [
         },
     },
     {
-        Component: Select,
+        Component: CustomSelect,
         controller: {
             name: "etnia",
             defaultValue: "",
@@ -335,7 +335,7 @@ const FormularioVerificacion = [
         },
     },
     {
-        Component: Select,
+        Component: CustomSelect,
         controller: {
             name: "tipo_cliente",
             defaultValue: "",
@@ -385,7 +385,7 @@ const FormularioVerificacion = [
                     label: "Educación",
                 },
             ],
-            label: "De los siguientes roles en cual se reconoce",
+            label: "De los siguientes roles en cuál se reconoce?",
             required: true,
         },
     },
@@ -536,7 +536,7 @@ const FormularioVerificacion = [
         },
     },
     {
-        Component: Select,
+        Component: CustomSelect,
         controller: {
             name: "zona",
             defaultValue: "",
@@ -563,7 +563,7 @@ const FormularioVerificacion = [
         },
     },
     {
-        Component: Select,
+        Component: CustomSelect,
         controller: {
             name: "conectividad",
             defaultValue: "",
@@ -620,7 +620,7 @@ const FormularioVerificacion = [
         },
     },
     {
-        Component: Select,
+        Component: CustomSelect,
         controller: {
             name: "curso_inscrito",
             defaultValue: "",
