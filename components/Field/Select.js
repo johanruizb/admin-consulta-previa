@@ -11,14 +11,18 @@ export default function CustomSelect({ inputProps }) {
 
     const {
         controller: controllerProps,
-        field: { InputProps, onChange: onChangeField, ...fieldProps },
+        field: {
+            label: formLabel,
+            InputProps,
+            onChange: onChangeField,
+            ...fieldProps
+        },
     } = inputProps;
 
     return (
         <Controller
             control={control}
-            render={({ field, fieldState }) => {
-                const { error } = fieldState;
+            render={({ field, fieldState: { error } }) => {
                 const { onChange: onChangeController } = field;
 
                 return (
@@ -26,13 +30,14 @@ export default function CustomSelect({ inputProps }) {
                         error={Boolean(error?.type || error?.types)}
                         required={controllerProps.rules?.required?.value}
                     >
-                        <FormLabel>{fieldProps.label}</FormLabel>
+                        <FormLabel>{formLabel}</FormLabel>
                         <Select
                             {...field}
                             onChange={(e, newValue) => {
                                 onChangeField?.(newValue, onChangeController) ||
                                     onChangeController(newValue);
                             }}
+                            {...fieldProps}
                         >
                             {fieldProps.options.map((option) => (
                                 <Option key={option.value} value={option.value}>

@@ -20,7 +20,12 @@ export default function SelectWrapper({ inputProps }) {
 
     const {
         controller: controllerProps,
-        field: { ...fieldProps },
+        field: {
+            label: formLabel,
+            InputProps,
+            onChange: onChangeField,
+            ...fieldProps
+        },
     } = inputProps;
 
     return isLoading || error ? (
@@ -28,7 +33,7 @@ export default function SelectWrapper({ inputProps }) {
             error={error}
             required={controllerProps.rules?.required?.value}
         >
-            <FormLabel>{fieldProps.label}</FormLabel>
+            <FormLabel>{formLabel}</FormLabel>
             <JoySelect
                 endDecorator={
                     isLoading ? (
@@ -37,6 +42,7 @@ export default function SelectWrapper({ inputProps }) {
                         error && <ReportIcon color="danger" />
                     )
                 }
+                {...fieldProps}
             />
             <FormHelperText>
                 {error ? "No se han podido recuperar las opciones" : " "}
@@ -57,7 +63,12 @@ function AsyncSelect({ inputProps }) {
 
     const {
         controller: controllerProps,
-        field: { InputProps, ...fieldProps },
+        field: {
+            label: formLabel,
+            InputProps,
+            onChange: onChangeField,
+            ...fieldProps
+        },
     } = inputProps;
 
     return (
@@ -69,11 +80,12 @@ function AsyncSelect({ inputProps }) {
                         error={Boolean(error?.type || error?.types)}
                         required={controllerProps.rules?.required?.value}
                     >
-                        <FormLabel>{fieldProps.label}</FormLabel>
+                        <FormLabel>{formLabel}</FormLabel>
                         <JoySelect
                             {...field}
                             value={parseInt(field.value) || ""}
                             onChange={(e, value) => field.onChange(value)}
+                            {...fieldProps}
                         >
                             {fieldProps.options.map((option) => (
                                 <Option
