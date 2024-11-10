@@ -87,9 +87,11 @@ export default function Page() {
         if (mounted && data) {
             setFiltering(true);
             const filtered = jsonFilter(values, ["module"]);
-            debounceFilter(data.resultados ?? [], filtered);
+            debounceFilter(data?.resultados ?? [], filtered);
+        } else if (data === undefined) {
+            setFiltering(true);
         }
-    }, [values, mounted, data]);
+    }, [values, data]);
 
     useEffect(() => {
         setFiltering(true);
@@ -115,6 +117,8 @@ export default function Page() {
             </Stack>
         );
     }
+
+    // console.log("data", data);
 
     return (
         <Layout>
@@ -191,7 +195,7 @@ export default function Page() {
                 ) : (
                     <TablaAvances
                         data={rows}
-                        actividades={data.actividades}
+                        actividades={data?.actividades ?? []}
                         // isValidating={isValidating}
                         isFiltering={filtering}
                     />

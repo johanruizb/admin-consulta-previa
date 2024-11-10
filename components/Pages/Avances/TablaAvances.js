@@ -34,12 +34,7 @@ function getMessage(estado) {
     }
 }
 
-export default function TablaAvances({
-    data,
-    actividades,
-    isValidating,
-    isFiltering,
-}) {
+export default function TablaAvances({ data, actividades, isFiltering }) {
     const [page, setPage] = useState(1);
 
     return (
