@@ -12,7 +12,9 @@ export default async function middleware(req) {
     const isProtectedRoute = !isPublicRoute;
 
     // 3. Decrypt the session from the cookie
-    const session = await getIronSession(cookies(), {
+    const c = await cookies();
+
+    const session = await getIronSession(c, {
         password: process.env.SESSION_SECRET,
         cookieName: "session",
     });
