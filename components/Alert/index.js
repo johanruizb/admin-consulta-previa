@@ -3,7 +3,7 @@ import IconButton from "@mui/joy/IconButton";
 
 import Close from "@mui/icons-material/Close";
 
-import { useSessionStorage } from "@uidotdev/usehooks";
+import { useLocalStorage } from "@uidotdev/usehooks";
 import { useEffect, useRef, useState } from "react";
 
 export default function CustomAlert({ autoHideDuration = 6000 }) {
@@ -17,7 +17,7 @@ export default function CustomAlert({ autoHideDuration = 6000 }) {
 }
 
 function Custom({ autoHideDuration = 6000 }) {
-    const [config, saveConfig] = useSessionStorage("CustomAlert", {
+    const [config, saveConfig] = useLocalStorage("CustomAlert", {
         open: false,
         variant: "solid",
         color: "success",
@@ -27,7 +27,12 @@ function Custom({ autoHideDuration = 6000 }) {
     const interval = useRef(null);
 
     const onClose = () => {
-        saveConfig({ ...config, open: false });
+        saveConfig({
+            open: false,
+            variant: "solid",
+            color: "success",
+            content: "",
+        });
     };
 
     useEffect(() => {
