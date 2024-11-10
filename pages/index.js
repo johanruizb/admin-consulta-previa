@@ -1,4 +1,4 @@
-import { Checkbox, FormControl, FormLabel } from "@mui/joy";
+import { Checkbox, FormControl, FormLabel, List, ListItem } from "@mui/joy";
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Card from "@mui/joy/Card";
@@ -30,6 +30,7 @@ import CustomPie from "@/components/Panel/CustomPie";
 import { formatNumber, getURL } from "@/components/utils";
 
 import useSWR from "swr";
+import useClient from "@/hooks/useClient";
 
 dayjs.locale("es");
 
@@ -39,15 +40,6 @@ const fetcherWithCurso = ({ url, args: { options } }) => {
 
 export default function Page() {
     const [curso, setCurso] = useState([1, 2, 3, 4]);
-
-    // const fetcherCallback = useCallback(
-    //     (url) =>
-    //         fetcher(url, {
-    //             body: JSON.stringify(curso),
-    //             method: "POST",
-    //         }),
-    //     [curso]
-    // );
 
     const { data, isLoading } = useSWR(
         {
@@ -71,9 +63,7 @@ export default function Page() {
 
     const [mounted, setMounted] = useState(false);
 
-    useEffect(() => {
-        setMounted(true);
-    }, []);
+    useClient(() => setMounted(true));
 
     const handleCursoChange = (event) => {
         const newValue = parseInt(event.target.value);
@@ -85,19 +75,7 @@ export default function Page() {
         }
     };
 
-    if (!mounted) {
-        return (
-            <Stack
-                justifyContent="center"
-                alignContent="center"
-                alignItems="center"
-                width="100%"
-                height="100%"
-            >
-                <CircularProgress />
-            </Stack>
-        );
-    }
+    if (!mounted) return null;
 
     return (
         <Layout>
@@ -136,43 +114,53 @@ export default function Page() {
                     Estadísticas
                 </Typography>
 
-                <FormControl
+                <Box
                     sx={{
                         flex: { xs: 1, md: 0.5 },
                         maxWidth: { md: "calc(60% - 152.23px)" },
                         width: "100%",
                     }}
                 >
-                    <FormLabel
-                        id="select-field-demo-label"
-                        htmlFor="select-field-demo-button"
+                    <Typography
+                        id="sandwich-group"
+                        level="body-sm"
+                        sx={{ fontWeight: "lg", mb: 1 }}
                     >
                         Estadísticas por curso
-                    </FormLabel>
+                    </Typography>
                     {cursosIsLoading ? (
                         <CircularProgress />
                     ) : (
-                        cursos?.map((item, index) => {
-                            const checked = curso.includes(item.id);
+                        <div role="group" aria-labelledby="sandwich-group">
+                            <List size="sm">
+                                {cursos?.map((item, index) => {
+                                    const checked = curso.includes(item.id);
 
-                            return (
-                                <Checkbox
-                                    key={index}
-                                    value={item.id}
-                                    label={item.name}
-                                    checked={checked}
-                                    onChange={handleCursoChange}
-                                    color={checked ? "primary" : "warning"}
-                                    variant="solid"
-                                    uncheckedIcon={<Close />}
-                                    sx={{
-                                        my: 0.25,
-                                    }}
-                                />
-                            );
-                        })
+                                    return (
+                                        <ListItem key={index}>
+                                            <Checkbox
+                                                value={item.id}
+                                                label={item.name}
+                                                checked={checked}
+                                                onChange={handleCursoChange}
+                                                color={
+                                                    checked
+                                                        ? "primary"
+                                                        : "warning"
+                                                }
+                                                variant="solid"
+                                                uncheckedIcon={<Close />}
+                                                sx={{
+                                                    my: 0.25,
+                                                }}
+                                            />
+                                        </ListItem>
+                                    );
+                                })}
+                            </List>
+                        </div>
                     )}
-                </FormControl>
+                </Box>
             </Box>
             {isLoading ? (
                 <Stack
