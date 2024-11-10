@@ -22,6 +22,8 @@ import { FormProvider, useForm } from "react-hook-form";
 import useSWR, { useSWRConfig } from "swr";
 import CSVField from "./CSVField";
 
+import { v4 as uuidv4 } from "uuid";
+
 function DialogoCarga({ open, setOpen }) {
     const methods = useForm();
     const { handleSubmit, reset } = methods;
@@ -41,9 +43,7 @@ function DialogoCarga({ open, setOpen }) {
             body: formData,
         })
             .then(async (response) => {
-                mutate(getURL("/api/moodle/reporte/procesando"), undefined, {
-                    validate: false,
-                });
+                mutate(getURL("/api/moodle/reporte/procesando"));
                 const result = await response.json();
                 if (response.ok) {
                     onOpen(result.message, "success");
@@ -176,9 +176,7 @@ export default function UploadAvances() {
                         : "Se ha producido un error al procesar los datos",
                     data?.ultima_tarea_exitosa ? "success" : "danger"
                 );
-                mutate(getURL("/api/moodle/reporte/2"), undefined, {
-                    validate: false,
-                });
+                mutate(getURL("/api/moodle/reporte/2"));
             }
             setTime({
                 seconds: 0,
