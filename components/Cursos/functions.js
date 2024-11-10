@@ -5,7 +5,9 @@ import { chunk } from "lodash";
 import { cloneDeep } from "lodash";
 
 function filter(originalData, state, callback) {
-    const entries = Object.entries(state.filter);
+    const { search, ...rest } = state;
+
+    const entries = Object.entries(rest);
     let result = cloneDeep(originalData);
 
     result = originalData.filter((row) => {
@@ -17,7 +19,7 @@ function filter(originalData, state, callback) {
         });
     });
 
-    if (state.search !== undefined) {
+    if (search !== undefined) {
         const fuse = new Fuse(result, {
             keys: [
                 "pais_nac",
@@ -38,7 +40,7 @@ function filter(originalData, state, callback) {
 
     callback((prev) => ({
         ...prev,
-        filtered: result,
+        // filtered: result,
         chunked: chunkedList,
         pages: chunkedList.length,
     }));
