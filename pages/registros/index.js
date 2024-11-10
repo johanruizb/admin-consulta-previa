@@ -2,12 +2,10 @@
 
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
-import Button from "@mui/joy/Button";
 import Link from "@mui/joy/Link";
 import Typography from "@mui/joy/Typography";
 
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 
 import Layout from "@/components/Home/Layout";
@@ -17,26 +15,22 @@ import Head from "next/head";
 
 import CircularProgress from "@mui/joy/CircularProgress";
 import Stack from "@mui/joy/Stack";
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 
 import useSWR from "swr";
 
 import fetcher from "@/components/fetcher";
 import { getURL } from "@/components/utils";
 
-import Alert from "@/components/Alert";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import { useRouter } from "next/navigation";
 
-import usePermissionContext from "@/components/Home/permissionContext/usePermission";
-import CountUp from "react-countup";
 import ExportUsers from "@/components/Registros/ExportUsers";
+import usePermission from "@/hooks/usePermission";
+import CountUp from "react-countup";
 
 export default function Registros({ children }) {
-    const { isLoading: permissionIsLoading, hasPermission } =
-        usePermissionContext();
-
     const { data: inscritos, isLoading: inscritosIsLoading } = useSWR(
         getURL("api/usuarios/estadisticas/registrados"),
         {
@@ -59,15 +53,10 @@ export default function Registros({ children }) {
         router.push(`/registros/${id}`, undefined, { shallow: true });
     };
 
-    useEffect(() => {
-        if (!permissionIsLoading && !hasPermission("usuario.view_persona")) {
-            router.replace("/");
-        }
-    }, [permissionIsLoading, hasPermission]);
+    usePermission("usuario.view_persona");
 
     return (
         <Layout>
-            <Alert />
             <Head>
                 <title>Personas registradas - Consulta previa</title>
             </Head>
