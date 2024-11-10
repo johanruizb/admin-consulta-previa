@@ -13,7 +13,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { getURL } from "../utils";
 
 import useAlert from "@/hooks/useAlert";
-import { useLocalStorage, useSessionStorage } from "@uidotdev/usehooks";
+import { useLocalStorage } from "@uidotdev/usehooks";
 import dayjs from "dayjs";
 import usePermissionContext from "../Home/permissionContext/usePermission";
 
@@ -23,11 +23,11 @@ const options = [
     },
     {
         value: 1,
-        label: "Exportar "Curso de grupos étnicos"",
+        label: `Exportar "Curso de grupos étnicos"`,
     },
     {
         value: 2,
-        label: "Exportar "Curso de capacidades institucionales"",
+        label: `Exportar "Curso de capacidades institucionales"`,
     },
 ];
 
