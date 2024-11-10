@@ -17,8 +17,10 @@ import Head from "next/head";
 
 import ColorSchemeToggle from "@/components/Home/ColorSchemeToggle";
 import UnivalleIcon from "@/components/Icons/Univalle";
+import useAlert from "@/hooks/useAlert";
 
 export default function JoySignInSideTemplate() {
+    const { onOpen } = useAlert();
     const [show, setShow] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -39,11 +41,19 @@ export default function JoySignInSideTemplate() {
             },
             body: JSON.stringify(data),
         }).then(async (response) => {
-            if (response.ok) location.reload();
-            else {
+            if (response.ok) {
+                onOpen("Inicio de sesión exitoso", "success");
+                location.reload();
+            } else {
+                const result = await response.json();
+                onOpen(
+                    result?.message ||
+                        result ||
+                        "Ha ocurrido un error al iniciar sesión",
+                    "danger"
+                );
+                console.error("Error al iniciar sesión", response);
                 setLoading(false);
-                const r = JSON.parse(JSON.stringify(response));
-                console.error({ ...r, body: await response.json() });
             }
         });
     };

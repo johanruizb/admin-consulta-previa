@@ -25,6 +25,9 @@ export default async function handler(req, res) {
             body: JSON.stringify({ username, password }),
         }
     );
+
+    const result = await response.json();
+
     if (response.ok) {
         const session = await getIronSession(req, res, {
             password: process.env.SESSION_SECRET,
@@ -37,14 +40,12 @@ export default async function handler(req, res) {
             },
         });
 
-        const { access } = await response.json();
-
         // Informacion de la sesion
-        session.accessToken = access;
+        session.accessToken = result.access;
         await session.save();
 
         res.status(200).end();
     } else {
-        res.status(401).end();
+        res.status(response.status).json(result || response.statusText);
     }
 }
