@@ -3,8 +3,8 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "update": "ncu",
-        "upgrade": "ncu -u --reject eslint && npm install",
+        "update": "ncu --reject eslint",
+        "upgrade": "ncu -u --reject eslint && npm i --force",
         "format": "py .\\utils\\format.py",
         "dev": "next dev -p 2418",
         "build": "next build",
@@ -14,30 +14,29 @@
     "dependencies": {
         "@emotion/react": "^11.13.3",
         "@emotion/styled": "^11.13.0",
-        "@mui/icons-material": "^6.0.2",
+        "@mui/icons-material": "^6.1.6",
         "@mui/joy": "^5.0.0-beta.48",
-        "@mui/material": "^6.1.1",
-        "@mui/x-charts": "^7.18.0",
+        "@mui/material": "^6.1.6",
+        "@mui/x-charts": "^7.22.2",
         "@uidotdev/usehooks": "^2.4.1",
         "dayjs": "^1.11.13",
         "fuse.js": "^7.0.0",
         "iron-session": "^8.0.3",
         "lodash": "^4.17.21",
-        "next": "^14.2.13",
-        "npm-check-updates": "^17.1.1",
+        "next": "^15.0.3",
+        "npm-check-updates": "^17.1.10",
         "react": "^18",
         "react-countup": "^6.5.3",
         "react-dom": "^18",
-        "react-dropzone": "^14.2.9",
-        "react-hook-form": "^7.53.0",
+        "react-dropzone": "^14.3.5",
+        "react-hook-form": "^7.53.2",
         "react-imask": "^7.6.1",
-        "react-simple-maps": "^1.0.0",
         "swr": "^2.2.5",
-        "uuid": "^10.0.0"
+        "uuid": "^11.0.2"
     },
     "devDependencies": {
         "eslint": "^8.57.0",
-        "eslint-config-next": "^14.2.8",
-        "typescript": "^5.5.4"
+        "eslint-config-next": "^15.0.3",
+        "typescript": "^5.6.3"
     }
 }
