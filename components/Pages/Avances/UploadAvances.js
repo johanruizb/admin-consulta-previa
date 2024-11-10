@@ -176,7 +176,8 @@ export default function UploadAvances() {
                         : "Se ha producido un error al procesar los datos",
                     data?.ultima_tarea_exitosa ? "success" : "danger"
                 );
-                mutate(getURL("/api/moodle/reporte/2"));
+                // mutate(getURL("/api/moodle/reporte/2"));
+                location.reload();
             }
             setTime({
                 seconds: 0,
