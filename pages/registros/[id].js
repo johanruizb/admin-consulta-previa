@@ -39,6 +39,7 @@ import dayjs from "dayjs";
 import Registros from ".";
 
 import { getIconHistory } from "@/components/Registros/functions";
+import usePermission from "@/hooks/usePermission";
 
 export default function Wrapper() {
     const { isLoading: permissionIsLoading, hasPermission } =
@@ -63,6 +64,8 @@ export default function Wrapper() {
 
     const ready =
         mounted && !permissionIsLoading && !isValidating && !isLoading;
+
+    usePermission("usuario.view_persona");
 
     return ready ? (
         hasPermission("usuario.change_persona") ? (
@@ -192,61 +195,55 @@ function View({ defaultValues }) {
                             {validado
                                 ? `La persona ya ha sido validada. Si hay algún error, edita los campos necesarios y presiona el botón "Guardar".`
                                 : `Si hay algún error, edita los campos necesarios. Cuando la información sea correcta presiona el botón "Validar".`}
-                            <form
-                                onSubmit={(event) => {
-                                    event.preventDefault();
-                                    setOpen(false);
-                                }}
-                            >
-                                <Stack spacing={2}>
-                                    <FormProvider {...methods}>
-                                        <Grid container spacing={1.25}>
-                                            {FormularioVerificacion.map(
-                                                (slotProps, index) => {
-                                                    const {
-                                                        Component,
-                                                        size = {
-                                                            xs: 12,
-                                                            md: 6,
-                                                        },
-                                                        ...inputProps
-                                                    } = slotProps;
 
-                                                    const { name } =
-                                                        inputProps?.controller ??
-                                                        {};
+                            <Stack spacing={2}>
+                                <FormProvider {...methods}>
+                                    <Grid container spacing={1.25}>
+                                        {FormularioVerificacion.map(
+                                            (slotProps, index) => {
+                                                const {
+                                                    Component,
+                                                    size = {
+                                                        xs: 12,
+                                                        md: 6,
+                                                    },
+                                                    ...inputProps
+                                                } = slotProps;
 
-                                                    return Component ? (
-                                                        [
-                                                            "genero_otro",
-                                                            "otra_conectividad",
-                                                        ].includes(name) ||
-                                                        name === undefined ? (
+                                                const { name } =
+                                                    inputProps?.controller ??
+                                                    {};
+
+                                                return Component ? (
+                                                    [
+                                                        "genero_otro",
+                                                        "otra_conectividad",
+                                                    ].includes(name) ||
+                                                    name === undefined ? (
+                                                        <Component
+                                                            key={index}
+                                                            inputProps={
+                                                                inputProps
+                                                            }
+                                                        />
+                                                    ) : (
+                                                        <Grid
+                                                            key={index}
+                                                            size={size}
+                                                        >
                                                             <Component
-                                                                key={index}
                                                                 inputProps={
                                                                     inputProps
                                                                 }
                                                             />
-                                                        ) : (
-                                                            <Grid
-                                                                key={index}
-                                                                size={size}
-                                                            >
-                                                                <Component
-                                                                    inputProps={
-                                                                        inputProps
-                                                                    }
-                                                                />
-                                                            </Grid>
-                                                        )
-                                                    ) : null;
-                                                }
-                                            )}
-                                        </Grid>
-                                    </FormProvider>
-                                </Stack>
-                            </form>
+                                                        </Grid>
+                                                    )
+                                                ) : null;
+                                            }
+                                        )}
+                                    </Grid>
+                                </FormProvider>
+                            </Stack>
                             <Box
                                 sx={{
                                     mt: "10px",
