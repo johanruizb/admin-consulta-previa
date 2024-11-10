@@ -24,7 +24,6 @@ import useClient from "@/hooks/useClient";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import DevWrapper from "../Wrapper/DevWrapper";
 import usePermissionContext from "./permissionContext/usePermission";
 import Profile from "./Profile";
 import Settings from "./Settings";
@@ -206,33 +205,31 @@ export default function Sidebar() {
                                 </ListItemButton>
                             </ListItem>
                         )}
-                        <DevWrapper>
-                            {hasPermission(
-                                "moodle.view_actividadescompletadas"
-                            ) && (
-                                <ListItem>
-                                    <ListItemButton
-                                        component="a"
-                                        onClick={() =>
-                                            handleRouteChange("/avance-cursos")
-                                        }
-                                        selected={
-                                            mounted
-                                                ? location.pathname ==
-                                                  "/avance-cursos"
-                                                : false
-                                        }
-                                    >
-                                        <SchoolIcon />
-                                        <ListItemContent>
-                                            <Typography level="title-sm">
-                                                Avance de cursos
-                                            </Typography>
-                                        </ListItemContent>
-                                    </ListItemButton>
-                                </ListItem>
-                            )}
-                        </DevWrapper>
+                        {hasPermission(
+                            "moodle.view_actividadescompletadas"
+                        ) && (
+                            <ListItem>
+                                <ListItemButton
+                                    component="a"
+                                    onClick={() =>
+                                        handleRouteChange("/avance-cursos")
+                                    }
+                                    selected={
+                                        mounted
+                                            ? location.pathname ==
+                                              "/avance-cursos"
+                                            : false
+                                    }
+                                >
+                                    <SchoolIcon />
+                                    <ListItemContent>
+                                        <Typography level="title-sm">
+                                            Avance de cursos
+                                        </Typography>
+                                    </ListItemContent>
+                                </ListItemButton>
+                            </ListItem>
+                        )}
                     </List>
                 )}
                 <List
