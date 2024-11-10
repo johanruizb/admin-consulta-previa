@@ -61,7 +61,7 @@ function DialogoCarga({ open, setOpen }) {
             })
             .finally(() => {
                 setLoading(false);
-                // setTimeout(() => {
+                setTimeout(() => {
                     mutate(
                         getURL("/api/moodle/reporte/procesando"),
                         undefined,
@@ -69,7 +69,7 @@ function DialogoCarga({ open, setOpen }) {
                             revalidate: true,
                         }
                     );
-                // }, 250);
+                }, 250);
             });
     };
 
