@@ -14,9 +14,13 @@ import {
 } from "@mui/material/styles";
 import { SWRConfig } from "swr";
 
-import "@/styles/Option.css";
+import CustomAlert from "@/components/Alert";
 import "@/styles/globals.css";
+import "@/styles/Option.css";
 import "@/styles/OrderTable.css";
+import "@/styles/Avances.css";
+import SettingsProvider from "@/components/Home/settingsContext/SettingsProvider";
+import { Fragment } from "react";
 
 const customTheme = extendTheme({
     colorSchemeSelector: "media",
@@ -38,24 +42,29 @@ export default function App({ Component, pageProps }) {
                     defaultMode="light"
                 >
                     <CssBaseline enableColorScheme />
-                    <PermissionProvider>
-                        <SWRConfig
-                            value={{
-                                revalidateOnMount: true,
-                                fetcher: async (...args) => {
-                                    const res = await fetch(...args);
-                                    return res.ok
-                                        ? res.json()
-                                        : Promise.reject({
-                                              status: res.status,
-                                              statusText: res.statusText,
-                                          });
-                                },
-                            }}
-                        >
-                            <Component {...pageProps} />
-                        </SWRConfig>
-                    </PermissionProvider>
+                    <SWRConfig
+                        value={{
+                            revalidateOnMount: true,
+                            fetcher: async (...args) => {
+                                const res = await fetch(...args);
+                                return res.ok
+                                    ? res.json()
+                                    : Promise.reject({
+                                          status: res.status,
+                                          statusText: res.statusText,
+                                      });
+                            },
+                        }}
+                    >
+                        <PermissionProvider>
+                            <SettingsProvider>
+                                <Fragment>
+                                    <Component {...pageProps} />
+                                    <CustomAlert />
+                                </Fragment>
+                            </SettingsProvider>
+                        </PermissionProvider>
+                    </SWRConfig>
                 </ThemeProvider>
             </JoyCssVarsProvider>
         </CacheProvider>
