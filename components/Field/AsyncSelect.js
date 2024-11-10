@@ -30,7 +30,7 @@ export default function SelectWrapper({ inputProps }) {
 
     return isLoading || error ? (
         <FormControl
-            error={error}
+            error={Boolean(error)}
             required={controllerProps.rules?.required?.value}
         >
             <FormLabel>{formLabel}</FormLabel>
