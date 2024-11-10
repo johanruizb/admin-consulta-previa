@@ -10,6 +10,8 @@ import { useColorScheme as useMaterialColorScheme } from "@mui/material/styles";
 
 import ComputerIcon from "@mui/icons-material/Computer";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
+import useSettingsContext from "./settingsContext/useSettings";
+import useClient from "@/hooks/useClient";
 
 function getIcon(mode) {
     switch (mode) {
@@ -38,18 +40,21 @@ function getLegend(mode) {
 }
 
 export default function ColorSchemeToggle(props) {
+    const { settings, saveSettings } = useSettingsContext();
+
     const { onClick, sx, ...other } = props;
     const { mode, setMode: setMaterialMode } = useMaterialColorScheme();
     const { mode: joyMode, setMode: setJoyMode } = useJoyColorScheme();
     const [mounted, setMounted] = useState(false);
 
-    useEffect(() => {
+    useClient(() => {
         setMounted(true);
-    }, []);
-
-    useEffect(() => {
-        if (mounted && mode !== joyMode) setMaterialMode(joyMode);
-    }, [mounted]);
+        if (mode !== joyMode) setMaterialMode(joyMode);
+        saveSettings({
+            ...settings,
+            colorScheme: joyMode,
+        });
+    });
 
     if (!mounted || !mode) return null;
 
@@ -61,8 +66,14 @@ export default function ColorSchemeToggle(props) {
                 variant="outlined"
                 color="neutral"
                 onClick={() => {
-                    setMaterialMode(mode === "dark" ? "light" : "dark");
-                    setJoyMode(mode === "dark" ? "light" : "dark");
+                    const colorScheme = mode === "dark" ? "light" : "dark";
+                    setMaterialMode(colorScheme);
+                    setJoyMode(colorScheme);
+
+                    saveSettings({
+                        ...settings,
+                        colorScheme,
+                    });
                 }}
                 {...other}
                 sx={[...(Array.isArray(sx) ? sx : [sx])]}

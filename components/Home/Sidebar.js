@@ -1,6 +1,8 @@
+"use client";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import SchoolIcon from "@mui/icons-material/School";
+import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 
 import Box from "@mui/joy/Box";
 import Divider from "@mui/joy/Divider";
@@ -17,38 +19,66 @@ import UnivalleIcon from "../Icons/Univalle";
 import { closeSidebar } from "../utils";
 import ColorSchemeToggle from "./ColorSchemeToggle";
 
+import STORAGE from "@/hooks/storage";
+import useClient from "@/hooks/useClient";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import DevWrapper from "../Wrapper/DevWrapper";
 import usePermissionContext from "./permissionContext/usePermission";
 import Profile from "./Profile";
-import DevWrapper from "../Wrapper/DevWrapper";
+import Settings from "./Settings";
+import useSettingsContext from "./settingsContext/useSettings";
 
 export default function Sidebar() {
     const { isLoading, hasPermission } = usePermissionContext();
 
     const router = useRouter();
-    const [mounted, setMounted] = useState(false);
 
-    useEffect(() => {
+    const [mounted, setMounted] = useState(false);
+    const [open, setOpen] = useState();
+
+    useClient(() => {
         setMounted(true);
-    }, []);
+        setOpen(STORAGE.load("open_settings_app", sessionStorage, false));
+    });
 
     const handleRouteChange = (url, replace = false) => {
         if (replace) router.replace(url, undefined, { shallow: true });
         else router.push(url, undefined, { shallow: true });
     };
 
+    const { settings } = useSettingsContext();
+
+    const sheetSx = settings.useWideInterface
+        ? {
+              transform:
+                  "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)))",
+          }
+        : {
+              transform: {
+                  xs: "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)))",
+                  md: "none",
+              },
+          };
+
+    const Sidebaroverlay = settings.useWideInterface
+        ? {
+              transform:
+                  "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1) + var(--SideNavigation-slideIn, 0) * var(--Sidebar-width, 0px)))",
+          }
+        : {
+              transform: {
+                  xs: "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1) + var(--SideNavigation-slideIn, 0) * var(--Sidebar-width, 0px)))",
+                  lg: "translateX(-100%)",
+              },
+          };
+
     return (
         <Sheet
             className="Sidebar"
             sx={{
-                // position: { xs: "fixed", md: "sticky" },
                 position: "fixed",
-                transform: {
-                    xs: "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)))",
-                    md: "none",
-                },
                 transition: "transform 0.4s, width 0.4s",
                 zIndex: 1000,
                 height: "100dvh",
@@ -61,6 +91,7 @@ export default function Sidebar() {
                 gap: 2,
                 borderRight: "1px solid",
                 borderColor: "divider",
+                ...sheetSx,
             }}
         >
             <GlobalStyles
@@ -85,33 +116,27 @@ export default function Sidebar() {
                     opacity: "var(--SideNavigation-slideIn)",
                     backgroundColor: "var(--joy-palette-background-backdrop)",
                     transition: "opacity 0.4s",
-                    transform: {
-                        xs: "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1) + var(--SideNavigation-slideIn, 0) * var(--Sidebar-width, 0px)))",
-                        lg: "translateX(-100%)",
-                    },
+                    ...Sidebaroverlay,
                 }}
                 onClick={() => closeSidebar()}
             />
-            <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-                <IconButton variant="plain" color="primary" size="lg">
-                    <UnivalleIcon
-                        sx={(theme) => ({
-                            fontSize: "48px",
-                            fill: "#D9000C",
-                            [theme.getColorSchemeSelector("dark")]: {
-                                fill: "white",
-                            },
-                        })}
-                    />
-                </IconButton>
-                <Typography level="title-lg">Consulta previa</Typography>
-                <ColorSchemeToggle sx={{ ml: "auto" }} />
-            </Box>
-            {/* <Input
-                size="sm"
-                startDecorator={<SearchRoundedIcon />}
-                placeholder="Search"
-            /> */}
+            {!settings.useWideInterface && (
+                <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                    <IconButton variant="plain" color="primary" size="lg">
+                        <UnivalleIcon
+                            sx={(theme) => ({
+                                fontSize: "48px",
+                                fill: "#D9000C",
+                                [theme.getColorSchemeSelector("dark")]: {
+                                    fill: "white",
+                                },
+                            })}
+                        />
+                    </IconButton>
+                    <Typography level="title-lg">Consulta previa</Typography>
+                    <ColorSchemeToggle sx={{ ml: "auto" }} />
+                </Box>
+            )}
             <Box
                 sx={{
                     minHeight: 0,
@@ -182,7 +207,9 @@ export default function Sidebar() {
                             </ListItem>
                         )}
                         <DevWrapper>
-                            {hasPermission("usuario.view_persona") && (
+                            {hasPermission(
+                                "moodle.view_actividadescompletadas"
+                            ) && (
                                 <ListItem>
                                     <ListItemButton
                                         component="a"
@@ -206,141 +233,32 @@ export default function Sidebar() {
                                 </ListItem>
                             )}
                         </DevWrapper>
-
-                        {/* <ListItem nested>
-                                                <Toggler
-                                                    renderToggle={({ open, setOpen }) => (
-                                                        <ListItemButton onClick={() => setOpen(!open)}>
-                                                            <AssignmentRoundedIcon />
-                                                            <ListItemContent>
-                                                                <Typography level="title-sm">
-                                                                    Tasks
-                                                                </Typography>
-                                                            </ListItemContent>
-                                                            <KeyboardArrowDownIcon
-                                                                sx={[
-                                                                    open
-                                                                        ? {
-                                                                              transform:
-                                                                                  "rotate(180deg)",
-                                                                          }
-                                                                        : {
-                                                                              transform: "none",
-                                                                          },
-                                                                ]}
-                                                            />
-                                                        </ListItemButton>
-                                                    )}
-                                                >
-                                                    <List sx={{ gap: 0.5 }}>
-                                                        <ListItem sx={{ mt: 0.5 }}>
-                                                            <ListItemButton>All tasks</ListItemButton>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                            <ListItemButton>Backlog</ListItemButton>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                            <ListItemButton>In progress</ListItemButton>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                            <ListItemButton>Done</ListItemButton>
-                                                        </ListItem>
-                                                    </List>
-                                                </Toggler>
-                                            </ListItem>
-                                            <ListItem>
-                                                <ListItemButton
-                                                    role="menuitem"
-                                                    component="a"
-                                                    href="/joy-ui/getting-started/templates/messages/"
-                                                >
-                                                    <QuestionAnswerRoundedIcon />
-                                                    <ListItemContent>
-                                                        <Typography level="title-sm">
-                                                            Messages
-                                                        </Typography>
-                                                    </ListItemContent>
-                                                    <Chip size="sm" color="primary" variant="solid">
-                                                        4
-                                                    </Chip>
-                                                </ListItemButton>
-                                            </ListItem>
-                                            <ListItem nested>
-                                                <Toggler
-                                                    renderToggle={({ open, setOpen }) => (
-                                                        <ListItemButton onClick={() => setOpen(!open)}>
-                                                            <GroupRoundedIcon />
-                                                            <ListItemContent>
-                                                                <Typography level="title-sm">
-                                                                    Users
-                                                                </Typography>
-                                                            </ListItemContent>
-                                                            <KeyboardArrowDownIcon
-                                                                sx={[
-                                                                    open
-                                                                        ? {
-                                                                              transform:
-                                                                                  "rotate(180deg)",
-                                                                          }
-                                                                        : {
-                                                                              transform: "none",
-                                                                          },
-                                                                ]}
-                                                            />
-                                                        </ListItemButton>
-                                                    )}
-                                                >
-                                                    <List sx={{ gap: 0.5 }}>
-                                                        <ListItem sx={{ mt: 0.5 }}>
-                                                            <ListItemButton
-                                                                role="menuitem"
-                                                                component="a"
-                                                                href="/joy-ui/getting-started/templates/profile-dashboard/"
-                                                            >
-                                                                My profile
-                                                            </ListItemButton>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                            <ListItemButton>
-                                                                Create a new user
-                                                            </ListItemButton>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                            <ListItemButton>
-                                                                Roles & permission
-                                                            </ListItemButton>
-                                                        </ListItem>
-                                                    </List>
-                                                </Toggler>
-                                            </ListItem> */}
                     </List>
                 )}
-                {/* <List
+                <List
                     size="sm"
                     sx={{
                         mt: "auto",
                         flexGrow: 0,
                         "--ListItem-radius": (theme) => theme.vars.radius.sm,
                         "--List-gap": "8px",
-                        mb: 2,
+                        // mb: 2,
                     }}
                 >
                     <ListItem>
-                        <ListItemButton>
-                            <SupportRoundedIcon />
-                            Support
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem>
-                        <ListItemButton>
+                        <ListItemButton
+                            onClick={() => setOpen(true)}
+                            selected={open}
+                        >
                             <SettingsRoundedIcon />
-                            Settings
+                            Ajustes
                         </ListItemButton>
                     </ListItem>
-                </List> */}
+                </List>
             </Box>
             <Divider />
             <Profile />
+            {open && <Settings open={open} onClose={() => setOpen(false)} />}
         </Sheet>
     );
 }
