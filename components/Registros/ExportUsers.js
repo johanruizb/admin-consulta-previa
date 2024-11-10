@@ -23,11 +23,11 @@ const options = [
     },
     {
         value: 1,
-        label: "Exportar 'Curso de grupos étnicos'",
+        label: "Exportar "Curso de grupos étnicos"",
     },
     {
         value: 2,
-        label: "Exportar 'Curso de capacidades institucionales'",
+        label: "Exportar "Curso de capacidades institucionales"",
     },
 ];
 

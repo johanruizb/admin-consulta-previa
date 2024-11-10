@@ -1,6 +1,7 @@
 import STORAGE from "@/hooks/storage";
 import useClient from "@/hooks/useClient";
-import { CircularProgress, Stack } from "@mui/joy";
+import CircularProgress from "@mui/joy/CircularProgress";
+import Stack from "@mui/joy/Stack";
 import { useState } from "react";
 import SettingsContext from ".";
 

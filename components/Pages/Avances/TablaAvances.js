@@ -6,15 +6,13 @@ import Typography from "@mui/joy/Typography";
 
 import Pagination from "@mui/material/Pagination";
 
-import {
-    Button,
-    Checkbox,
-    CircularProgress,
-    LinearProgress,
-    Link,
-    Stack,
-    Tooltip,
-} from "@mui/joy";
+import Button from "@mui/joy/Button";
+import Checkbox from "@mui/joy/Checkbox";
+import CircularProgress from "@mui/joy/CircularProgress";
+import LinearProgress from "@mui/joy/LinearProgress";
+import Link from "@mui/joy/Link";
+import Stack from "@mui/joy/Stack";
+import Tooltip from "@mui/joy/Tooltip";
 import { range } from "lodash";
 import { Fragment, useState } from "react";
 

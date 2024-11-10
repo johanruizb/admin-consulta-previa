@@ -4,7 +4,8 @@ import GlobalStyles from "@mui/joy/GlobalStyles";
 import IconButton from "@mui/joy/IconButton";
 import Sheet from "@mui/joy/Sheet";
 
-import { Box, Typography } from "@mui/joy";
+import Box from "@mui/joy/Box";
+import Typography from "@mui/joy/Typography";
 import UnivalleIcon from "../Icons/Univalle";
 import { toggleSidebar } from "../utils";
 import ColorSchemeToggle from "./ColorSchemeToggle";

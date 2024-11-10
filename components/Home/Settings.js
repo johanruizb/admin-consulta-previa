@@ -1,4 +1,4 @@
-import { DialogActions } from "@mui/joy";
+import DialogActions from "@mui/joy/DialogActions";
 import Button from "@mui/joy/Button";
 import DialogTitle from "@mui/joy/DialogTitle";
 import Modal from "@mui/joy/Modal";
@@ -6,7 +6,7 @@ import ModalDialog from "@mui/joy/ModalDialog";
 import { FormProvider, useForm } from "react-hook-form";
 
 import SaveIcon from "@mui/icons-material/Save";
-import { useMediaQuery } from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import Grid from "@mui/material/Grid2";
 import { SettingsForm } from "./constants";
 

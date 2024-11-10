@@ -30,7 +30,7 @@ import UploadAvances from "@/components/Pages/Avances/UploadAvances";
 import { getURL } from "@/components/utils";
 import useClient from "@/hooks/useClient";
 import { jsonFilter } from "@/utils/json";
-import { Button } from "@mui/joy";
+import Button from "@mui/joy/Button";
 import getTimeout from "@/utils/timeout";
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 import usePermission from "@/hooks/usePermission";

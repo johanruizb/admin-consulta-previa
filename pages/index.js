@@ -1,4 +1,8 @@
-import { Checkbox, FormControl, FormLabel, List, ListItem } from "@mui/joy";
+import Checkbox from "@mui/joy/Checkbox";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import List from "@mui/joy/List";
+import ListItem from "@mui/joy/ListItem";
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Card from "@mui/joy/Card";

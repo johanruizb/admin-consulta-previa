@@ -6,16 +6,15 @@ import ReportProblemIcon from "@mui/icons-material/ReportProblem";
 import { convertToFormData, getURL } from "@/components/utils";
 import useAlert from "@/hooks/useAlert";
 import usePermission from "@/hooks/usePermission";
-import {
-    Button,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Link,
-    ModalDialog,
-    Typography,
-} from "@mui/joy";
-import { CircularProgress, Modal } from "@mui/material";
+import Button from "@mui/joy/Button";
+import DialogActions from "@mui/joy/DialogActions";
+import DialogContent from "@mui/joy/DialogContent";
+import DialogTitle from "@mui/joy/DialogTitle";
+import Link from "@mui/joy/Link";
+import ModalDialog from "@mui/joy/ModalDialog";
+import Typography from "@mui/joy/Typography";
+import CircularProgress from "@mui/material/CircularProgress";
+import Modal from "@mui/material/Modal";
 import { useLocalStorage, usePrevious } from "@uidotdev/usehooks";
 import dayjs from "dayjs";
 import { Fragment, useEffect, useState } from "react";

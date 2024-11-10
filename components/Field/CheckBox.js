@@ -1,5 +1,5 @@
 import Close from "@mui/icons-material/Close";
-import { Checkbox } from "@mui/joy";
+import Checkbox from "@mui/joy/Checkbox";
 
 import FormControl from "@mui/joy/FormControl";
 import FormHelperText from "@mui/joy/FormHelperText";
