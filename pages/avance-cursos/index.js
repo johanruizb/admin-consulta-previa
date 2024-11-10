@@ -54,8 +54,7 @@ export default function Page() {
         getURL("/api/moodle/reporte/" + modulo_id)
     );
 
-    const { isLoading: permissionIsLoading, hasPermission } =
-        usePermissionContext();
+    const { hasPermission } = usePermissionContext();
 
     const [mounted, setMounted] = useState(false);
     const [filtering, setFiltering] = useState(true);
