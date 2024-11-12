@@ -127,28 +127,19 @@ function View({ defaultValues }) {
             body: formData,
         })
             .then(async (response) => {
+                let res = null;
+                res = await response.json();
+                
                 if (response.ok) {
-                    const res = await response.json();
                     openAlert(res.message, "solid", "success");
                     router.back();
                 } else {
-                    response
-                        .json()
-                        .then((data) => {
-                            openAlert(
-                                data?.message ??
-                                    `Se ha producido un error (${response.statusText})`,
-                                "solid",
-                                "danger"
-                            );
-                        })
-                        .catch(() => {
-                            openAlert(
-                                `Se ha producido un error (${response.statusText})`,
-                                "solid",
-                                "danger"
-                            );
-                        });
+                    openAlert(
+                        res?.message ??
+                            `Se ha producido un error (${response.statusText})`,
+                        "solid",
+                        "danger"
+                    );
                 }
             })
             .catch((error) => {
