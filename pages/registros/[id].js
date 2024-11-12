@@ -128,7 +128,8 @@ function View({ defaultValues }) {
         })
             .then(async (response) => {
                 if (response.ok) {
-                    openAlert(await response.json(), "solid", "success");
+                    const res = await response.json();
+                    openAlert(res.message, "solid", "success");
                     router.back();
                 } else {
                     response
