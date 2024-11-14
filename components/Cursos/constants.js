@@ -1,31 +1,30 @@
 import AsyncSelect from "@/components/Field/AsyncSelect";
 import CustomSelect from "../Field/Select";
-import CustomCheckbox from "../Field/CheckBox";
+import ThreeCheckBox from "../Field/ThreeCheckBox";
 
 const FormularioCursos = [
-    // {
-    //     Component: AsyncSelect,
-    //     controller: {
-    //         name: "pais_nac",
-    //         defaultValue: "",
-    //     },
-    //     field: {
-    //         label: "País de nacimiento",
-    //         placeholder: "Seleccione un país",
-    //     },
-    //     url: "/api/ubicacion/paises",
-    // },
-    // {
-    //     Component: AsyncSelect,
-    //     controller: {
-    //         name: "estado_res",
-    //     },
-    //     field: {
-    //         label: "Departamento de residencia",
-    //         placeholder: "Seleccione un departamento",
-    //     },
-    //     url: "/api/ubicacion/estados/48",
-    // },
+    {
+        Component: AsyncSelect,
+        controller: {
+            name: "user__ciudad_nac__state_id__country_id",
+        },
+        field: {
+            label: "País de nacimiento",
+            placeholder: "Seleccione un país",
+        },
+        url: "/api/ubicacion/paises",
+    },
+    {
+        Component: AsyncSelect,
+        controller: {
+            name: "user__ciudad__state_id",
+        },
+        field: {
+            label: "Departamento de residencia",
+            placeholder: "Seleccione un departamento",
+        },
+        url: "/api/ubicacion/estados/48",
+    },
     // {
     //     Component: CustomSelect,
     //     controller: {
@@ -215,7 +214,7 @@ const FormularioCursos = [
     {
         Component: CustomSelect,
         controller: {
-            name: "module",
+            name: "activity__module_id",
             defaultValue: "",
         },
         field: {
@@ -242,7 +241,7 @@ const FormularioCursos = [
         },
     },
     {
-        Component: CustomCheckbox,
+        Component: ThreeCheckBox,
         controller: {
             name: "modulo_completado",
             defaultValue: false,

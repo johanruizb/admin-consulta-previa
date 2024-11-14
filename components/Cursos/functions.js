@@ -13,7 +13,13 @@ function filter(originalData, state, callback) {
     result = originalData.filter((row) => {
         return entries.every(([key, value]) => {
             // TODO: Verificar si esto es correcto
-            if (row[key] === undefined) return true;
+            if (
+                (value !== 0 && value !== false && !value) ||
+                row[key] === undefined ||
+                value?.toString().trim() === "" ||
+                value === "all"
+            )
+                return true;
 
             return String(row[key]) === String(value);
         });
