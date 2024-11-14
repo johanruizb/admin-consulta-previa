@@ -36,6 +36,7 @@ import getTimeout from "@/utils/timeout";
 import Button from "@mui/joy/Button";
 import { useRenderCount } from "@uidotdev/usehooks";
 import fetcher from "@/components/fetcher";
+import DevWrapper from "@/components/Wrapper/DevWrapper";
 
 dayjs.locale("es");
 
@@ -159,21 +160,23 @@ export default function Page() {
             <Head>
                 <title>Avance de cursos - Consulta previa</title>
             </Head>
-            <Box
-                sx={{
-                    position: "fixed",
-                    bottom: 0,
-                    left: 0,
-                }}
-            >
-                <Typography
-                    variant="h1"
-                    component="h1"
-                    sx={{ fontSize: 24, fontWeight: 500 }}
+            <DevWrapper>
+                <Box
+                    sx={{
+                        position: "fixed",
+                        bottom: 2,
+                        left: 2,
+                    }}
                 >
-                    {count}
-                </Typography>
-            </Box>
+                    <Typography
+                        variant="h1"
+                        component="h1"
+                        sx={{ fontSize: 24, fontWeight: 500 }}
+                    >
+                        {count}
+                    </Typography>
+                </Box>
+            </DevWrapper>
             <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Breadcrumbs
                     size="sm"
