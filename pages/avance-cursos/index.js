@@ -25,15 +25,17 @@ import useSWR from "swr";
 
 import FiltrarCursos from "@/components/Cursos/FiltrarCursos";
 import { filter } from "@/components/Cursos/functions";
+import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 import TablaAvances from "@/components/Pages/Avances/TablaAvances";
 import UploadAvances from "@/components/Pages/Avances/UploadAvances";
 import { getURL } from "@/components/utils";
 import useClient from "@/hooks/useClient";
-import { jsonFilter } from "@/utils/json";
-import Button from "@mui/joy/Button";
-import getTimeout from "@/utils/timeout";
-import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 import usePermission from "@/hooks/usePermission";
+import { jsonFilter } from "@/utils/json";
+import getTimeout from "@/utils/timeout";
+import Button from "@mui/joy/Button";
+import { useRenderCount } from "@uidotdev/usehooks";
+import fetcher from "@/components/fetcher";
 
 dayjs.locale("es");
 
@@ -43,7 +45,16 @@ dayjs.locale("es");
 // preload(getURL("/api/moodle/reporte/12"), fetcher);
 
 export default function Page() {
-    const methods = useForm();
+    const count = useRenderCount();
+    const methods = useForm({
+        defaultValues: {
+            user__ciudad_nac__state_id__country_id: "all",
+            user__ciudad__state_id: "all",
+            activity__module_id: 2,
+            modulo_completado: "all",
+        },
+    });
+
     const { control, reset } = methods;
 
     const values = useWatch({ control });
@@ -51,7 +62,30 @@ export default function Page() {
     const modulo_id = useWatch({ control, name: "module", defaultValue: 2 });
 
     const { data, isLoading } = useSWR(
-        getURL("/api/moodle/reporte/" + modulo_id)
+        [
+            getURL("/api/moodle/reporte/" + modulo_id),
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    ...values,
+                    modulo_completado: undefined,
+                }),
+            },
+        ],
+
+        async (args) => {
+            // console.log("args", args[0], args[1]);
+            const res = await fetch(args[0], args[1]);
+            return res.ok
+                ? res.json()
+                : Promise.reject({
+                      status: res.status,
+                      statusText: res.statusText,
+                  });
+        }
     );
 
     const { hasPermission } = usePermissionContext();
@@ -99,7 +133,7 @@ export default function Page() {
 
     useClient(() => {
         setMounted(true);
-        reset({ module: 2, modulo_completado: true });
+        // reset({ activity__module_id: 2, modulo_completado: "all" });
     });
 
     usePermission("moodle.view_actividadescompletadas");
@@ -125,6 +159,21 @@ export default function Page() {
             <Head>
                 <title>Avance de cursos - Consulta previa</title>
             </Head>
+            <Box
+                sx={{
+                    position: "fixed",
+                    bottom: 0,
+                    left: 0,
+                }}
+            >
+                <Typography
+                    variant="h1"
+                    component="h1"
+                    sx={{ fontSize: 24, fontWeight: 500 }}
+                >
+                    {count}
+                </Typography>
+            </Box>
             <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Breadcrumbs
                     size="sm"
