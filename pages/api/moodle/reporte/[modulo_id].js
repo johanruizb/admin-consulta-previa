@@ -1,14 +1,6 @@
 import { getIronSession } from "iron-session";
 import { NextApiRequest, NextApiResponse } from "next";
 
-async function buffer(readable) {
-    const chunks = [];
-    for await (const chunk of readable) {
-        chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
-    }
-    return Buffer.concat(chunks);
-}
-
 /**
  * Handler para la ruta API de Next.js que maneja la obtención de los datos del usuario.
  *
@@ -25,13 +17,15 @@ export default async function handler(req, res) {
 
     const response = await fetch(
         process.env.NEXT_PUBLIC_BASE_URL +
-            "/api/v1/moodle/reporte/" +
+            "/api/v1/moodle/reporte/resumen/" +
             req.query.modulo_id,
         {
-            method: "GET",
+            method: "POST",
             headers: {
+                "Content-Type": "application/json",
                 Authorization: "Bearer " + session.accessToken,
             },
+            body: JSON.stringify(req.body),
         }
     );
 
@@ -49,6 +43,6 @@ export default async function handler(req, res) {
 export const config = {
     api: {
         responseLimit: false,
-        bodyParser: false,
+        // bodyParser: false,
     },
 };
