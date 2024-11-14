@@ -19,6 +19,10 @@ export default async function handler(req, res) {
                 country_id,
             {
                 method: "GET",
+                headers: {
+                    // get client path
+                    "X-Referer": req.headers.referer,
+                },
             }
         );
 

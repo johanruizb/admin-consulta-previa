@@ -13,6 +13,10 @@ export default async function handler(req, res) {
         process.env.NEXT_PUBLIC_BASE_URL + "/api/ubicacion/paises",
         {
             method: "GET",
+            headers: {
+                // get client path
+                "X-Referer": req.headers.referer,
+            },
         }
     );
 
