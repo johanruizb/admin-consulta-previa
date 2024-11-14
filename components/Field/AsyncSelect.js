@@ -1,16 +1,17 @@
 import ReportIcon from "@mui/icons-material/Report";
 
 import CircularProgress from "@mui/joy/CircularProgress";
-import { default as JoySelect } from "@mui/joy/Select";
-import Option from "@mui/joy/Option";
 import FormControl from "@mui/joy/FormControl";
 import FormHelperText from "@mui/joy/FormHelperText";
 import FormLabel from "@mui/joy/FormLabel";
+import Option from "@mui/joy/Option";
+import { default as JoySelect } from "@mui/joy/Select";
 
 import { Controller, useFormContext } from "react-hook-form";
 
 import useSWRImmutable from "swr/immutable";
 
+import { v4 } from "uuid";
 import fetcher from "../fetcher";
 import { getURL } from "../utils";
 
@@ -20,12 +21,7 @@ export default function SelectWrapper({ inputProps }) {
 
     const {
         controller: controllerProps,
-        field: {
-            label: formLabel,
-            InputProps,
-            onChange: onChangeField,
-            ...fieldProps
-        },
+        field: { label: formLabel },
     } = inputProps;
 
     return isLoading || error ? (
@@ -42,7 +38,6 @@ export default function SelectWrapper({ inputProps }) {
                         error && <ReportIcon color="danger" />
                     )
                 }
-                {...fieldProps}
             />
             <FormHelperText>
                 {error ? "No se han podido recuperar las opciones" : " "}
@@ -65,8 +60,7 @@ function AsyncSelect({ inputProps }) {
         controller: controllerProps,
         field: {
             label: formLabel,
-            InputProps,
-            onChange: onChangeField,
+            // options,
             ...fieldProps
         },
     } = inputProps;
@@ -83,14 +77,22 @@ function AsyncSelect({ inputProps }) {
                         <FormLabel>{formLabel}</FormLabel>
                         <JoySelect
                             {...field}
-                            value={parseInt(field.value) || ""}
+                            value={
+                                isNaN(parseInt(field.value))
+                                    ? field.value
+                                    : parseInt(field.value)
+                            }
                             onChange={(e, value) => field.onChange(value)}
-                            {...fieldProps}
+                            // {...fieldProps}
                         >
-                            {fieldProps.options.map((option) => (
+                            {fieldProps?.options?.map((option) => (
                                 <Option
-                                    key={parseInt(option.value)}
-                                    value={parseInt(option.value)}
+                                    key={v4()}
+                                    value={
+                                        isNaN(parseInt(option.value))
+                                            ? option.value
+                                            : parseInt(option.value)
+                                    }
                                 >
                                     {option.label}
                                 </Option>
