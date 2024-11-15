@@ -59,7 +59,7 @@ export function formatNumber(number, locale = "en-US", options = {}) {
     return result?.replace(",", ".");
 }
 
-function getWindow() {
+export function getWindow() {
     if (typeof window !== "undefined") return window;
     return null;
 }
