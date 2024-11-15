@@ -17,15 +17,12 @@ import Head from "next/head";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 
-import { chunk, debounce } from "lodash";
-
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 
 import useSWR from "swr";
 
 import FiltrarCursos from "@/components/Cursos/FiltrarCursos";
-import { filter } from "@/components/Cursos/functions";
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 import TablaAvances from "@/components/Pages/Avances/TablaAvances";
 import UploadAvances from "@/components/Pages/Avances/UploadAvances";
@@ -33,10 +30,9 @@ import { getURL } from "@/components/utils";
 import DevWrapper from "@/components/Wrapper/DevWrapper";
 import useClient from "@/hooks/useClient";
 import usePermission from "@/hooks/usePermission";
-import getTimeout from "@/utils/timeout";
+import { IconButton, Tooltip } from "@mui/joy";
 import Button from "@mui/joy/Button";
 import { useRenderCount } from "@uidotdev/usehooks";
-import { IconButton, Tooltip } from "@mui/joy";
 
 dayjs.locale("es");
 
@@ -61,7 +57,7 @@ export default function Page() {
         },
     });
 
-    const { control, reset } = methods;
+    const { control } = methods;
 
     const values = useWatch({ control });
     // const modulo_completado = useWatch({ control, name: "modulo_completado" });
@@ -96,26 +92,10 @@ export default function Page() {
     const { hasPermission } = usePermissionContext();
 
     const [mounted, setMounted] = useState(false);
-    // const [filtering, setFiltering] = useState(true);
-    const [rows, setRows] = useState();
 
     useEffect(() => {
         setMounted(true);
     }, []);
-
-    useEffect(() => {
-        if (mounted && data) {
-            const chucked = chunk(data?.resultados ?? [], 50);
-            setRows({
-                chunked: chucked,
-                pages: chucked.length,
-            });
-        }
-
-        return () => {
-            setRows();
-        };
-    }, [data, mounted]);
 
     useClient(() => {
         setMounted(true);
@@ -244,7 +224,7 @@ export default function Page() {
             </Box>
             <FormProvider {...methods}>
                 <FiltrarCursos />
-                {isLoading || !rows ? (
+                {isLoading || !data ? (
                     <Stack
                         justifyContent="center"
                         alignContent="center"
@@ -270,9 +250,10 @@ export default function Page() {
                     </Stack>
                 ) : (
                     <TablaAvances
-                        data={rows}
-                        actividades={data?.actividades ?? []}
-                        // isValidating={isValidating}
+                        data={data}
+                        // actividades={data?.actividades ?? []}
+                        // label={data?.label_completado ?? "Módulo completado"}
+                        isValidating={isValidating}
                         // isFiltering={filtering}
                     />
                 )}
