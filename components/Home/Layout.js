@@ -12,8 +12,6 @@ function Layout({ children }) {
         location: { pathname },
     } = getWindow() ?? {};
 
-    console.log(pathname);
-
     const useWide = pathname.includes("/avance-cursos");
 
     const { settings } = useSettingsContext();
