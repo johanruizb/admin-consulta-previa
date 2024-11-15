@@ -130,7 +130,7 @@ export default function TablaAvances({
                                             noWrap
                                             textAlign="center"
                                         >
-                                            {label}
+                                            {label ?? "Módulo completado"}
                                         </Typography>
                                     </th>
                                 </Tooltip>
