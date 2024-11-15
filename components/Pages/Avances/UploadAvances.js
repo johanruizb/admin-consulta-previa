@@ -184,7 +184,7 @@ export default function UploadAvances() {
                 );
                 mutate(
                     // test regex from `${getURL("/api/moodle/reporte/")}\d+`
-                    (key) => key.match(/\/api\/moodle\/reporte\/\d+/),
+                    (key) => key?.match?.(/\/api\/moodle\/reporte\/\d+/),
                     undefined,
                     {
                         revalidate: true,
