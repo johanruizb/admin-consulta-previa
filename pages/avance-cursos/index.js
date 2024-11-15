@@ -97,41 +97,11 @@ export default function Page() {
 
     const [mounted, setMounted] = useState(false);
     // const [filtering, setFiltering] = useState(true);
-    const [rows, setRows] = useState({
-        chunked: [],
-        pages: 0,
-    });
+    const [rows, setRows] = useState();
 
     useEffect(() => {
         setMounted(true);
     }, []);
-
-    // const timeout = useRef();
-
-    // const debounceFilter = useCallback(
-    //     debounce((d, f) => {
-    //         const startTime = dayjs();
-    //         filter(d, f, setRows);
-
-    //         if (!timeout.current)
-    //             timeout.current = setTimeout(() => {
-    //                 setFiltering(false);
-    //                 timeout.current = null;
-    //             }, getTimeout(startTime, 750));
-    //     }, 300),
-    //     []
-    // );
-
-    // useEffect(() => {
-    //     if (mounted && data) {
-    //         setFiltering(true);
-    //         debounceFilter(data?.resultados ?? [], { modulo_completado });
-    //     } else if (!data) setFiltering(true);
-
-    //     return () => {
-    //         setFiltering(false);
-    //     };
-    // }, [modulo_completado, data, mounted]);
 
     useEffect(() => {
         if (mounted && data) {
@@ -141,6 +111,10 @@ export default function Page() {
                 pages: chucked.length,
             });
         }
+
+        return () => {
+            setRows();
+        };
     }, [data, mounted]);
 
     useClient(() => {
@@ -270,7 +244,7 @@ export default function Page() {
             </Box>
             <FormProvider {...methods}>
                 <FiltrarCursos />
-                {isLoading ? (
+                {isLoading || !rows ? (
                     <Stack
                         justifyContent="center"
                         alignContent="center"
