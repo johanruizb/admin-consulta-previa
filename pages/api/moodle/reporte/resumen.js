@@ -41,7 +41,7 @@ export default async function handler(req, res) {
 export const config = {
     api: {
         responseLimit: false,
-        maxDuration: 30,
+        maxDuration: 60,
         // bodyParser: false,
     },
 };
