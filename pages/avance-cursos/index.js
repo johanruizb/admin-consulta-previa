@@ -6,6 +6,7 @@ import Typography from "@mui/joy/Typography";
 
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import ReplayIcon from "@mui/icons-material/Replay";
 
 import Stack from "@mui/material/Stack";
 
@@ -16,7 +17,7 @@ import Head from "next/head";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 
-import { debounce } from "lodash";
+import { chunk, debounce } from "lodash";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
@@ -29,14 +30,13 @@ import usePermissionContext from "@/components/Home/permissionContext/usePermiss
 import TablaAvances from "@/components/Pages/Avances/TablaAvances";
 import UploadAvances from "@/components/Pages/Avances/UploadAvances";
 import { getURL } from "@/components/utils";
+import DevWrapper from "@/components/Wrapper/DevWrapper";
 import useClient from "@/hooks/useClient";
 import usePermission from "@/hooks/usePermission";
-import { jsonFilter } from "@/utils/json";
 import getTimeout from "@/utils/timeout";
 import Button from "@mui/joy/Button";
 import { useRenderCount } from "@uidotdev/usehooks";
-import fetcher from "@/components/fetcher";
-import DevWrapper from "@/components/Wrapper/DevWrapper";
+import { IconButton, Tooltip } from "@mui/joy";
 
 dayjs.locale("es");
 
@@ -51,7 +51,12 @@ export default function Page() {
         defaultValues: {
             user__ciudad_nac__state_id__country_id: "all",
             user__ciudad__state_id: "all",
-            activity__module_id: 2,
+            user__genero_id: "all",
+            user__etnia: "all",
+            user__tipo_cliente: "all",
+            user__zona: "all",
+            user__conectividad: "all",
+            activity__module_id: "all",
             modulo_completado: "all",
         },
     });
@@ -59,12 +64,11 @@ export default function Page() {
     const { control, reset } = methods;
 
     const values = useWatch({ control });
+    // const modulo_completado = useWatch({ control, name: "modulo_completado" });
 
-    const modulo_id = useWatch({ control, name: "module", defaultValue: 2 });
-
-    const { data, isLoading } = useSWR(
+    const { data, isLoading, isValidating, mutate } = useSWR(
         [
-            getURL("/api/moodle/reporte/" + modulo_id),
+            getURL("/api/moodle/reporte/resumen"),
             {
                 method: "POST",
                 headers: {
@@ -72,7 +76,7 @@ export default function Page() {
                 },
                 body: JSON.stringify({
                     ...values,
-                    modulo_completado: undefined,
+                    // modulo_completado: undefined,
                 }),
             },
         ],
@@ -92,7 +96,7 @@ export default function Page() {
     const { hasPermission } = usePermissionContext();
 
     const [mounted, setMounted] = useState(false);
-    const [filtering, setFiltering] = useState(true);
+    // const [filtering, setFiltering] = useState(true);
     const [rows, setRows] = useState({
         chunked: [],
         pages: 0,
@@ -102,39 +106,45 @@ export default function Page() {
         setMounted(true);
     }, []);
 
-    const timeout = useRef();
+    // const timeout = useRef();
 
-    const debounceFilter = useCallback(
-        debounce((d, f) => {
-            const startTime = dayjs();
-            filter(d, f, setRows);
+    // const debounceFilter = useCallback(
+    //     debounce((d, f) => {
+    //         const startTime = dayjs();
+    //         filter(d, f, setRows);
 
-            if (!timeout.current)
-                timeout.current = setTimeout(() => {
-                    setFiltering(false);
-                    timeout.current = null;
-                }, getTimeout(startTime, 750));
-        }, 300),
-        []
-    );
+    //         if (!timeout.current)
+    //             timeout.current = setTimeout(() => {
+    //                 setFiltering(false);
+    //                 timeout.current = null;
+    //             }, getTimeout(startTime, 750));
+    //     }, 300),
+    //     []
+    // );
+
+    // useEffect(() => {
+    //     if (mounted && data) {
+    //         setFiltering(true);
+    //         debounceFilter(data?.resultados ?? [], { modulo_completado });
+    //     } else if (!data) setFiltering(true);
+
+    //     return () => {
+    //         setFiltering(false);
+    //     };
+    // }, [modulo_completado, data, mounted]);
 
     useEffect(() => {
         if (mounted && data) {
-            setFiltering(true);
-            const filtered = jsonFilter(values, ["module"]);
-            debounceFilter(data?.resultados ?? [], filtered);
-        } else if (data === undefined) {
-            setFiltering(true);
+            const chucked = chunk(data?.resultados ?? [], 50);
+            setRows({
+                chunked: chucked,
+                pages: chucked.length,
+            });
         }
-    }, [values, data]);
-
-    useEffect(() => {
-        setFiltering(true);
-    }, [modulo_id]);
+    }, [data, mounted]);
 
     useClient(() => {
         setMounted(true);
-        // reset({ activity__module_id: 2, modulo_completado: "all" });
     });
 
     usePermission("moodle.view_actividadescompletadas");
@@ -177,6 +187,46 @@ export default function Page() {
                     </Typography>
                 </Box>
             </DevWrapper>
+            <Tooltip
+                title={
+                    isLoading
+                        ? "Cargando información..."
+                        : isValidating
+                        ? "Validando información..."
+                        : // : filtering
+                          // ? "Filtrando información..."
+                          "Recargar información"
+                }
+                arrow
+            >
+                <Box
+                    sx={{
+                        position: "fixed",
+                        bottom: 16,
+                        right: 16,
+                        zIndex: 1000,
+                    }}
+                >
+                    <IconButton
+                        variant="solid"
+                        color="primary"
+                        sx={{
+                            width: 56,
+                            height: 56,
+                            borderRadius: "50%",
+                        }}
+                        onClick={() => {
+                            mutate(undefined, {
+                                validate: false,
+                            });
+                        }}
+                        loading={isLoading || isValidating}
+                        size="lg"
+                    >
+                        <ReplayIcon fontSize="large" />
+                    </IconButton>
+                </Box>
+            </Tooltip>
             <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Breadcrumbs
                     size="sm"
@@ -249,7 +299,7 @@ export default function Page() {
                         data={rows}
                         actividades={data?.actividades ?? []}
                         // isValidating={isValidating}
-                        isFiltering={filtering}
+                        // isFiltering={filtering}
                     />
                 )}
             </FormProvider>
