@@ -16,9 +16,7 @@ export default async function handler(req, res) {
     });
 
     const response = await fetch(
-        process.env.NEXT_PUBLIC_BASE_URL +
-            "/api/v1/moodle/reporte/resumen/" +
-            req.query.modulo_id,
+        process.env.NEXT_PUBLIC_BASE_URL + "/api/v1/moodle/reporte/resumen",
         {
             method: "POST",
             headers: {
