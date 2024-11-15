@@ -6,14 +6,33 @@ import Typography from "@mui/joy/Typography";
 
 import Pagination from "@mui/material/Pagination";
 
-import DevWrapper from "@/components/Wrapper/DevWrapper";
 import Checkbox from "@mui/joy/Checkbox";
 import Tooltip from "@mui/joy/Tooltip";
-import { range } from "lodash";
+import dayjs from "dayjs";
+import { chunk, range } from "lodash";
 import { Fragment, useEffect, useState } from "react";
+import { useFormContext, useWatch } from "react-hook-form";
 
-export default function TablaAvances({ data, actividades }) {
+export default function TablaAvances({
+    data,
+    // actividades: propsActividades,
+    // label,
+    isValidating,
+}) {
+    const {
+        actividades,
+        label_completado: label,
+        resultados: rows,
+    } = data ?? {};
     const [page, setPage] = useState(1);
+
+    const { control } = useFormContext();
+
+    const values = useWatch({
+        control,
+    });
+
+    const { modulo_completado: mc_filtro } = values;
 
     useEffect(() => {
         return () => {
@@ -23,30 +42,6 @@ export default function TablaAvances({ data, actividades }) {
 
     return (
         <Fragment>
-            <DevWrapper>
-                <Box
-                    sx={{
-                        position: "fixed",
-                        top: 16,
-                        right: 16,
-                        zIndex: 1000,
-                    }}
-                >
-                    <Typography
-                        variant="h1"
-                        component="h1"
-                        sx={{ fontSize: 24, fontWeight: 500 }}
-                    >
-                        Total pagina:{" "}
-                        {data?.chunked?.[page - 1]?.length ?? "..."}
-                        <br />
-                        Total registros:{" "}
-                        {(data?.chunked?.length - 1) * 50 +
-                            data?.chunked?.[data?.chunked?.length - 1]?.length -
-                            1 ?? "..."}
-                    </Typography>
-                </Box>
-            </DevWrapper>
             <Fragment>
                 <Sheet
                     className="OrderTableContainer"
@@ -80,7 +75,7 @@ export default function TablaAvances({ data, actividades }) {
                             <tr>
                                 <th
                                     style={{
-                                        width: 80,
+                                        width: 10,
                                         padding: "12px 6px",
                                     }}
                                 >
@@ -88,7 +83,7 @@ export default function TablaAvances({ data, actividades }) {
                                 </th>
                                 <th
                                     style={{
-                                        width: 120,
+                                        width: 30,
                                         padding: "12px 6px",
                                     }}
                                 >
@@ -103,7 +98,7 @@ export default function TablaAvances({ data, actividades }) {
                                     >
                                         <th
                                             style={{
-                                                width: 25,
+                                                width: 60 / actividades.length,
                                                 padding: "12px 6px",
                                             }}
                                         >
@@ -111,6 +106,7 @@ export default function TablaAvances({ data, actividades }) {
                                                 // className="verticalTableHeader"
                                                 level="body-xs"
                                                 noWrap
+                                                textAlign="center"
                                             >
                                                 {actividad.name}
                                             </Typography>
@@ -124,7 +120,7 @@ export default function TablaAvances({ data, actividades }) {
                                 >
                                     <th
                                         style={{
-                                            width: 25,
+                                            width: 10,
                                             padding: "12px 6px",
                                         }}
                                     >
@@ -132,33 +128,29 @@ export default function TablaAvances({ data, actividades }) {
                                             // className="verticalTableHeader"
                                             level="body-xs"
                                             noWrap
+                                            textAlign="center"
                                         >
-                                            Módulo completado
+                                            {label}
                                         </Typography>
                                     </th>
                                 </Tooltip>
                             </tr>
                         </thead>
                         <tbody>
-                            {data?.chunked?.[page - 1]?.map((row) => (
+                            {rows?.chunked?.[page - 1]?.map((row) => (
                                 <Box
                                     component="tr"
                                     key={row.id}
-                                    // onClick={() => onView(row.id)}
                                     className="pointer-row"
-                                    // {...(hasPermission("usuario.change_persona")
-                                    //     ? {
-                                    //           onClick: () => onView(row.id),
-                                    //       }
-                                    //     : {})}
-
-                                    {...(row.id === "resumen" && {
-                                        sx: {
-                                            // border: 1,
-                                            bgcolor:
-                                                "rgba(31, 122, 31,.3) !important",
-                                        },
-                                    })}
+                                    sx={{
+                                        bgcolor:
+                                            row.id === "resumen"
+                                                ? "rgba(11, 107, 203, 0.25) !important"
+                                                : row.modulo_completado &&
+                                                  mc_filtro === "all"
+                                                ? "rgba(31, 122, 31, 0.2) !important"
+                                                : "transparent",
+                                    }}
                                 >
                                     {row.id === "resumen" ? (
                                         <Fragment>
@@ -176,7 +168,7 @@ export default function TablaAvances({ data, actividades }) {
                                                     return (
                                                         <Tooltip
                                                             key={index}
-                                                            title={`Usuarios que han completado la actividad: ${actividad}`}
+                                                            title={`Usuarios que lo han completado: ${actividad}`}
                                                             placement="top"
                                                             arrow
                                                         >
@@ -232,13 +224,28 @@ export default function TablaAvances({ data, actividades }) {
                                                     const estadoNumero =
                                                         Number(estado);
 
+                                                    const completado =
+                                                        estadoNumero >= 1;
+
                                                     return (
                                                         <Tooltip
                                                             key={id}
                                                             // title={getMessage(
                                                             //     estadoNumero
                                                             // )}
-                                                            title="Completado"
+                                                            title={
+                                                                actividad.fecha
+                                                                    ? completado
+                                                                        ? `${dayjs(
+                                                                              actividad.fecha
+                                                                          ).format(
+                                                                              "DD [de] MMMM [de] YYYY, [a las] HH:mm:ss a"
+                                                                          )}`
+                                                                        : "Actividad no completada"
+                                                                    : completado
+                                                                    ? "Módulo completado"
+                                                                    : "Módulo no completado"
+                                                            }
                                                             placement="top"
                                                             arrow
                                                         >
@@ -255,8 +262,7 @@ export default function TablaAvances({ data, actividades }) {
                                                                     <Checkbox
                                                                         readOnly
                                                                         checked={
-                                                                            estadoNumero >=
-                                                                            1
+                                                                            completado
                                                                         }
                                                                         // color={
                                                                         //     estadoNumero ===
@@ -329,7 +335,7 @@ export default function TablaAvances({ data, actividades }) {
                                     )}
                                 </Box>
                             ))}
-                            {data?.pages === 0 && (
+                            {rows?.pages === 0 && (
                                 <tr>
                                     <td colSpan={actividades.length + 3}>
                                         <Typography textAlign="center">
@@ -361,7 +367,7 @@ export default function TablaAvances({ data, actividades }) {
                     <Pagination
                         size="medium"
                         page={page}
-                        count={data.pages || 1}
+                        count={rows.pages || 1}
                         variant="outlined"
                         onChange={(_, page) => setPage(page)}
                         sx={{
