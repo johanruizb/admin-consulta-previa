@@ -114,7 +114,7 @@ export default function TablaAvances({
                                     </Tooltip>
                                 ))}
                                 <Tooltip
-                                    title="Módulo completado"
+                                    title={label ?? "Módulo completado"}
                                     placement="left"
                                     arrow
                                 >
