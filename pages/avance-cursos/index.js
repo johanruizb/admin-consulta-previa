@@ -93,10 +93,6 @@ export default function Page() {
 
     const [mounted, setMounted] = useState(false);
 
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-
     useClient(() => {
         setMounted(true);
     });
@@ -224,7 +220,7 @@ export default function Page() {
             </Box>
             <FormProvider {...methods}>
                 <FiltrarCursos />
-                {isLoading || !data ? (
+                {isLoading ? (
                     <Stack
                         justifyContent="center"
                         alignContent="center"
@@ -249,13 +245,7 @@ export default function Page() {
                         </Button>
                     </Stack>
                 ) : (
-                    <TablaAvances
-                        data={data}
-                        // actividades={data?.actividades ?? []}
-                        // label={data?.label_completado ?? "Módulo completado"}
-                        isValidating={isValidating}
-                        // isFiltering={filtering}
-                    />
+                    <TablaAvances data={data} isValidating={isValidating} />
                 )}
             </FormProvider>
         </Layout>
