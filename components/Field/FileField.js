@@ -21,7 +21,10 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Image from "next/image";
 import { useDropzone } from "react-dropzone";
 
-const CustomImage = forwardRef(function CustomImage({ url, field }, ref) {
+const CustomImage = forwardRef(function CustomImage(
+    { url, field, readOnly },
+    ref
+) {
     const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
         accept: {
             "image/png": [".png", ".jpg", ".jpeg"],
@@ -82,49 +85,52 @@ const CustomImage = forwardRef(function CustomImage({ url, field }, ref) {
                         ref={ref}
                         width={ratioRef?.current?.clientWidth ?? 0}
                         height={ratioRef?.current?.clientHeight ?? 0}
+                        onClick={handleClick}
                     />
                 ) : (
                     <CircularProgress variant="solid" color="neutral" />
                 )}
-                <Stack
-                    direction="row"
-                    spacing={1.25}
-                    sx={{
-                        position: "absolute",
-                        right: "50%",
-                        top: "50%",
-                        transform: "translate(50%, -50%)",
-                    }}
-                >
-                    <Tooltip
-                        title="Abrir en nueva pestaña"
-                        arrow
-                        variant="soft"
+                {!readOnly && (
+                    <Stack
+                        direction="row"
+                        spacing={1.25}
+                        sx={{
+                            position: "absolute",
+                            right: "50%",
+                            top: "50%",
+                            transform: "translate(50%, -50%)",
+                        }}
                     >
-                        <IconButton
+                        <Tooltip
+                            title="Abrir en nueva pestaña"
+                            arrow
+                            variant="soft"
+                        >
+                            <IconButton
+                                color="primary"
+                                variant="solid"
+                                onClick={handleClick}
+                            >
+                                <OpenInNewIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Button
                             color="primary"
                             variant="solid"
-                            onClick={handleClick}
+                            onClick={handleReplace}
+                            startDecorator={<FileUploadIcon />}
+                            {...getRootProps()}
                         >
-                            <OpenInNewIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Button
-                        color="primary"
-                        variant="solid"
-                        onClick={handleReplace}
-                        startDecorator={<FileUploadIcon />}
-                        {...getRootProps()}
-                    >
-                        Reemplazar imagen
-                        <input
-                            type="file"
-                            hidden
-                            {...field}
-                            {...getInputProps()}
-                        />
-                    </Button>
-                </Stack>
+                            Reemplazar imagen
+                            <input
+                                type="file"
+                                hidden
+                                {...field}
+                                {...getInputProps()}
+                            />
+                        </Button>
+                    </Stack>
+                )}
             </Box>
         </AspectRatio>
     );
@@ -172,6 +178,7 @@ export default function FileField({ inputProps }) {
                                     root: {
                                         url: value,
                                         field,
+                                        readOnly: fieldProps.readOnly,
                                     },
                                 }}
                             />

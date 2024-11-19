@@ -54,6 +54,7 @@ export default function BirthdayField({ inputProps }) {
                             {...field}
                             type="date"
                             endDecorator={<YearCount date={field.value} />}
+                            readOnly={fieldProps.readOnly}
                         />
                         <FormHelperText>{error?.message ?? " "}</FormHelperText>
                     </FormControl>

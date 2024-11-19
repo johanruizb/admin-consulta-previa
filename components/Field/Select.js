@@ -15,6 +15,7 @@ export default function CustomSelect({ inputProps }) {
             label: formLabel,
             InputProps,
             onChange: onChangeField,
+            options,
             ...fieldProps
         },
     } = inputProps;
@@ -38,8 +39,13 @@ export default function CustomSelect({ inputProps }) {
                                     onChangeController(newValue);
                             }}
                             {...fieldProps}
+                            slotProps={{
+                                button: {
+                                    disabled: fieldProps.readOnly,
+                                },
+                            }}
                         >
-                            {fieldProps.options.map((option) => (
+                            {options.map((option) => (
                                 <Option key={option.value} value={option.value}>
                                     {option.label}
                                 </Option>

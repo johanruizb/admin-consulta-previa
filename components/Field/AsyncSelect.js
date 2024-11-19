@@ -84,6 +84,11 @@ function AsyncSelect({ inputProps }) {
                             }
                             onChange={(e, value) => field.onChange(value)}
                             // {...fieldProps}
+                            slotProps={{
+                                button: {
+                                    disabled: fieldProps.readOnly,
+                                },
+                            }}
                         >
                             {fieldProps?.options?.map((option) => (
                                 <Option

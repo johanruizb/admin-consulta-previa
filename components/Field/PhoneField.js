@@ -58,6 +58,7 @@ export default function PhoneField({ inputProps }) {
                                     component: PhoneMask,
                                 },
                             }}
+                            readOnly={fieldProps.readOnly}
                         />
                         <FormHelperText>{error?.message ?? " "}</FormHelperText>
                     </FormControl>
