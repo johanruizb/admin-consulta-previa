@@ -1,5 +1,7 @@
+import { IconButton, Tooltip } from "@mui/joy";
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
+import Button from "@mui/joy/Button";
 import CircularProgress from "@mui/joy/CircularProgress";
 import Link from "@mui/joy/Link";
 import Typography from "@mui/joy/Typography";
@@ -10,19 +12,20 @@ import ReplayIcon from "@mui/icons-material/Replay";
 
 import Stack from "@mui/material/Stack";
 
-import Layout from "@/components/Home/Layout";
-
 import Head from "next/head";
+import { useRouter } from "next/navigation";
 
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 
-import { useEffect, useState } from "react";
+import { useRenderCount } from "@uidotdev/usehooks";
+import { useState } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 
 import useSWR from "swr";
 
 import FiltrarCursos from "@/components/Cursos/FiltrarCursos";
+import Layout from "@/components/Home/Layout";
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 import TablaAvances from "@/components/Pages/Avances/TablaAvances";
 import UploadAvances from "@/components/Pages/Avances/UploadAvances";
@@ -30,9 +33,7 @@ import { getURL } from "@/components/utils";
 import DevWrapper from "@/components/Wrapper/DevWrapper";
 import useClient from "@/hooks/useClient";
 import usePermission from "@/hooks/usePermission";
-import { IconButton, Tooltip } from "@mui/joy";
-import Button from "@mui/joy/Button";
-import { useRenderCount } from "@uidotdev/usehooks";
+
 
 dayjs.locale("es");
 
@@ -41,10 +42,13 @@ dayjs.locale("es");
 // preload(getURL("/api/moodle/reporte/11"), fetcher);
 // preload(getURL("/api/moodle/reporte/12"), fetcher);
 
-export default function Page() {
+export default function Avances({ children }) {
+    const router = useRouter();
     const count = useRenderCount();
     const methods = useForm({
         defaultValues: {
+            activity__module__course_id: 1,
+            activity__module_id: "all",
             user__ciudad_nac__state_id__country_id: "all",
             user__ciudad__state_id: "all",
             user__genero_id: "all",
@@ -52,7 +56,6 @@ export default function Page() {
             user__tipo_cliente: "all",
             user__zona: "all",
             user__conectividad: "all",
-            activity__module_id: "all",
             modulo_completado: "all",
         },
     });
@@ -89,7 +92,8 @@ export default function Page() {
         }
     );
 
-    const { hasPermission } = usePermissionContext();
+    const { isLoading: permissionIsLoading, hasPermission } =
+        usePermissionContext();
 
     const [mounted, setMounted] = useState(false);
 
@@ -98,6 +102,10 @@ export default function Page() {
     });
 
     usePermission("moodle.view_actividadescompletadas");
+
+    const onView = (id) => {
+        router.push(`/avance-cursos/${id}`, undefined, { shallow: true });
+    };
 
     if (!mounted) {
         return (
@@ -117,6 +125,7 @@ export default function Page() {
 
     return (
         <Layout>
+            {children}
             <Head>
                 <title>Avance de cursos - Consulta previa</title>
             </Head>
@@ -220,7 +229,7 @@ export default function Page() {
             </Box>
             <FormProvider {...methods}>
                 <FiltrarCursos />
-                {isLoading ? (
+                {isLoading || permissionIsLoading ? (
                     <Stack
                         justifyContent="center"
                         alignContent="center"
@@ -245,7 +254,12 @@ export default function Page() {
                         </Button>
                     </Stack>
                 ) : (
-                    <TablaAvances data={data} isValidating={isValidating} />
+                    <TablaAvances
+                        data={data}
+                        // isValidating={isValidating}
+                        hasPermission={hasPermission}
+                        onView={onView}
+                    />
                 )}
             </FormProvider>
         </Layout>
