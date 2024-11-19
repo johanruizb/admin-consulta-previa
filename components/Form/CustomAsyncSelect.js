@@ -1,18 +1,20 @@
 import ReportIcon from "@mui/icons-material/Report";
 
 import CircularProgress from "@mui/joy/CircularProgress";
-import { default as JoySelect } from "@mui/joy/Select";
-import Option from "@mui/joy/Option";
 import FormControl from "@mui/joy/FormControl";
 import FormHelperText from "@mui/joy/FormHelperText";
 import FormLabel from "@mui/joy/FormLabel";
+import Option from "@mui/joy/Option";
+import { default as JoySelect } from "@mui/joy/Select";
 
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 
 import useSWRImmutable from "swr/immutable";
 
+import { v4 } from "uuid";
 import fetcher from "../fetcher";
 import { format, getURL } from "../utils";
+import useSWR from "swr";
 
 function getCustomURL(url, values) {
     return getURL(format(url, values));
@@ -21,9 +23,8 @@ function getCustomURL(url, values) {
 export default function CustomAsyncSelect({ inputProps }) {
     const { control } = useFormContext();
 
-    const { url, ...otherProps } = inputProps;
-
     const {
+        url,
         dependencies,
         controller: controllerProps,
         field: { ...fieldProps },
@@ -35,7 +36,14 @@ export default function CustomAsyncSelect({ inputProps }) {
     });
 
     const customURL = getCustomURL(url, values);
-    const { data, error, isLoading } = useSWRImmutable(customURL, fetcher);
+    const validURL = Array.isArray(values)
+        ? values.every((value) => value)
+        : values;
+
+    const { data, error, isLoading } = useSWR(
+        validURL ? customURL : null,
+        fetcher
+    );
 
     return isLoading || error ? (
         <FormControl
@@ -59,8 +67,8 @@ export default function CustomAsyncSelect({ inputProps }) {
     ) : (
         <AsyncSelect
             inputProps={{
-                ...otherProps,
-                field: { ...otherProps.field, options: data },
+                ...inputProps,
+                field: { ...inputProps.field, options: data },
             }}
         />
     );
@@ -71,7 +79,7 @@ function AsyncSelect({ inputProps }) {
 
     const {
         controller: controllerProps,
-        field: { InputProps, ...fieldProps },
+        field: { label: formLabel, options, ...fieldProps },
     } = inputProps;
 
     return (
@@ -83,16 +91,30 @@ function AsyncSelect({ inputProps }) {
                         error={Boolean(error?.type || error?.types)}
                         required={controllerProps.rules?.required?.value}
                     >
-                        <FormLabel>{fieldProps.label}</FormLabel>
+                        <FormLabel>{formLabel}</FormLabel>
                         <JoySelect
                             {...field}
-                            value={parseInt(field.value) || ""}
+                            value={
+                                isNaN(parseInt(field.value))
+                                    ? field.value
+                                    : parseInt(field.value)
+                            }
                             onChange={(e, value) => field.onChange(value)}
+                            {...fieldProps}
+                            slotProps={{
+                                button: {
+                                    disabled: fieldProps.readOnly,
+                                },
+                            }}
                         >
-                            {fieldProps?.options?.map((option) => (
+                            {options?.map((option) => (
                                 <Option
-                                    key={parseInt(option.value)}
-                                    value={parseInt(option.value)}
+                                    key={v4()}
+                                    value={
+                                        isNaN(parseInt(option.value))
+                                            ? option.value
+                                            : parseInt(option.value)
+                                    }
                                 >
                                     {option.label}
                                 </Option>
