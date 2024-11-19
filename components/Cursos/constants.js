@@ -1,8 +1,63 @@
 import AsyncSelect from "@/components/Field/AsyncSelect";
 import CustomSelect from "../Field/Select";
 import ThreeCheckBox from "../Field/ThreeCheckBox";
+import CustomAsyncSelect from "../Form/CustomAsyncSelect";
 
 const FormularioCursos = [
+    {
+        Component: CustomSelect,
+        controller: {
+            name: "activity__module__course_id",
+            defaultValue: 1,
+        },
+        field: {
+            label: "Curso",
+            placeholder: "Seleccione un curso",
+            sx: {
+                borderColor: "var(--joy-palette-primary-500) !important",
+            },
+            options: [
+                {
+                    value: 1,
+                    label: "Curso virtual de autoformación en Consulta Previa - Grupos étnicos (20h)",
+                },
+                {
+                    value: 2,
+                    label: "Curso virtual de autoformación en consulta previa para fortalecimiento de capacidades institucionales (20h)",
+                },
+            ],
+        },
+        size: {
+            xs: 12,
+            md: 6,
+        },
+    },
+    {
+        Component: CustomAsyncSelect,
+        controller: {
+            name: "activity__module_id",
+        },
+        field: {
+            label: "Modulo",
+            placeholder: "Seleccione una opción",
+            sx: {
+                borderColor: "var(--joy-palette-primary-500) !important",
+            },
+        },
+        url: "/api/moodle/curso/$1/modulos",
+        dependencies: ["activity__module__course_id"],
+    },
+    {
+        Component: ThreeCheckBox,
+        controller: {
+            name: "modulo_completado",
+            defaultValue: false,
+        },
+        field: {
+            label: "Modulo completado",
+            content: "¿El modulo ha sido completado?",
+        },
+    },
     {
         Component: AsyncSelect,
         controller: {
@@ -93,50 +148,12 @@ const FormularioCursos = [
         },
         url: "/api/usuarios/general/conectividad",
     },
-    {
-        Component: CustomSelect,
-        controller: {
-            name: "activity__module_id",
-            defaultValue: "",
-        },
-        field: {
-            options: [
-                {
-                    value: "all",
-                    label: "Todos los módulos",
-                },
-                {
-                    value: 2,
-                    label: "Módulo 1 - Derecho Fundamental a la Consulta Previa",
-                },
-                {
-                    value: 7,
-                    label: "Módulo 2 - Derecho Fundamental a la Consulta Previa",
-                },
-                {
-                    value: 11,
-                    label: "Módulo 3 - Derecho Fundamental a la Consulta Previa",
-                },
-                {
-                    value: 12,
-                    label: "Módulo 4 - Derecho Fundamental a la Consulta Previa",
-                },
-            ],
-            label: "Modulo",
-            placeholder: "Seleccione una opción",
-        },
-    },
-    {
-        Component: ThreeCheckBox,
-        controller: {
-            name: "modulo_completado",
-            defaultValue: false,
-        },
-        field: {
-            label: "Modulo completado",
-            content: "¿El modulo ha sido completado?",
-        },
-    },
+];
+
+const FiltroCursos = [
+    FormularioCursos.slice(0, 3),
+    FormularioCursos.slice(3, FormularioCursos.length),
 ];
 
 export default FormularioCursos;
+export { FiltroCursos };
