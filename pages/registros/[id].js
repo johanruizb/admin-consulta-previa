@@ -40,6 +40,7 @@ import Registros from ".";
 
 import { getIconHistory } from "@/components/Registros/functions";
 import usePermission from "@/hooks/usePermission";
+import useAlert from "@/hooks/useAlert";
 
 export default function Wrapper() {
     const { isLoading: permissionIsLoading, hasPermission } =
@@ -89,12 +90,7 @@ export default function Wrapper() {
 }
 
 function View({ defaultValues }) {
-    const [, saveConfig] = useSessionStorage("CustomAlert", {
-        open: false,
-        variant: "solid",
-        color: "success",
-        content: "",
-    });
+    const { onOpen: saveConfig } = useAlert();
 
     const [loading, setLoading] = useState(false);
 
@@ -106,8 +102,8 @@ function View({ defaultValues }) {
         router.push("/registros");
     };
 
-    const openAlert = (content, variant = "solid", color = "success") => {
-        saveConfig({ open: true, variant, color, content });
+    const openAlert = (content, color = "success") => {
+        saveConfig(content, color);
     };
 
     const methods = useForm({ defaultValues });
@@ -130,13 +126,13 @@ function View({ defaultValues }) {
                 const res = await response.json();
 
                 if (response.ok) {
-                    openAlert(res.message, "solid", "success");
+                    openAlert(res.message);
                     router.back();
                 } else {
                     openAlert(
                         res?.message ??
                             `Se ha producido un error (${response.statusText})`,
-                        "solid",
+
                         "danger"
                     );
                 }
@@ -144,7 +140,7 @@ function View({ defaultValues }) {
             .catch((error) => {
                 openAlert(
                     `Se ha producido un error (${error.toString()})`,
-                    "solid",
+
                     "danger"
                 );
             })
