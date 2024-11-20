@@ -33,6 +33,7 @@ import { getURL } from "@/components/utils";
 import DevWrapper from "@/components/Wrapper/DevWrapper";
 import useClient from "@/hooks/useClient";
 import usePermission from "@/hooks/usePermission";
+import ExportAvances from "@/components/Pages/Avances/ExportarAvances";
 
 dayjs.locale("es");
 
@@ -223,9 +224,12 @@ export default function Avances({ children }) {
                     Avance de cursos
                 </Typography>
                 <FormProvider {...methods}>
-                    {hasPermission("moodle.add_actividadescompletadas") && (
-                        <UploadAvances />
-                    )}
+                    <Stack spacing={1}>
+                        {hasPermission("moodle.add_actividadescompletadas") && (
+                            <UploadAvances />
+                        )}
+                        <ExportAvances />
+                    </Stack>
                 </FormProvider>
             </Box>
             <FormProvider {...methods}>
