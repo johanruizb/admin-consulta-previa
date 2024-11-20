@@ -127,9 +127,8 @@ function View({ defaultValues }) {
             body: formData,
         })
             .then(async (response) => {
-                let res = null;
-                res = await response.json();
-                
+                const res = await response.json();
+
                 if (response.ok) {
                     openAlert(res.message, "solid", "success");
                     router.back();
