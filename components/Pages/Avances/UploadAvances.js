@@ -161,9 +161,6 @@ export default function UploadAvances() {
     const previousData = usePrevious(data);
     const { onOpen } = useAlert();
 
-    const { control } = useFormContext();
-    const values = useWatch({ control });
-
     useEffect(() => {
         if (data?.procesando) {
             setOptions({
