@@ -34,7 +34,6 @@ import DevWrapper from "@/components/Wrapper/DevWrapper";
 import useClient from "@/hooks/useClient";
 import usePermission from "@/hooks/usePermission";
 
-
 dayjs.locale("es");
 
 // preload(getURL("/api/moodle/reporte/2"), fetcher);
@@ -223,9 +222,11 @@ export default function Avances({ children }) {
                 <Typography level="h2" component="h1">
                     Avance de cursos
                 </Typography>
-                {hasPermission("moodle.add_actividadescompletadas") && (
-                    <UploadAvances />
-                )}
+                <FormProvider {...methods}>
+                    {hasPermission("moodle.add_actividadescompletadas") && (
+                        <UploadAvances />
+                    )}
+                </FormProvider>
             </Box>
             <FormProvider {...methods}>
                 <FiltrarCursos />
