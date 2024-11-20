@@ -18,7 +18,12 @@ import Modal from "@mui/material/Modal";
 import { useLocalStorage, usePrevious } from "@uidotdev/usehooks";
 import dayjs from "dayjs";
 import { Fragment, useEffect, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import {
+    FormProvider,
+    useForm,
+    useFormContext,
+    useWatch,
+} from "react-hook-form";
 import useSWR, { useSWRConfig } from "swr";
 import CSVField from "./CSVField";
 
@@ -156,6 +161,9 @@ export default function UploadAvances() {
     const previousData = usePrevious(data);
     const { onOpen } = useAlert();
 
+    const { control } = useFormContext();
+    const values = useWatch({ control });
+
     useEffect(() => {
         if (data?.procesando) {
             setOptions({
@@ -184,7 +192,8 @@ export default function UploadAvances() {
                 );
                 mutate(
                     // test regex from `${getURL("/api/moodle/reporte/")}\d+`
-                    (key) => key?.match?.(/\/api\/moodle\/reporte\/\d+/),
+                    // (key) => key?.match?.(/\/api\/moodle\/reporte\/\d+/),
+                    (key) => Array.isArray(key),
                     undefined,
                     {
                         revalidate: true,
