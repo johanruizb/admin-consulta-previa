@@ -10,11 +10,6 @@ export default class MyDocument extends Document {
                     <InitColorSchemeScript defaultMode="light" />
                     <Main />
                     <NextScript />
-                    <script
-                        defer
-                        src="https://static.cloudflareinsights.com/beacon.min.js"
-                        data-cf-beacon={`{ token: ${process.env.CLOUDFLARE_ANALYTICS} }`}
-                    />
                 </body>
             </Html>
         );
