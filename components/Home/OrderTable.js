@@ -314,18 +314,18 @@ export default function OrderTable({ data, onView }) {
                                                         false: (
                                                             <BlockIcon fontSize="small" />
                                                         ),
-                                                    }[row.inscrito]
+                                                    }[row.participacion]
                                                 }
                                                 color={
                                                     {
                                                         true: "success",
                                                         false: "danger",
-                                                    }[row.inscrito]
+                                                    }[row.participacion]
                                                 }
                                             >
-                                                {row.inscrito
-                                                    ? "Inscrito"
-                                                    : "No inscrito"}
+                                                {row.participacion
+                                                    ? "Participando"
+                                                    : "Sin participar"}
                                             </Chip>
                                         </td>
                                     </tr>
