@@ -1,4 +1,5 @@
 import AsyncSelect from "@/components/Field/AsyncSelect";
+import CustomCheckbox from "../Field/CheckBox";
 import CustomSelect from "../Field/Select";
 import ThreeCheckBox from "../Field/ThreeCheckBox";
 import CustomAsyncSelect from "../Form/CustomAsyncSelect";
@@ -147,6 +148,17 @@ const FormularioCursos = [
             placeholder: "Seleccione una opción",
         },
         url: "/api/usuarios/general/conectividad",
+    },
+    {
+        Component: CustomCheckbox,
+        controller: {
+            name: "personas_sin_actividad",
+            defaultValue: false,
+        },
+        field: {
+            label: "Mostrar personas sin actividad",
+            content: "Personas sin registro de actividad",
+        },
     },
 ];
 
