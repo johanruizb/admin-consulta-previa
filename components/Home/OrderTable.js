@@ -219,6 +219,14 @@ export default function OrderTable({ data, onView }) {
                                     >
                                         Estado
                                     </th>
+                                    <th
+                                        style={{
+                                            width: 100,
+                                            padding: "12px 6px",
+                                        }}
+                                    >
+                                        Estado en moodle
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -291,6 +299,33 @@ export default function OrderTable({ data, onView }) {
                                                 {row.info_validada
                                                     ? "Validado"
                                                     : "Sin validar"}
+                                            </Chip>
+                                        </td>
+
+                                        <td>
+                                            <Chip
+                                                variant="soft"
+                                                size="sm"
+                                                startDecorator={
+                                                    {
+                                                        true: (
+                                                            <CheckRoundedIcon fontSize="small" />
+                                                        ),
+                                                        false: (
+                                                            <BlockIcon fontSize="small" />
+                                                        ),
+                                                    }[row.inscrito]
+                                                }
+                                                color={
+                                                    {
+                                                        true: "success",
+                                                        false: "danger",
+                                                    }[row.inscrito]
+                                                }
+                                            >
+                                                {row.inscrito
+                                                    ? "Inscrito"
+                                                    : "No inscrito"}
                                             </Chip>
                                         </td>
                                     </tr>
