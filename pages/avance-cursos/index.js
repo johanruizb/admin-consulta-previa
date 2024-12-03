@@ -19,7 +19,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/es";
 
 import { useRenderCount } from "@uidotdev/usehooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 
 import useSWR from "swr";
@@ -27,13 +27,13 @@ import useSWR from "swr";
 import FiltrarCursos from "@/components/Cursos/FiltrarCursos";
 import Layout from "@/components/Home/Layout";
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
+import ExportAvances from "@/components/Pages/Avances/ExportarAvances";
 import TablaAvances from "@/components/Pages/Avances/TablaAvances";
 import UploadAvances from "@/components/Pages/Avances/UploadAvances";
 import { getURL } from "@/components/utils";
 import DevWrapper from "@/components/Wrapper/DevWrapper";
 import useClient from "@/hooks/useClient";
 import usePermission from "@/hooks/usePermission";
-import ExportAvances from "@/components/Pages/Avances/ExportarAvances";
 
 dayjs.locale("es");
 
@@ -60,9 +60,10 @@ export default function Avances({ children }) {
         },
     });
 
-    const { control } = methods;
+    const { control, setValue } = methods;
 
     const values = useWatch({ control });
+
     // const modulo_completado = useWatch({ control, name: "modulo_completado" });
 
     const { data, isLoading, isValidating, mutate } = useSWR(
@@ -106,6 +107,19 @@ export default function Avances({ children }) {
     const onView = (id) => {
         router.push(`/avance-cursos/${id}`, undefined, { shallow: true });
     };
+
+    const [personas_sin_actividad, modulo_completado] = useWatch({
+        control,
+        name: ["personas_sin_actividad", "modulo_completado"],
+    });
+
+    useEffect(() => {
+        if (
+            personas_sin_actividad &&
+            (modulo_completado !== "all" || modulo_completado === true)
+        )
+            setValue("modulo_completado", "all");
+    }, [personas_sin_actividad, modulo_completado]);
 
     if (!mounted) {
         return (
