@@ -50,5 +50,5 @@ export const config = {
     api: {
         responseLimit: false,
     },
-    maxDuration: 30,
+    maxDuration: 60,
 };
