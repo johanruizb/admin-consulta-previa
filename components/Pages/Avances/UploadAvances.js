@@ -18,23 +18,21 @@ import Modal from "@mui/material/Modal";
 import { useLocalStorage, usePrevious } from "@uidotdev/usehooks";
 import dayjs from "dayjs";
 import { Fragment, useEffect, useState } from "react";
-import {
-    FormProvider,
-    useForm,
-    useFormContext,
-    useWatch,
-} from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import useSWR, { useSWRConfig } from "swr";
 import CSVField from "./CSVField";
 
 function DialogoCarga({ open, setOpen }) {
-    const methods = useForm();
-    const { handleSubmit, reset } = methods;
-
-    const [loading, setLoading] = useState(false);
     const { onOpen } = useAlert();
 
-    const { mutate } = useSWRConfig();
+    const { data: procesando, mutate: mutateProcesando } = useSWR(
+        getURL("/api/moodle/reporte/procesando")
+    );
+
+    const [loading, setLoading] = useState(false);
+
+    const methods = useForm();
+    const { handleSubmit, reset } = methods;
 
     const onSubmit = (data) => {
         setLoading(true);
@@ -66,15 +64,7 @@ function DialogoCarga({ open, setOpen }) {
             })
             .finally(() => {
                 setLoading(false);
-                setTimeout(() => {
-                    mutate(
-                        getURL("/api/moodle/reporte/procesando"),
-                        undefined,
-                        {
-                            revalidate: true,
-                        }
-                    );
-                }, 250);
+                mutateProcesando();
             });
     };
 
@@ -114,6 +104,15 @@ function DialogoCarga({ open, setOpen }) {
                 <FormProvider {...methods}>
                     <CSVField />
                 </FormProvider>
+                {procesando?.last_task && (
+                    <Typography>
+                        Ultima actualización:{" "}
+                        {dayjs(procesando.last_task).format(
+                            "DD/MM/YYYY HH:mm:ss"
+                        )}{" "}
+                        ({procesando.last_task_status ? "Exitoso" : "Fallido"})
+                    </Typography>
+                )}
                 <DialogActions
                     sx={{
                         justifyContent: "space-between",
@@ -144,66 +143,30 @@ function DialogoCarga({ open, setOpen }) {
 }
 
 export default function UploadAvances() {
-    const [options, setOptions] = useState({});
-
     const { data, isLoading, isValidating, error } = useSWR(
         getURL("/api/moodle/reporte/procesando"),
-        options
+        { refreshInterval: 2500 }
     );
 
     const { mutate } = useSWRConfig();
 
     const [open, setOpen] = useLocalStorage("open_UploadAvances", false);
-    const [time, setTime] = useState({
-        seconds: 0,
-    });
 
     const previousData = usePrevious(data);
     const { onOpen } = useAlert();
 
     useEffect(() => {
-        if (data?.procesando) {
-            setOptions({
-                refreshInterval: 5000,
+        if (previousData?.task_in_progress) {
+            onOpen(
+                data?.last_task_message,
+                data?.last_task_status ? "success" : "danger"
+            );
+            mutate((key) => {
+                console.log(key);
+                return Array.isArray(key);
             });
-
-            const diff = dayjs().diff(dayjs(data.ultima_tarea), "s");
-            setTime({
-                seconds: diff,
-            });
-
-            const interval = setInterval(() => {
-                setTime((prev) => ({
-                    seconds: prev.seconds + 1,
-                }));
-            }, 1000);
-
-            return () => clearInterval(interval);
-        } else {
-            if (previousData?.procesando) {
-                onOpen(
-                    data?.ultima_tarea_exitosa
-                        ? "Datos procesados correctamente"
-                        : "Se ha producido un error al procesar los datos",
-                    data?.ultima_tarea_exitosa ? "success" : "danger"
-                );
-                mutate(
-                    // test regex from `${getURL("/api/moodle/reporte/")}\d+`
-                    // (key) => key?.match?.(/\/api\/moodle\/reporte\/\d+/),
-                    (key) => Array.isArray(key),
-                    undefined,
-                    {
-                        revalidate: true,
-                    }
-                );
-                // location.reload();
-            }
-            setTime({
-                seconds: 0,
-            });
-            setOptions({});
         }
-    }, [data]);
+    }, [data, previousData]);
 
     usePermission("moodle.add_actividadescompletadas");
 
@@ -214,7 +177,7 @@ export default function UploadAvances() {
                 startDecorator={<CloudUploadIcon />}
                 onClick={() => setOpen(true)}
                 endDecorator={
-                    isLoading | isValidating | data?.procesando ? (
+                    isLoading | isValidating | data?.task_in_progress ? (
                         <CircularProgress size={20} />
                     ) : error ? (
                         <ReportProblemIcon color="error" />
@@ -227,10 +190,10 @@ export default function UploadAvances() {
                         />
                     )
                 }
-                disabled={data?.procesando}
+                disabled={data?.task_in_progress}
             >
-                {data?.procesando
-                    ? `Procesando datos (${time.seconds}s)`
+                {data?.task_in_progress
+                    ? `Procesando datos...`
                     : "Cargar avances en formato CSV"}
             </Button>
             <DialogoCarga open={open} setOpen={setOpen} />
