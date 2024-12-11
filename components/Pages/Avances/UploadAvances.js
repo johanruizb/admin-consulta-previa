@@ -21,6 +21,7 @@ import { Fragment, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import useSWR, { useSWRConfig } from "swr";
 import CSVField from "./CSVField";
+import fetcher from "@/components/fetcher";
 
 function DialogoCarga({ open, setOpen }) {
     const { onOpen } = useAlert();
@@ -143,9 +144,11 @@ function DialogoCarga({ open, setOpen }) {
 }
 
 export default function UploadAvances() {
+    const [options, setOptions] = useState({});
+
     const { data, isLoading, isValidating, error } = useSWR(
         getURL("/api/moodle/reporte/procesando"),
-        { refreshInterval: 2500 }
+        fetcher
     );
 
     const { mutate } = useSWRConfig();
@@ -156,15 +159,15 @@ export default function UploadAvances() {
     const { onOpen } = useAlert();
 
     useEffect(() => {
-        if (previousData?.task_in_progress) {
+        if (data?.task_in_progress) {
+            setOptions({ refreshInterval: 2500, revalidateOnMount: true });
+        } else if (previousData?.task_in_progress) {
             onOpen(
                 data?.last_task_message,
                 data?.last_task_status ? "success" : "danger"
             );
-            mutate((key) => {
-                console.log(key);
-                return Array.isArray(key);
-            });
+            mutate((key) => Array.isArray(key));
+            setOptions({});
         }
     }, [data, previousData]);
 
