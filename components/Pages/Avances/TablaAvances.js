@@ -197,7 +197,7 @@ export default function TablaAvances({
     );
 }
 
-function Row({ row, onView, actividades, hasPermission }) {
+function Row({ row, onView, hasPermission }) {
     const { control } = useFormContext();
 
     const values = useWatch({
@@ -220,7 +220,7 @@ function Row({ row, onView, actividades, hasPermission }) {
                         ? "rgba(31, 122, 31, 0.2) !important"
                         : "transparent",
             }}
-            {...(hasPermission("usuario.change_persona")
+            {...(hasPermission("usuario.change_persona") && row.id !== "resumen"
                 ? {
                       onClick: () => onView(row.id),
                   }
