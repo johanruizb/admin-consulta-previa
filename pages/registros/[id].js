@@ -330,7 +330,7 @@ function View({ defaultValues }) {
                                                                                         2
                                                                                             ? 0
                                                                                             : 0.5,
-                                                                                    mb: 0.5,
+                                                                                    my: 0.5,
                                                                                 }}
                                                                             >
                                                                                 <ListItemContent>
