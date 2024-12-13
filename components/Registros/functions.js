@@ -6,13 +6,13 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 function getIconHistory(history_type, props = {}) {
     switch (history_type) {
         case "Registrado":
-            return <PersonAddIcon {...props} />;
+            return <PersonAddIcon {...props} fontSize="medium" />;
         case "Modificado":
-            return <EditIcon {...props} />;
+            return <EditIcon {...props} fontSize="medium" />;
         case "Verificado":
-            return <ChecklistRtlIcon {...props} />;
+            return <ChecklistRtlIcon {...props} fontSize="medium" />;
         default:
-            return <BookIcon {...props} />;
+            return <BookIcon {...props} fontSize="medium" />;
     }
 }
 
