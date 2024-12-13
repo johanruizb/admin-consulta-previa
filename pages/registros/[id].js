@@ -1,3 +1,6 @@
+import Accordion from "@mui/joy/Accordion";
+import AccordionDetails from "@mui/joy/AccordionDetails";
+import AccordionSummary from "@mui/joy/AccordionSummary";
 import Button from "@mui/joy/Button";
 import CircularProgress from "@mui/joy/CircularProgress";
 import DialogActions from "@mui/joy/DialogActions";
@@ -23,8 +26,6 @@ import fetcher from "@/components/fetcher";
 import FormularioVerificacion from "@/components/Form/constants";
 import { convertToFormData, getURL } from "@/components/utils";
 
-import { useSessionStorage } from "@uidotdev/usehooks";
-
 import useSWRImmutable from "swr/immutable";
 
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
@@ -39,8 +40,9 @@ import dayjs from "dayjs";
 import Registros from ".";
 
 import { getIconHistory } from "@/components/Registros/functions";
-import usePermission from "@/hooks/usePermission";
 import useAlert from "@/hooks/useAlert";
+import usePermission from "@/hooks/usePermission";
+import { Divider } from "@mui/material";
 
 export default function Wrapper() {
     const { isLoading: permissionIsLoading, hasPermission } =
@@ -243,42 +245,180 @@ function View({ defaultValues }) {
                                     sx={{ borderRadius: "sm", mt: "10px" }}
                                 >
                                     {defaultValues.historial.map(
-                                        (item, index) => (
-                                            <ListItem key={index}>
-                                                <ListItemDecorator>
-                                                    {getIconHistory(
-                                                        item.history_type
-                                                    )}
-                                                </ListItemDecorator>
-                                                <ListItemContent>
-                                                    <Typography level="title-sm">
-                                                        {item.history_type}{" "}
-                                                        {item.has_user
-                                                            ? `por ${
-                                                                  item.history_user_fullname
-                                                                      ? item.history_user_fullname +
-                                                                        " (" +
-                                                                        item.history_user_username +
-                                                                        ")"
-                                                                      : item.history_user_username
-                                                              } — ${
-                                                                  item.history_user_role
-                                                              }`
-                                                            : ""}
-                                                    </Typography>
-                                                    <Typography
-                                                        level="body-sm"
-                                                        noWrap
-                                                    >
-                                                        {dayjs(
-                                                            item.history_date
-                                                        ).format(
-                                                            "DD/MM/YYYY HH:mm:ss A"
+                                        (item, index) =>
+                                            item.changes ? (
+                                                <Accordion>
+                                                    <AccordionSummary>
+                                                        <ListItem key={index}>
+                                                            <ListItemDecorator>
+                                                                {getIconHistory(
+                                                                    item.history_type,
+                                                                    {
+                                                                        color: item.changes
+                                                                            ? "info"
+                                                                            : undefined,
+                                                                    }
+                                                                )}
+                                                            </ListItemDecorator>
+                                                            <ListItemContent>
+                                                                <Typography level="title-sm">
+                                                                    {
+                                                                        item.history_type
+                                                                    }{" "}
+                                                                    {item.has_user
+                                                                        ? `por ${
+                                                                              item.history_user_fullname
+                                                                                  ? item.history_user_fullname +
+                                                                                    " (" +
+                                                                                    item.history_user_username +
+                                                                                    ")"
+                                                                                  : item.history_user_username
+                                                                          } — ${
+                                                                              item.history_user_role
+                                                                          }`
+                                                                        : ""}
+                                                                </Typography>
+                                                                <Typography
+                                                                    level="body-sm"
+                                                                    noWrap
+                                                                >
+                                                                    {dayjs(
+                                                                        item.history_date
+                                                                    ).format(
+                                                                        "DD/MM/YYYY HH:mm:ss A"
+                                                                    )}
+                                                                </Typography>
+                                                            </ListItemContent>
+                                                        </ListItem>
+                                                    </AccordionSummary>
+                                                    <AccordionDetails>
+                                                        <List>
+                                                            <Grid
+                                                                container
+                                                                // spacing={2}
+                                                                // rowSpacing={2}
+                                                            >
+                                                                {Object.entries(
+                                                                    item.changes
+                                                                ).map(
+                                                                    (
+                                                                        [
+                                                                            field,
+                                                                            changes,
+                                                                        ],
+                                                                        index
+                                                                    ) => (
+                                                                        <Grid
+                                                                            size={
+                                                                                6
+                                                                            }
+                                                                        >
+                                                                            <ListItem
+                                                                                sx={{
+                                                                                    border: 1,
+                                                                                    borderColor:
+                                                                                        "divider",
+                                                                                    mr:
+                                                                                        (index +
+                                                                                            1) %
+                                                                                        2
+                                                                                            ? 1
+                                                                                            : 0,
+                                                                                    ml:
+                                                                                        (index +
+                                                                                            1) %
+                                                                                        2
+                                                                                            ? 0
+                                                                                            : 1,
+                                                                                }}
+                                                                            >
+                                                                                <ListItemContent>
+                                                                                    <Typography level="title-sm">
+                                                                                        {
+                                                                                            field
+                                                                                        }
+                                                                                    </Typography>
+                                                                                    <Stack
+                                                                                        direction="row"
+                                                                                        spacing={
+                                                                                            0.5
+                                                                                        }
+                                                                                    >
+                                                                                        <Typography
+                                                                                            level="body-sm"
+                                                                                            color="danger"
+                                                                                            noWrap
+                                                                                        >
+                                                                                            {
+                                                                                                changes.old
+                                                                                            }
+                                                                                        </Typography>
+                                                                                        <span>
+                                                                                            {
+                                                                                                "»»"
+                                                                                            }
+                                                                                        </span>
+                                                                                        <Typography
+                                                                                            level="body-sm"
+                                                                                            color="success"
+                                                                                            noWrap
+                                                                                        >
+                                                                                            {
+                                                                                                changes.new
+                                                                                            }
+                                                                                        </Typography>
+                                                                                    </Stack>
+                                                                                </ListItemContent>
+                                                                            </ListItem>
+                                                                        </Grid>
+                                                                    )
+                                                                )}
+                                                            </Grid>
+                                                            <Divider
+                                                                sx={{
+                                                                    mt: 2,
+                                                                    mb: -1,
+                                                                }}
+                                                            />
+                                                        </List>
+                                                    </AccordionDetails>
+                                                </Accordion>
+                                            ) : (
+                                                <ListItem key={index}>
+                                                    <ListItemDecorator>
+                                                        {getIconHistory(
+                                                            item.history_type
                                                         )}
-                                                    </Typography>
-                                                </ListItemContent>
-                                            </ListItem>
-                                        )
+                                                    </ListItemDecorator>
+                                                    <ListItemContent>
+                                                        <Typography level="title-sm">
+                                                            {item.history_type}{" "}
+                                                            {item.has_user
+                                                                ? `por ${
+                                                                      item.history_user_fullname
+                                                                          ? item.history_user_fullname +
+                                                                            " (" +
+                                                                            item.history_user_username +
+                                                                            ")"
+                                                                          : item.history_user_username
+                                                                  } — ${
+                                                                      item.history_user_role
+                                                                  }`
+                                                                : ""}
+                                                        </Typography>
+                                                        <Typography
+                                                            level="body-sm"
+                                                            noWrap
+                                                        >
+                                                            {dayjs(
+                                                                item.history_date
+                                                            ).format(
+                                                                "DD/MM/YYYY HH:mm:ss A"
+                                                            )}
+                                                        </Typography>
+                                                    </ListItemContent>
+                                                </ListItem>
+                                            )
                                     )}
                                 </List>
                             </Box>
