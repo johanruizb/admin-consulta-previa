@@ -322,14 +322,15 @@ function View({ defaultValues }) {
                                                                                         (index +
                                                                                             1) %
                                                                                         2
-                                                                                            ? 1
+                                                                                            ? 0.5
                                                                                             : 0,
                                                                                     ml:
                                                                                         (index +
                                                                                             1) %
                                                                                         2
                                                                                             ? 0
-                                                                                            : 1,
+                                                                                            : 0.5,
+                                                                                    mb: 0.5,
                                                                                 }}
                                                                             >
                                                                                 <ListItemContent>
