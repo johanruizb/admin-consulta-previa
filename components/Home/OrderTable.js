@@ -28,12 +28,13 @@ import { v4 as uuidv4 } from "uuid";
 import usePermissionContext from "./permissionContext/usePermission";
 
 import { filterTable } from "./functions";
+import { useSessionStorage } from "@uidotdev/usehooks";
 
 export default function OrderTable({ data, onView }) {
     const { isLoading: permissionIsLoading, hasPermission } =
         usePermissionContext();
 
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useSessionStorage("OrderTable__page", 1);
     const [filter, setFilter] = useState({});
 
     const [rows, setRows] = useState();
