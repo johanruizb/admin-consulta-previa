@@ -20,15 +20,21 @@ import dayjs from "dayjs";
 
 import { debounce } from "lodash";
 
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import {
+    Fragment,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState
+} from "react";
 
 import CircularProgress from "@mui/joy/CircularProgress";
 import Stack from "@mui/joy/Stack";
 import { v4 as uuidv4 } from "uuid";
 import usePermissionContext from "./permissionContext/usePermission";
 
-import { filterTable } from "./functions";
 import { useSessionStorage } from "@uidotdev/usehooks";
+import { filterTable } from "./functions";
 
 export default function OrderTable({ data, onView }) {
     const { isLoading: permissionIsLoading, hasPermission } =

@@ -18,6 +18,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon from "@mui/icons-material/Save";
 
 import { useRouter } from "next/router";
+import { useRouter as useNavigate } from "next/navigation";
 
 import { Fragment, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -50,6 +51,7 @@ export default function Wrapper() {
 
     const [mounted, setMounted] = useState(false);
     const router = useRouter();
+
     const { id } = router.query;
 
     const {
@@ -98,10 +100,13 @@ function View({ defaultValues }) {
 
     const router = useRouter();
     const { id } = router.query;
+
+    const navigate = useNavigate();
+
     const sm = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
     const onClose = () => {
-        router.push("/registros");
+        navigate.push("/registros", undefined, { shallow: true });
     };
 
     const openAlert = (content, color = "success") => {
@@ -247,7 +252,7 @@ function View({ defaultValues }) {
                                     {defaultValues.historial.map(
                                         (item, index) =>
                                             item.changes ? (
-                                                <Accordion>
+                                                <Accordion key={index}>
                                                     <AccordionSummary>
                                                         <ListItem key={index}>
                                                             <ListItemDecorator>
@@ -309,6 +314,9 @@ function View({ defaultValues }) {
                                                                         index
                                                                     ) => (
                                                                         <Grid
+                                                                            key={
+                                                                                index
+                                                                            }
                                                                             size={
                                                                                 6
                                                                             }
@@ -341,6 +349,7 @@ function View({ defaultValues }) {
                                                                                     </Typography>
                                                                                     <Stack
                                                                                         direction="row"
+                                                                                        alignItems="center"
                                                                                         spacing={
                                                                                             0.5
                                                                                         }
