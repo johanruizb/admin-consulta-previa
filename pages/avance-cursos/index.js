@@ -64,8 +64,6 @@ export default function Avances({ children }) {
 
     const values = useWatch({ control });
 
-    // const modulo_completado = useWatch({ control, name: "modulo_completado" });
-
     const { data, isLoading, isValidating, mutate } = useSWR(
         [
             getURL("/api/moodle/reporte/resumen"),
@@ -76,13 +74,11 @@ export default function Avances({ children }) {
                 },
                 body: JSON.stringify({
                     ...values,
-                    // modulo_completado: undefined,
                 }),
             },
         ],
 
         async (args) => {
-            // console.log("args", args[0], args[1]);
             const res = await fetch(args[0], args[1]);
             return res.ok
                 ? res.json()
@@ -92,6 +88,8 @@ export default function Avances({ children }) {
                   });
         }
     );
+
+    const [filter, setFilter] = useState();
 
     const { isLoading: permissionIsLoading, hasPermission } =
         usePermissionContext();
@@ -134,8 +132,6 @@ export default function Avances({ children }) {
             </Stack>
         );
     }
-
-    // console.log("data", data);
 
     return (
         <Layout>
@@ -247,7 +243,11 @@ export default function Avances({ children }) {
                 </FormProvider>
             </Box>
             <FormProvider {...methods}>
-                <FiltrarCursos />
+                <FiltrarCursos
+                    data={data}
+                    filter={filter}
+                    setFilter={setFilter}
+                />
                 {isLoading || permissionIsLoading ? (
                     <Stack
                         justifyContent="center"
@@ -275,7 +275,7 @@ export default function Avances({ children }) {
                 ) : (
                     <TablaAvances
                         data={data}
-                        // isValidating={isValidating}
+                        filter={filter}
                         hasPermission={hasPermission}
                         onView={onView}
                     />
