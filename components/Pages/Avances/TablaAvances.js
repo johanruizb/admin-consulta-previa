@@ -175,7 +175,7 @@ export default function TablaAvances({ data, hasPermission, onView, filter }) {
                     <Pagination
                         size="medium"
                         page={page}
-                        count={rows.pages || 1}
+                        count={(filter ?? rows).pages || 1}
                         variant="outlined"
                         onChange={(_, page) => setPage(page)}
                         sx={{
