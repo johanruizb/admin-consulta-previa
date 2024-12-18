@@ -4,38 +4,44 @@ import { chunk } from "lodash";
 
 import { cloneDeep } from "lodash";
 
-function filter(originalData, state, callback) {
+function filter(
+    originalData,
+    state,
+    callback,
+    keys = [
+        "pais_nac",
+        "departamento_res",
+        "genero",
+        "etnia",
+        "tipo_cliente",
+        "zona",
+        "conectividad",
+    ]
+) {
     const { search, ...rest } = state;
 
     const entries = Object.entries(rest);
     let result = cloneDeep(originalData);
 
-    result = originalData.filter((row) => {
-        return entries.every(([key, value]) => {
-            // TODO: Verificar si esto es correcto
-            if (
-                (value !== 0 && value !== false && !value) ||
-                row[key] === undefined ||
-                value?.toString().trim() === "" ||
-                value === "all"
-            )
-                return true;
+    if (rest !== undefined)
+        result = originalData.filter((row) => {
+            return entries.every(([key, value]) => {
+                // TODO: Verificar si esto es correcto
+                if (
+                    (value !== 0 && value !== false && !value) ||
+                    row[key] === undefined ||
+                    value?.toString().trim() === "" ||
+                    value === "all"
+                )
+                    return true;
 
-            return String(row[key]) === String(value);
+                return String(row[key]) === String(value);
+            });
         });
-    });
 
     if (search !== undefined) {
         const fuse = new Fuse(result, {
-            keys: [
-                "pais_nac",
-                "departamento_res",
-                "genero",
-                "etnia",
-                "tipo_cliente",
-                "zona",
-                "conectividad",
-            ],
+            keys,
             useExtendedSearch: true,
             // threshold: 0.3,
         });
@@ -46,7 +52,6 @@ function filter(originalData, state, callback) {
 
     callback((prev) => ({
         ...prev,
-        // filtered: result,
         chunked: chunkedList,
         pages: chunkedList.length,
     }));
