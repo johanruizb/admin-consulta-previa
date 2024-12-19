@@ -654,4 +654,13 @@ const FormularioVerificacion = [
     },
 ];
 
+const DOCUMENTOS = {
+    1: "(CC) Cédula de ciudadanía",
+    2: "(CE) Cédula de extranjería",
+    3: "(PA) Pasaporte",
+    4: "(PR) Permiso de residencia",
+    5: "(TI) Tarjeta de identidad",
+};
+
 export default FormularioVerificacion;
+export { DOCUMENTOS };
