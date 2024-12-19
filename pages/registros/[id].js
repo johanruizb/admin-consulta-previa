@@ -1,49 +1,53 @@
-import Accordion from "@mui/joy/Accordion";
-import AccordionDetails from "@mui/joy/AccordionDetails";
-import AccordionSummary from "@mui/joy/AccordionSummary";
+import fetcher from "@/components/fetcher";
+import FormularioVerificacion, {
+    DOCUMENTOS,
+} from "@/components/Form/constants";
+import usePermissionContext from "@/components/Home/permissionContext/usePermission";
+import Navigate from "@/components/Navigate";
+import { getIconHistory } from "@/components/Registros/functions";
+import { convertToFormData, getURL } from "@/components/utils";
+import useAlert from "@/hooks/useAlert";
+import usePermission from "@/hooks/usePermission";
+
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CloseIcon from "@mui/icons-material/Close";
+import SaveIcon from "@mui/icons-material/Save";
+
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    ListDivider,
+} from "@mui/joy";
+import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import CircularProgress from "@mui/joy/CircularProgress";
 import DialogActions from "@mui/joy/DialogActions";
 import DialogContent from "@mui/joy/DialogContent";
 import DialogTitle from "@mui/joy/DialogTitle";
-import Modal from "@mui/joy/Modal";
-import ModalDialog from "@mui/joy/ModalDialog";
-import Stack from "@mui/joy/Stack";
-
-import Backdrop from "@mui/material/Backdrop";
-import Grid from "@mui/material/Grid2";
-import useMediaQuery from "@mui/material/useMediaQuery";
-
-import CloseIcon from "@mui/icons-material/Close";
-import SaveIcon from "@mui/icons-material/Save";
-
-import { useRouter } from "next/router";
-import { useRouter as useNavigate } from "next/navigation";
-
-import { Fragment, useEffect, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-
-import fetcher from "@/components/fetcher";
-import FormularioVerificacion from "@/components/Form/constants";
-import { convertToFormData, getURL } from "@/components/utils";
-
-import useSWRImmutable from "swr/immutable";
-
-import usePermissionContext from "@/components/Home/permissionContext/usePermission";
-import Navigate from "@/components/Navigate";
-import Box from "@mui/joy/Box";
 import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import ListItemContent from "@mui/joy/ListItemContent";
 import ListItemDecorator from "@mui/joy/ListItemDecorator";
+import Modal from "@mui/joy/Modal";
+import ModalDialog from "@mui/joy/ModalDialog";
+import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
-import dayjs from "dayjs";
-import Registros from ".";
 
-import { getIconHistory } from "@/components/Registros/functions";
-import useAlert from "@/hooks/useAlert";
-import usePermission from "@/hooks/usePermission";
 import { Divider } from "@mui/material";
+import Backdrop from "@mui/material/Backdrop";
+import Grid from "@mui/material/Grid2";
+import useMediaQuery from "@mui/material/useMediaQuery";
+
+import dayjs from "dayjs";
+import { useRouter as useNavigate } from "next/navigation";
+import { useRouter } from "next/router";
+import { Fragment, useEffect, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import useSWRImmutable from "swr/immutable";
+
+import Registros from ".";
 
 export default function Wrapper() {
     const { isLoading: permissionIsLoading, hasPermission } =
@@ -184,6 +188,15 @@ function View({ defaultValues }) {
                             {validado
                                 ? "Editar información"
                                 : "Verificar inscripción"}
+                            {" — "}
+                            {defaultValues &&
+                                `${defaultValues.nombres} ${
+                                    defaultValues.apellidos
+                                } ${
+                                    DOCUMENTOS[defaultValues.tipo_doc].split(
+                                        " "
+                                    )[0]
+                                } ${defaultValues.num_doc}`}
                         </DialogTitle>
                         <DialogContent>
                             {validado
@@ -432,6 +445,127 @@ function View({ defaultValues }) {
                                     )}
                                 </List>
                             </Box>
+                            {defaultValues.modulos && (
+                                <Box
+                                    sx={{
+                                        mt: "10px",
+                                    }}
+                                >
+                                    <DialogTitle>
+                                        Avance de cursos y actividades
+                                    </DialogTitle>
+                                    <List
+                                        size="lg"
+                                        variant="outlined"
+                                        sx={{ borderRadius: "sm", mt: "10px" }}
+                                    >
+                                        {
+                                            defaultValues.modulos.map(
+                                                (modulo, index) => (
+                                                    <Accordion key={index}>
+                                                        <AccordionSummary>
+                                                            <ListItem>
+                                                                <ListItemDecorator>
+                                                                    {modulo.completado ? (
+                                                                        <CheckBoxIcon
+                                                                            fontSize="medium"
+                                                                            color="primary"
+                                                                        />
+                                                                    ) : (
+                                                                        <CheckBoxOutlineBlankIcon fontSize="medium" />
+                                                                    )}
+                                                                </ListItemDecorator>
+                                                                <ListItemContent>
+                                                                    <Typography
+                                                                        level="title-sm"
+                                                                        noWrap
+                                                                    >
+                                                                        {
+                                                                            modulo.name
+                                                                        }
+                                                                    </Typography>
+                                                                    <Typography
+                                                                        level="body-sm"
+                                                                        noWrap
+                                                                    >
+                                                                        {modulo.completado
+                                                                            ? "Completado"
+                                                                            : "Incompleto"}
+                                                                    </Typography>
+                                                                </ListItemContent>
+                                                            </ListItem>
+                                                        </AccordionSummary>
+                                                        {index <
+                                                            defaultValues
+                                                                .modulos
+                                                                .length -
+                                                                1 && (
+                                                            <ListDivider inset="gutter" />
+                                                        )}
+                                                        <AccordionDetails>
+                                                            {modulo.actividades.map(
+                                                                (
+                                                                    actividad,
+                                                                    index
+                                                                ) => (
+                                                                    <ListItem
+                                                                        key={
+                                                                            index
+                                                                        }
+                                                                        sx={{
+                                                                            ml: "24px",
+                                                                        }}
+                                                                    >
+                                                                        <ListItemDecorator>
+                                                                            {actividad?.completado ? (
+                                                                                <CheckBoxIcon
+                                                                                    fontSize="medium"
+                                                                                    color="primary"
+                                                                                />
+                                                                            ) : (
+                                                                                <CheckBoxOutlineBlankIcon fontSize="medium" />
+                                                                            )}
+                                                                        </ListItemDecorator>
+                                                                        <ListItemContent>
+                                                                            <Typography
+                                                                                level="title-sm"
+                                                                                noWrap
+                                                                            >
+                                                                                {
+                                                                                    actividad?.name
+                                                                                }
+                                                                            </Typography>
+                                                                            <Typography
+                                                                                level="body-sm"
+                                                                                noWrap
+                                                                            >
+                                                                                {actividad?.completado
+                                                                                    ? `Completado — ${dayjs(
+                                                                                          actividad.date
+                                                                                      ).format(
+                                                                                          "DD/MM/YYYY HH:mm:ss A"
+                                                                                      )}`
+                                                                                    : "Incompleto"}
+                                                                            </Typography>
+                                                                        </ListItemContent>
+                                                                    </ListItem>
+                                                                )
+                                                            )}
+                                                            {index <
+                                                                defaultValues
+                                                                    .modulos
+                                                                    .length -
+                                                                    1 && (
+                                                                <ListDivider inset="gutter" />
+                                                            )}
+                                                        </AccordionDetails>
+                                                    </Accordion>
+                                                )
+                                            ) // Actividades
+                                        }
+                                    </List>
+                                </Box>
+                            )}
                         </DialogContent>
                         <DialogActions
                             sx={{
