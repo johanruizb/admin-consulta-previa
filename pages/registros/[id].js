@@ -14,12 +14,10 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon from "@mui/icons-material/Save";
 
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    ListDivider,
-} from "@mui/joy";
+import Accordion from "@mui/joy/Accordion";
+import AccordionDetails from "@mui/joy/AccordionDetails";
+import AccordionSummary from "@mui/joy/AccordionSummary";
+import ListDivider from "@mui/joy/ListDivider";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import CircularProgress from "@mui/joy/CircularProgress";
@@ -35,7 +33,7 @@ import ModalDialog from "@mui/joy/ModalDialog";
 import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
 
-import { Divider } from "@mui/material";
+import Divider from "@mui/material/Divider";
 import Backdrop from "@mui/material/Backdrop";
 import Grid from "@mui/material/Grid2";
 import useMediaQuery from "@mui/material/useMediaQuery";

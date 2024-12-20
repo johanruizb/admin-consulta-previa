@@ -12,13 +12,11 @@ import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CloseIcon from "@mui/icons-material/Close";
 
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Divider,
-    ListDivider,
-} from "@mui/joy";
+import Accordion from "@mui/joy/Accordion";
+import AccordionDetails from "@mui/joy/AccordionDetails";
+import AccordionSummary from "@mui/joy/AccordionSummary";
+import Divider from "@mui/joy/Divider";
+import ListDivider from "@mui/joy/ListDivider";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import CircularProgress from "@mui/joy/CircularProgress";

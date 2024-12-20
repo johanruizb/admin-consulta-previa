@@ -1,14 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import SearchIcon from "@mui/icons-material/Search";
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    FormControl,
-    FormLabel,
-    Input,
-    Stack,
-} from "@mui/joy";
+import Accordion from "@mui/joy/Accordion";
+import AccordionDetails from "@mui/joy/AccordionDetails";
+import AccordionSummary from "@mui/joy/AccordionSummary";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import Input from "@mui/joy/Input";
+import Stack from "@mui/joy/Stack";
 import Box from "@mui/joy/Box";
 import Grid from "@mui/material/Grid2";
 import { debounce } from "lodash";

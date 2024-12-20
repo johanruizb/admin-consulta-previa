@@ -1,4 +1,5 @@
-import { IconButton, Tooltip } from "@mui/joy";
+import IconButton from "@mui/joy/IconButton";
+import Tooltip from "@mui/joy/Tooltip";
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Button from "@mui/joy/Button";
