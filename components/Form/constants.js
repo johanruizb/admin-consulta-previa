@@ -1,6 +1,7 @@
 import AsyncSelect from "../Field/AsyncSelect";
 import BirthdayField from "../Field/BirthdayField";
 import FileField from "../Field/FileField";
+import MultiSelect from "../Field/MultiSelect";
 import PhoneField from "../Field/PhoneField";
 import CustomSelect from "../Field/Select";
 import TextField from "../Field/TextField";
@@ -620,10 +621,10 @@ const FormularioVerificacion = [
         },
     },
     {
-        Component: CustomSelect,
+        Component: MultiSelect,
         controller: {
-            name: "curso_inscrito",
-            defaultValue: "",
+            name: "cursos_inscritos",
+            defaultValue: [],
         },
         field: {
             label: "Curso inscrito",
@@ -635,6 +636,14 @@ const FormularioVerificacion = [
                 {
                     value: 2,
                     label: "Curso virtual de autoformación en consulta previa para fortalecimiento de capacidades institucionales (20 horas)",
+                },
+                {
+                    value: 3,
+                    label: "Diplomado - Derecho Fundamental a la Consulta Previa - Grupos Étnicos (120 horas)",
+                },
+                {
+                    value: 4,
+                    label: "Diplomado - Derecho Fundamental a la Consulta Previa - Funcionarios y/o Contratistas (120 horas)",
                 },
             ],
         },
