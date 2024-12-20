@@ -29,6 +29,14 @@ const options = [
         value: 2,
         label: `Exportar "Curso de capacidades institucionales"`,
     },
+    {
+        value: 3,
+        label: `Exportar "Diplomado - Grupos Étnicos"`,
+    },
+    // {
+    //     value: 4,
+    //     label: `Exportar "Diplomado - Funcionarios y/o Contratistas"`,
+    // },
 ];
 
 function ExportUsers() {
