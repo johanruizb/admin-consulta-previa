@@ -26,6 +26,14 @@ const FormularioCursos = [
                     value: 2,
                     label: "Curso virtual de autoformación en consulta previa para fortalecimiento de capacidades institucionales (20h)",
                 },
+                {
+                    value: 3,
+                    label: "Diplomado - Derecho Fundamental a la Consulta Previa - Grupos Étnicos",
+                },
+                // {
+                //     value: 4,
+                //     label: "Diplomado - Derecho Fundamental a la Consulta Previa - Funcionarios y/o Contratistas",
+                // },
             ],
         },
         size: {
