@@ -20,13 +20,7 @@ import dayjs from "dayjs";
 
 import { debounce } from "lodash";
 
-import {
-    Fragment,
-    useCallback,
-    useEffect,
-    useMemo,
-    useState
-} from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 
 import CircularProgress from "@mui/joy/CircularProgress";
 import Stack from "@mui/joy/Stack";
@@ -45,13 +39,13 @@ export default function OrderTable({ data, onView }) {
 
     const [rows, setRows] = useState();
 
-    const debounceFilter = useCallback(
-        debounce((d, f) => filterTable(d, f, setRows), 300),
+    const setFilterDebounced = useCallback(
+        debounce((value) => setFilter(value), 250),
         []
     );
 
     useEffect(() => {
-        debounceFilter(data, filter);
+        filterTable(data, filter, setRows);
     }, [data, filter]);
 
     const ready = useMemo(
@@ -84,7 +78,7 @@ export default function OrderTable({ data, onView }) {
                         placeholder="Buscar en la tabla"
                         onChange={(e) => {
                             const value = e.target.value;
-                            setFilter((prev) => ({
+                            setFilterDebounced((prev) => ({
                                 ...prev,
                                 search: value || undefined,
                             }));
@@ -99,7 +93,7 @@ export default function OrderTable({ data, onView }) {
                         placeholder="Filtrar por estado"
                         slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
                         onChange={(e, newValue) => {
-                            setFilter((prev) => ({
+                            setFilterDebounced((prev) => ({
                                 ...prev,
                                 info_validada:
                                     newValue !== "" ? newValue : undefined,
@@ -119,13 +113,13 @@ export default function OrderTable({ data, onView }) {
                         placeholder="Filtrar por curso inscrito"
                         slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
                         onChange={(e, newValue) => {
-                            setFilter((prev) => ({
+                            setFilterDebounced((prev) => ({
                                 ...prev,
-                                curso_inscrito:
+                                cursos_inscritos:
                                     newValue !== "" ? newValue : undefined,
                             }));
                         }}
-                        value={filter.curso_inscrito ?? ""}
+                        value={filter.cursos_inscritos ?? ""}
                     >
                         <Option value={""}>Todos</Option>
                         <Option value={1}>
@@ -136,6 +130,14 @@ export default function OrderTable({ data, onView }) {
                             Curso virtual de autoformación en consulta previa
                             para fortalecimiento de capacidades institucionales
                             (20 horas)
+                        </Option>
+                        <Option value={3}>
+                            Diplomado - Derecho Fundamental a la Consulta Previa
+                            - Grupos Étnicos (120 horas)
+                        </Option>
+                        <Option value={4}>
+                            Diplomado - Derecho Fundamental a la Consulta Previa
+                            - Funcionarios y/o Contratistas (120 horas)
                         </Option>
                     </Select>
                 </FormControl>

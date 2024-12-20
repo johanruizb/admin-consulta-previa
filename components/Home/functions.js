@@ -1,21 +1,20 @@
 import Fuse from "fuse.js";
 
 import { chunk } from "lodash";
-
 import { cloneDeep } from "lodash";
 
 function filterTable(originalData, filter, setRows) {
     let result = cloneDeep(originalData);
 
     result = originalData.filter((row) => {
-        const curso_inscrito = filter.curso_inscrito
-            ? String(row.curso_inscrito) === String(filter.curso_inscrito)
+        const cursos_inscritos = filter.cursos_inscritos
+            ? String(row.cursos_inscritos) === String(filter.cursos_inscritos)
             : true;
         const info_validada = filter.info_validada
             ? String(row.info_validada) === String(filter.info_validada)
             : true;
 
-        return curso_inscrito && info_validada;
+        return cursos_inscritos && info_validada;
     });
 
     if (filter.search !== undefined) {
