@@ -641,10 +641,10 @@ const FormularioVerificacion = [
                     value: 3,
                     label: "Diplomado - Derecho Fundamental a la Consulta Previa - Grupos Étnicos (120 horas)",
                 },
-                {
-                    value: 4,
-                    label: "Diplomado - Derecho Fundamental a la Consulta Previa - Funcionarios y/o Contratistas (120 horas)",
-                },
+                // {
+                //     value: 4,
+                //     label: "Diplomado - Derecho Fundamental a la Consulta Previa - Funcionarios y/o Contratistas (120 horas)",
+                // },
             ],
         },
     },
