@@ -385,6 +385,34 @@ const FormularioVerificacion = [
                     value: 9,
                     label: "Educación",
                 },
+                {
+                    value: 10,
+                    label: "Contratista/Funcionario de otros Ministerios",
+                },
+                {
+                    value: 11,
+                    label: "Alcaldías",
+                },
+                {
+                    value: 12,
+                    label: "Educadores o profesores",
+                },
+                {
+                    value: 13,
+                    label: "Estudiantes universitarios",
+                },
+                {
+                    value: 14,
+                    label: "Líder/lideresa comunitaria",
+                },
+                {
+                    value: 15,
+                    label: "Funcionarios/contratistas del Ministerio del Interior",
+                },
+                {
+                    value: 16,
+                    label: "Funcionarios/contratistas de otra entidad pública ",
+                },
             ],
             label: "De los siguientes roles en cuál se reconoce?",
             required: true,
