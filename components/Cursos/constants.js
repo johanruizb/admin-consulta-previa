@@ -28,12 +28,12 @@ const FormularioCursos = [
                 },
                 {
                     value: 3,
-                    label: "Diplomado - Derecho Fundamental a la Consulta Previa - Grupos Étnicos",
+                    label: "Diplomado - Grupos Étnicos",
                 },
-                // {
-                //     value: 4,
-                //     label: "Diplomado - Derecho Fundamental a la Consulta Previa - Funcionarios y/o Contratistas",
-                // },
+                {
+                    value: 4,
+                    label: "Diplomado - Funcionarios y/o Contratistas",
+                },
             ],
         },
         size: {
