@@ -7,14 +7,18 @@ function filterTable(originalData, filter, setRows) {
     let result = cloneDeep(originalData);
 
     result = originalData.filter((row) => {
-        const cursos_inscritos = filter.cursos_inscritos
-            ? String(row.cursos_inscritos) === String(filter.cursos_inscritos)
+        const curso_20horas = filter.curso_20horas
+            ? String(row.curso_20horas) === String(filter.curso_20horas)
+            : true;
+        const diplomado_120horas = filter.diplomado_120horas
+            ? String(row.diplomado_120horas) ===
+              String(filter.diplomado_120horas)
             : true;
         const info_validada = filter.info_validada
             ? String(row.info_validada) === String(filter.info_validada)
             : true;
 
-        return cursos_inscritos && info_validada;
+        return curso_20horas && diplomado_120horas && info_validada;
     });
 
     if (filter.search !== undefined) {
