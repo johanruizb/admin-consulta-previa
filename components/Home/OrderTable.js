@@ -107,7 +107,9 @@ export default function OrderTable({ data, onView }) {
                     </Select>
                 </FormControl>
                 <FormControl size="sm">
-                    <FormLabel>Curso inscrito</FormLabel>
+                    <FormLabel>
+                        Curso - 20 horas
+                    </FormLabel>
                     <Select
                         size="sm"
                         placeholder="Filtrar por curso inscrito"
@@ -115,29 +117,42 @@ export default function OrderTable({ data, onView }) {
                         onChange={(e, newValue) => {
                             setFilterDebounced((prev) => ({
                                 ...prev,
-                                cursos_inscritos:
+                                curso_20horas:
                                     newValue !== "" ? newValue : undefined,
                             }));
                         }}
-                        value={filter.cursos_inscritos ?? ""}
+                        value={filter.curso_20horas ?? ""}
                     >
                         <Option value={""}>Todos</Option>
-                        <Option value={1}>
-                            Curso virtual de autoformación en Consulta Previa -
-                            Grupos étnicos (20 horas)
+                        <Option value={"Sociedad civil"}>
+                            Sociedad civil (20 horas)
                         </Option>
-                        <Option value={2}>
-                            Curso virtual de autoformación en consulta previa
-                            para fortalecimiento de capacidades institucionales
-                            (20 horas)
+                        <Option value={"Funcionarios"}>
+                            Funcionarios (20 horas)
                         </Option>
-                        <Option value={3}>
-                            Diplomado - Derecho Fundamental a la Consulta Previa
-                            - Grupos Étnicos (120 horas)
+                    </Select>
+                </FormControl>
+                <FormControl size="sm">
+                    <FormLabel>Diplomado - 120 horas</FormLabel>
+                    <Select
+                        size="sm"
+                        placeholder="Filtrar por curso inscrito"
+                        slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
+                        onChange={(e, newValue) => {
+                            setFilterDebounced((prev) => ({
+                                ...prev,
+                                diplomado_120horas:
+                                    newValue !== "" ? newValue : undefined,
+                            }));
+                        }}
+                        value={filter.diplomado_120horas ?? ""}
+                    >
+                        <Option value={""}>Todos</Option>
+                        <Option value={"Sociedad civil"}>
+                            Sociedad civil (20 horas)
                         </Option>
-                        <Option value={4}>
-                            Diplomado - Derecho Fundamental a la Consulta Previa
-                            - Funcionarios y/o Contratistas (120 horas)
+                        <Option value={"Funcionarios"}>
+                            Funcionarios (20 horas)
                         </Option>
                     </Select>
                 </FormControl>
@@ -174,7 +189,7 @@ export default function OrderTable({ data, onView }) {
                                 <tr>
                                     <th
                                         style={{
-                                            width: 140,
+                                            width: 80,
                                             padding: "12px 6px",
                                         }}
                                     >
@@ -182,7 +197,7 @@ export default function OrderTable({ data, onView }) {
                                     </th>
                                     <th
                                         style={{
-                                            width: 120,
+                                            width: 30,
                                             padding: "12px 6px",
                                         }}
                                     >
@@ -190,7 +205,7 @@ export default function OrderTable({ data, onView }) {
                                     </th>
                                     <th
                                         style={{
-                                            width: 120,
+                                            width: 80,
                                             padding: "12px 6px",
                                         }}
                                     >
@@ -206,7 +221,7 @@ export default function OrderTable({ data, onView }) {
                                     </th>
                                     <th
                                         style={{
-                                            width: 100,
+                                            width: 80,
                                             padding: "12px 6px",
                                         }}
                                     >
@@ -214,7 +229,7 @@ export default function OrderTable({ data, onView }) {
                                     </th>
                                     <th
                                         style={{
-                                            width: 160,
+                                            width: 100,
                                             padding: "12px 6px",
                                         }}
                                     >
@@ -222,7 +237,7 @@ export default function OrderTable({ data, onView }) {
                                     </th>
                                     <th
                                         style={{
-                                            width: 100,
+                                            width: 80,
                                             padding: "12px 6px",
                                         }}
                                     >
@@ -230,11 +245,19 @@ export default function OrderTable({ data, onView }) {
                                     </th>
                                     <th
                                         style={{
-                                            width: 100,
+                                            width: 80,
                                             padding: "12px 6px",
                                         }}
                                     >
-                                        Estado en moodle
+                                        Curso - 20 horas
+                                    </th>
+                                    <th
+                                        style={{
+                                            width: 80,
+                                            padding: "12px 6px",
+                                        }}
+                                    >
+                                        Diplomado - 120 horas
                                     </th>
                                 </tr>
                             </thead>
@@ -255,13 +278,14 @@ export default function OrderTable({ data, onView }) {
                                         <td>
                                             <Typography level="body-sm">
                                                 {dayjs(row.created_at).format(
-                                                    "DD/MM/YYYY HH:mm:ss A"
+                                                    "DD/MM/YYYY"
                                                 )}
+                                                {/* HH:mm:ss A */}
                                             </Typography>
                                         </td>
                                         <td>
                                             <Typography level="body-sm">
-                                                {row.tipo_doc_name}
+                                                {row.tipo_doc_abbreviation}
                                             </Typography>
                                         </td>
                                         <td>
@@ -310,32 +334,15 @@ export default function OrderTable({ data, onView }) {
                                                     : "Sin validar"}
                                             </Chip>
                                         </td>
-
                                         <td>
-                                            <Chip
-                                                variant="soft"
-                                                size="sm"
-                                                startDecorator={
-                                                    {
-                                                        true: (
-                                                            <CheckRoundedIcon fontSize="small" />
-                                                        ),
-                                                        false: (
-                                                            <BlockIcon fontSize="small" />
-                                                        ),
-                                                    }[row.participacion]
-                                                }
-                                                color={
-                                                    {
-                                                        true: "success",
-                                                        false: "danger",
-                                                    }[row.participacion]
-                                                }
-                                            >
-                                                {row.participacion
-                                                    ? "Participando"
-                                                    : "Sin participar"}
-                                            </Chip>
+                                            <Typography level="body-sm">
+                                                {row.curso_20horas}
+                                            </Typography>
+                                        </td>
+                                        <td>
+                                            <Typography level="body-sm">
+                                                {row.diplomado_120horas}
+                                            </Typography>
                                         </td>
                                     </tr>
                                 ))}
