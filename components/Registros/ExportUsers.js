@@ -33,10 +33,10 @@ const options = [
         value: 3,
         label: `Exportar "Diplomado - Grupos Étnicos"`,
     },
-    // {
-    //     value: 4,
-    //     label: `Exportar "Diplomado - Funcionarios y/o Contratistas"`,
-    // },
+    {
+        value: 4,
+        label: `Exportar "Diplomado - Funcionarios y/o Contratistas"`,
+    },
 ];
 
 function ExportUsers() {
