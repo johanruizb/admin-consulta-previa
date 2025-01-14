@@ -144,7 +144,7 @@ export default function Page() {
                                         <ListItem key={index}>
                                             <Checkbox
                                                 value={item.id}
-                                                label={item.name}
+                                                label={item.shortname}
                                                 checked={checked}
                                                 onChange={handleCursoChange}
                                                 color={
@@ -196,7 +196,7 @@ export default function Page() {
                                 <Typography level="title-lg">
                                     Personas registradas
                                 </Typography>
-                                <Stack flex={1} justifyContent="center">
+                                <Stack flex={0.5} justifyContent="center">
                                     <Stack
                                         direction="row"
                                         alignItems="center"
@@ -224,31 +224,24 @@ export default function Page() {
                                         </Typography>
                                     </Stack>
                                 </Stack>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid size={{ xs: 12, md: 4 }}>
-                        <Card
-                            variant="outlined"
-                            sx={{
-                                // width: "100%",
-                                height: "100%",
-                            }}
-                        >
-                            <CardContent>
                                 <Typography level="title-lg">
                                     Personas validadas ({data?.percentage} %)
                                 </Typography>
                                 <Stack
-                                    flex={1}
-                                    spacing={0}
+                                    flex={0.5}
+                                    // flex={1}
+                                    // spacing={0}
                                     justifyContent="center"
                                 >
                                     <Stack
                                         direction="row"
                                         // alignItems="center"
                                         alignItems="baseline"
-                                        justifyContent="center"
+                                        // justifyContent="center"
+                                        justifyContent={{
+                                            md: "center",
+                                            xs: "space-evenly",
+                                        }}
                                         spacing={1.25}
                                     >
                                         <Typography level="h2">
@@ -265,7 +258,7 @@ export default function Page() {
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid size={{ xs: 12, md: 4 }}>
+                    <Grid size={{ xs: 12, md: 8 }}>
                         <Card
                             variant="outlined"
                             sx={{
@@ -277,23 +270,29 @@ export default function Page() {
                                 <Typography level="title-lg">
                                     Personas por etnia
                                 </Typography>
-                                {data?.etnia?.map((item, index) => (
-                                    <Stack
-                                        key={index}
-                                        direction="row"
-                                        alignItems="center"
-                                        justifyContent="space-between"
-                                        spacing={1.25}
-                                        flex={1}
-                                    >
-                                        <Typography level="body-md">
-                                            {item.label}
-                                        </Typography>
-                                        <Typography level="h2">
-                                            {formatNumber(item.value)}
-                                        </Typography>
-                                    </Stack>
-                                ))}
+                                <Grid container columnSpacing={5}>
+                                    {data?.etnia?.map((item, index) => (
+                                        <Grid
+                                            key={index}
+                                            size={{ xs: 12, md: 6 }}
+                                        >
+                                            <Stack
+                                                direction="row"
+                                                alignItems="center"
+                                                justifyContent="space-between"
+                                                // spacing={1.25}
+                                                // flex={1}
+                                            >
+                                                <Typography level="body-md">
+                                                    {item.label}
+                                                </Typography>
+                                                <Typography level="h2">
+                                                    {formatNumber(item.value)}
+                                                </Typography>
+                                            </Stack>
+                                        </Grid>
+                                    ))}
+                                </Grid>
                             </CardContent>
                         </Card>
                     </Grid>
