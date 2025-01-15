@@ -55,6 +55,7 @@ export function getSeconds(until) {
 }
 
 export function formatNumber(number, locale = "en-US", options = {}) {
+    if (typeof number !== "number") return 0;
     const result = new Intl.NumberFormat(locale, options).format(number);
     return result?.replace(",", ".");
 }
