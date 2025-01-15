@@ -29,17 +29,6 @@ import UserSummary from "@/components/Registros/UserSummary";
 import usePermission from "@/hooks/usePermission";
 
 export default function Registros({ children }) {
-    const { data: inscritos, isLoading: inscritosIsLoading } = useSWR(
-        getURL("api/usuarios/estadisticas/registrados"),
-        {
-            revalidateOnMount: true,
-            fetcher: (url) =>
-                fetch(url, {
-                    method: "POST",
-                    body: JSON.stringify([1, 2, 3, 4]),
-                }).then((res) => res.json()),
-        }
-    );
     const router = useRouter();
 
     const { data, isLoading } = useSWR(
