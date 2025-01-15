@@ -227,7 +227,35 @@ export default function Page() {
                                 <Typography level="title-lg">
                                     Personas validadas ({data?.percentage} %)
                                 </Typography>
-                                <Stack
+                                <Stack flex={0.5} justifyContent="center">
+                                    <Stack
+                                        direction="row"
+                                        alignItems="center"
+                                        justifyContent="space-between"
+                                        spacing={1.25}
+                                    >
+                                        <Typography level="body-md">
+                                            Personas inscritas
+                                        </Typography>
+                                        <Typography level="h2">
+                                            {formatNumber(data.total)}
+                                        </Typography>
+                                    </Stack>
+                                    <Stack
+                                        direction="row"
+                                        alignItems="center"
+                                        justifyContent="space-between"
+                                        spacing={1.25}
+                                    >
+                                        <Typography level="body-md">
+                                            Personas validadas
+                                        </Typography>
+                                        <Typography level="h2">
+                                            {formatNumber(data.validated)}
+                                        </Typography>
+                                    </Stack>
+                                </Stack>
+                                {/* <Stack
                                     flex={0.5}
                                     // flex={1}
                                     // spacing={0}
@@ -254,7 +282,7 @@ export default function Page() {
                                             {formatNumber(data.total)}
                                         </Typography>
                                     </Stack>
-                                </Stack>
+                                </Stack> */}
                             </CardContent>
                         </Card>
                     </Grid>
