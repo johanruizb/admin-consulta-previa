@@ -1,14 +1,12 @@
-import Checkbox from "@mui/joy/Checkbox";
-import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
-import List from "@mui/joy/List";
-import ListItem from "@mui/joy/ListItem";
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
+import Checkbox from "@mui/joy/Checkbox";
 import CircularProgress from "@mui/joy/CircularProgress";
 import Link from "@mui/joy/Link";
+import List from "@mui/joy/List";
+import ListItem from "@mui/joy/ListItem";
 import Typography from "@mui/joy/Typography";
 
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
@@ -27,14 +25,14 @@ import Head from "next/head";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import fetcher from "@/components/fetcher";
 import CustomPie from "@/components/Panel/CustomPie";
 import { formatNumber, getURL } from "@/components/utils";
 
-import useSWR from "swr";
 import useClient from "@/hooks/useClient";
+import useSWR from "swr";
 
 dayjs.locale("es");
 
