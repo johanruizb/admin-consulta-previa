@@ -131,6 +131,9 @@ function Export() {
                         variant="solid"
                         color="primary"
                         aria-label="split button"
+                        sx={{
+                            maxWidth: { md: "325px" },
+                        }}
                     >
                         <Button
                             startDecorator={<FileDownloadIcon />}
