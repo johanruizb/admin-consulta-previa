@@ -39,6 +39,10 @@ export default async function handler(req, res) {
             const content = Buffer.from(await response.arrayBuffer());
 
             res.setHeader("Content-Type", contentType);
+            res.setHeader(
+                "Content-Disposition",
+                response.headers.get("content-disposition")
+            );
             res.status(response.status).send(content);
         }
     } catch (e) {
