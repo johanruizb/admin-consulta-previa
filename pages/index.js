@@ -196,7 +196,10 @@ export default function Page() {
                                 <Typography level="title-lg">
                                     Personas registradas
                                 </Typography>
-                                <Stack flex={0.5} justifyContent="center">
+                                <Stack
+                                    // flex={0.5}
+                                    justifyContent="center"
+                                >
                                     <Stack
                                         direction="row"
                                         alignItems="center"
@@ -224,23 +227,27 @@ export default function Page() {
                                         </Typography>
                                     </Stack>
                                 </Stack>
-                                <Typography level="title-lg">
-                                    Personas validadas ({data?.percentage} %)
-                                </Typography>
-                                <Stack flex={0.5} justifyContent="center">
-                                    <Stack
+                                {/* <Typography level="title-lg">
+                                    Personas validadas
+                                    ({data?.percentage} %)
+                                </Typography> */}
+                                <Stack
+                                    // flex={0.5}
+                                    justifyContent="center"
+                                >
+                                    {/* <Stack
                                         direction="row"
                                         alignItems="center"
                                         justifyContent="space-between"
                                         spacing={1.25}
                                     >
                                         <Typography level="body-md">
-                                            Personas inscritas
+                                            Personas registradas
                                         </Typography>
                                         <Typography level="h2">
                                             {formatNumber(data.total)}
                                         </Typography>
-                                    </Stack>
+                                    </Stack> */}
                                     <Stack
                                         direction="row"
                                         alignItems="center"
