@@ -26,9 +26,8 @@ export default async function handler(req, res) {
         }
     );
 
-    const result = await response.json();
-
     if (response.ok) {
+        const result = await response.json();
         const session = await getIronSession(req, res, {
             password: process.env.SESSION_SECRET,
             cookieName: "session",
@@ -46,6 +45,13 @@ export default async function handler(req, res) {
 
         res.status(200).end();
     } else {
-        res.status(response.status).json(result || response.statusText);
+        response
+            .json()
+            .then((data) => {
+                res.status(response.status).json(data);
+            })
+            .catch(() => {
+                res.status(response.status).json(response.statusText);
+            });
     }
 }
