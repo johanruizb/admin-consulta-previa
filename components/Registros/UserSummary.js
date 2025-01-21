@@ -1,4 +1,6 @@
-import { Card, CardContent, Typography } from "@mui/joy";
+import Card from "@mui/joy/Card";
+import CardContent from "@mui/joy/CardContent";
+import Typography from "@mui/joy/Typography";
 import Grid from "@mui/material/Grid2";
 import Stack from "@mui/material/Stack";
 import useSWR from "swr";
