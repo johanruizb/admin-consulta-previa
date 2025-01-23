@@ -46,6 +46,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import useSWRImmutable from "swr/immutable";
 
 import Registros from ".";
+import { Tooltip } from "@mui/joy";
 
 export default function Wrapper() {
     const { isLoading: permissionIsLoading, hasPermission } =
@@ -364,30 +365,47 @@ function View({ defaultValues }) {
                                                                                         spacing={
                                                                                             0.5
                                                                                         }
+                                                                                        sx={{
+                                                                                            cursor: "pointer",
+                                                                                        }}
                                                                                     >
-                                                                                        <Typography
-                                                                                            level="body-sm"
-                                                                                            color="danger"
-                                                                                            noWrap
-                                                                                        >
-                                                                                            {
+                                                                                        <Tooltip
+                                                                                            title={
                                                                                                 changes.old
                                                                                             }
-                                                                                        </Typography>
+                                                                                            arrow
+                                                                                        >
+                                                                                            <Typography
+                                                                                                level="body-sm"
+                                                                                                color="danger"
+                                                                                                noWrap
+                                                                                            >
+                                                                                                {
+                                                                                                    changes.old
+                                                                                                }
+                                                                                            </Typography>
+                                                                                        </Tooltip>
                                                                                         <span>
                                                                                             {
                                                                                                 "»»"
                                                                                             }
                                                                                         </span>
-                                                                                        <Typography
-                                                                                            level="body-sm"
-                                                                                            color="success"
-                                                                                            noWrap
-                                                                                        >
-                                                                                            {
+                                                                                        <Tooltip
+                                                                                            title={
                                                                                                 changes.new
                                                                                             }
-                                                                                        </Typography>
+                                                                                            arrow
+                                                                                        >
+                                                                                            <Typography
+                                                                                                level="body-sm"
+                                                                                                color="success"
+                                                                                                noWrap
+                                                                                            >
+                                                                                                {
+                                                                                                    changes.new
+                                                                                                }
+                                                                                            </Typography>
+                                                                                        </Tooltip>
                                                                                     </Stack>
                                                                                 </ListItemContent>
                                                                             </ListItem>
