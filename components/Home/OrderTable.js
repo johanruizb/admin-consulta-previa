@@ -39,6 +39,7 @@ export default function OrderTable({ data, onView }) {
 
     const [rows, setRows] = useState();
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const setFilterDebounced = useCallback(
         debounce((value) => setFilter(value), 250),
         []
@@ -107,9 +108,7 @@ export default function OrderTable({ data, onView }) {
                     </Select>
                 </FormControl>
                 <FormControl size="sm">
-                    <FormLabel>
-                        Curso - 20 horas
-                    </FormLabel>
+                    <FormLabel>Curso - 20 horas</FormLabel>
                     <Select
                         size="sm"
                         placeholder="Filtrar por curso inscrito"

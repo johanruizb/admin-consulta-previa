@@ -230,6 +230,29 @@ export default function Sidebar() {
                                 </ListItemButton>
                             </ListItem>
                         )}
+                        {hasPermission("usuario.view_listaespera") && (
+                            <ListItem>
+                                <ListItemButton
+                                    component="a"
+                                    onClick={() =>
+                                        handleRouteChange("/lista-espera")
+                                    }
+                                    selected={
+                                        mounted
+                                            ? location.pathname ==
+                                              "/lista-espera"
+                                            : false
+                                    }
+                                >
+                                    <SchoolIcon />
+                                    <ListItemContent>
+                                        <Typography level="title-sm">
+                                            Lista de espera
+                                        </Typography>
+                                    </ListItemContent>
+                                </ListItemButton>
+                            </ListItem>
+                        )}
                     </List>
                 )}
                 <List
