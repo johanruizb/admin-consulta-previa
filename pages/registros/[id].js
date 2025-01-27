@@ -330,7 +330,18 @@ function View({ defaultValues }) {
                                                                                 index
                                                                             }
                                                                             size={
-                                                                                6
+                                                                                field ===
+                                                                                    "Cursos inscritos" &&
+                                                                                Object.values(
+                                                                                    changes
+                                                                                ).every(
+                                                                                    (
+                                                                                        change
+                                                                                    ) =>
+                                                                                        change
+                                                                                )
+                                                                                    ? 12
+                                                                                    : 6
                                                                             }
                                                                         >
                                                                             <ListItem
