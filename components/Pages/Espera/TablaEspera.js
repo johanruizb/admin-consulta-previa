@@ -1,4 +1,3 @@
-import { filterTable } from "@/components/Home/functions";
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/joy/Box";
@@ -17,6 +16,33 @@ import dayjs from "dayjs";
 import { debounce } from "lodash";
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+
+import Fuse from "fuse.js";
+
+import { chunk, cloneDeep } from "lodash";
+
+function filterTable(originalData, filter, setRows) {
+    let result = cloneDeep(originalData);
+
+    if (filter.search !== undefined) {
+        const fuse = new Fuse(result, {
+            keys: ["nombres", "apellidos", "telefono1", "correo_electronico"],
+            useExtendedSearch: true,
+            // threshold: 0.3,
+        });
+        // result = fuse.search("=" + filter.search).map((item) => item.item);
+        result = fuse.search("'" + filter.search).map((item) => item.item);
+    }
+
+    const chunkedList = chunk(result, 50);
+
+    setRows((prev) => ({
+        ...prev,
+        filtered: result,
+        chunked: chunkedList,
+        pages: chunkedList.length,
+    }));
+}
 
 export default function TablaEspera({ data }) {
     const { isLoading: permissionIsLoading } = usePermissionContext();
