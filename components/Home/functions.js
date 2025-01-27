@@ -28,6 +28,7 @@ function filterTable(originalData, filter, setRows) {
                 "nombres",
                 "apellidos",
                 "telefono1",
+                "correo_electronico",
                 "estado_name",
             ],
             useExtendedSearch: true,
