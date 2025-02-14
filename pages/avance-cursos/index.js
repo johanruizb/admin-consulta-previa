@@ -1,10 +1,10 @@
-import IconButton from "@mui/joy/IconButton";
-import Tooltip from "@mui/joy/Tooltip";
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Button from "@mui/joy/Button";
 import CircularProgress from "@mui/joy/CircularProgress";
+import IconButton from "@mui/joy/IconButton";
 import Link from "@mui/joy/Link";
+import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
 
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
@@ -49,6 +49,7 @@ export default function Avances({ children }) {
     const methods = useForm({
         defaultValues: {
             activity__module__course_id: 1,
+            grupo_usuario: "all",
             activity__module_id: "all",
             user__ciudad_nac__state_id__country_id: "all",
             user__ciudad__state_id: "all",
@@ -64,6 +65,7 @@ export default function Avances({ children }) {
     const { control, setValue } = methods;
 
     const values = useWatch({ control });
+    // const {}
 
     const { data, isLoading, isValidating, mutate } = useSWR(
         [
@@ -118,6 +120,7 @@ export default function Avances({ children }) {
             (modulo_completado !== "all" || modulo_completado === true)
         )
             setValue("modulo_completado", "all");
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [personas_sin_actividad, modulo_completado]);
 
     if (!mounted) {
