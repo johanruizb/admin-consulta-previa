@@ -1,24 +1,24 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import SearchIcon from "@mui/icons-material/Search";
 import Accordion from "@mui/joy/Accordion";
 import AccordionDetails from "@mui/joy/AccordionDetails";
 import AccordionSummary from "@mui/joy/AccordionSummary";
+import Box from "@mui/joy/Box";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import Stack from "@mui/joy/Stack";
-import Box from "@mui/joy/Box";
 import Grid from "@mui/material/Grid2";
 import { debounce } from "lodash";
-import { useCallback, useEffect, useState } from "react";
-import { FiltroCursos } from "./constants";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import FormularioCursos, { FormularioGrupos } from "./constants";
 
 import Fuse from "fuse.js";
 
 import { chunk } from "lodash";
 
-import { cloneDeep } from "lodash";
 import { useSessionStorage } from "@uidotdev/usehooks";
+import { cloneDeep } from "lodash";
+import { useFormContext, useWatch } from "react-hook-form";
 
 function filter(originalData, searchValue, callback) {
     if (searchValue !== undefined && searchValue !== "") {
@@ -54,6 +54,7 @@ export default function FiltrarCursos({ setFilter, data }) {
     );
     const [search, setSearch] = useState();
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const setSearchDebounced = useCallback(
         debounce((value) => {
             setSearch(value);
@@ -63,7 +64,22 @@ export default function FiltrarCursos({ setFilter, data }) {
 
     useEffect(() => {
         filter(data?.all_res ?? [], search, setFilter);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search, data]);
+
+    // FormularioGrupos
+    const { control } = useFormContext();
+    const course_id = useWatch({
+        control,
+        name: "activity__module__course_id",
+    });
+
+    const FormGroups = useMemo(() => {
+        return FormularioGrupos[course_id];
+    }, [course_id]);
+
+    console.log(course_id);
+    console.log(FormularioGrupos[course_id]);
 
     return (
         <Box
@@ -109,26 +125,45 @@ export default function FiltrarCursos({ setFilter, data }) {
                         pt: 1,
                     }}
                 >
-                    {FiltroCursos.map((FormularioCurso, index) => (
-                        <Grid key={index} container spacing={1.25}>
-                            {FormularioCurso.map((slotProps, index) => {
-                                const {
-                                    Component,
-                                    size = {
-                                        xs: 12,
-                                        md: 3,
-                                    },
-                                    ...inputProps
-                                } = slotProps;
+                    <Grid container spacing={1.25}>
+                        {FormularioCursos.map((slotProps, index) => {
+                            const {
+                                Component,
+                                size = {
+                                    xs: 12,
+                                    md: 3,
+                                },
+                                ...inputProps
+                            } = slotProps;
 
-                                return Component ? (
+                            return Component ? (
+                                <Fragment key={index}>
+                                    {index == 1 &&
+                                        FormGroups?.map((slotProps, index) => {
+                                            const {
+                                                Component,
+                                                size = {
+                                                    xs: 12,
+                                                    md: 3,
+                                                },
+                                                ...inputProps
+                                            } = slotProps;
+
+                                            return Component ? (
+                                                <Grid key={index} size={size}>
+                                                    <Component
+                                                        inputProps={inputProps}
+                                                    />
+                                                </Grid>
+                                            ) : null;
+                                        })}
                                     <Grid key={index} size={size}>
                                         <Component inputProps={inputProps} />
                                     </Grid>
-                                ) : null;
-                            })}
-                        </Grid>
-                    ))}
+                                </Fragment>
+                            ) : null;
+                        })}
+                    </Grid>
                 </AccordionDetails>
             </Accordion>
         </Box>
