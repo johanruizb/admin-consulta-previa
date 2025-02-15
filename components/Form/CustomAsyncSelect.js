@@ -9,12 +9,11 @@ import { default as JoySelect } from "@mui/joy/Select";
 
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 
-import useSWRImmutable from "swr/immutable";
-
+import { useEffect, useMemo } from "react";
+import useSWR from "swr";
 import { v4 } from "uuid";
 import fetcher from "../fetcher";
 import { format, getURL } from "../utils";
-import useSWR from "swr";
 
 function getCustomURL(url, values) {
     return getURL(format(url, values));
@@ -75,12 +74,23 @@ export default function CustomAsyncSelect({ inputProps }) {
 }
 
 function AsyncSelect({ inputProps }) {
-    const { control } = useFormContext();
+    const { control, setValue } = useFormContext();
 
     const {
         controller: controllerProps,
         field: { label: formLabel, options, ...fieldProps },
     } = inputProps;
+
+    const opciones = useMemo(
+        () => options.filter((option) => option.value !== "all"),
+        [options]
+    );
+
+    useEffect(() => {
+        if (opciones.length === 1)
+            setValue(controllerProps.name, opciones[0].value);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [opciones]);
 
     return (
         <Controller

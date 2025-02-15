@@ -78,8 +78,8 @@ export default function FiltrarCursos({ setFilter, data }) {
         return FormularioGrupos[course_id];
     }, [course_id]);
 
-    console.log(course_id);
-    console.log(FormularioGrupos[course_id]);
+    // console.log(course_id);
+    // console.log(FormularioGrupos[course_id]);
 
     return (
         <Box
