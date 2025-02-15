@@ -12,3 +12,12 @@
     display: inline-block;
     vertical-align: middle;
 }
+
+.cell-avance,
+.row-resumen,
+.cell-resumen {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: unset !important;
+}
