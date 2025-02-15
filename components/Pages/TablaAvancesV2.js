@@ -286,7 +286,7 @@ export default function TablaAvancesV2({
                                 transform: "rotate(-90deg)",
                             },
                             "& .MuiDataGrid-columnHeaderTitle:before": {
-                                content: """",
+                                content: `""`,
                                 paddingTop: "120%",
                                 /* takes width as reference, + 10% for faking some extra padding */
                                 display: "inline-block",
