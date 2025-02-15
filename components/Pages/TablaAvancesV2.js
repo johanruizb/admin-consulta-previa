@@ -1,4 +1,4 @@
-import { Typography } from "@mui/joy";
+import Typography from "@mui/joy/Typography";
 import Box from "@mui/joy/Box";
 import Checkbox from "@mui/joy/Checkbox";
 import Sheet from "@mui/joy/Sheet";
@@ -286,7 +286,7 @@ export default function TablaAvancesV2({
                                 transform: "rotate(-90deg)",
                             },
                             "& .MuiDataGrid-columnHeaderTitle:before": {
-                                content: '""',
+                                content: """",
                                 paddingTop: "120%",
                                 /* takes width as reference, + 10% for faking some extra padding */
                                 display: "inline-block",
