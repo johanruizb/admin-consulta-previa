@@ -10,7 +10,6 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 import { v4 } from "uuid";
 
 function Status({ params, header } = {}) {
-    // const [isNear, ref] = useNearScreen();
     const [ref, entry] = useIntersectionObserver({
         threshold: 0,
         root: null,
