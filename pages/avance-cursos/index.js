@@ -29,8 +29,8 @@ import FiltrarCursos from "@/components/Cursos/FiltrarCursos";
 import Layout from "@/components/Home/Layout";
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 import ExportAvances from "@/components/Pages/Avances/ExportarAvances";
-import TablaAvances from "@/components/Pages/Avances/TablaAvances";
 import UploadAvances from "@/components/Pages/Avances/UploadAvances";
+import TablaAvancesV2 from "@/components/Pages/TablaAvancesV2";
 import { getURL } from "@/components/utils";
 import DevWrapper from "@/components/Wrapper/DevWrapper";
 import useClient from "@/hooks/useClient";
@@ -277,7 +277,7 @@ export default function Avances({ children }) {
                         </Button>
                     </Stack>
                 ) : (
-                    <TablaAvances
+                    <TablaAvancesV2
                         data={data}
                         filter={filter}
                         hasPermission={hasPermission}
