@@ -18,11 +18,14 @@
         "@mui/joy": "^5.0.0-beta.48",
         "@mui/material": "^6.1.6",
         "@mui/x-charts": "^7.22.2",
+        "@mui/x-data-grid": "^7.26.0",
         "@uidotdev/usehooks": "^2.4.1",
         "dayjs": "^1.11.13",
         "fuse.js": "^7.0.0",
+        "intersection-observer": "^0.12.2",
         "iron-session": "^8.0.3",
         "lodash": "^4.17.21",
+        "motion": "^12.4.3",
         "next": "^15.0.3",
         "npm-check-updates": "^17.1.10",
         "react": "^18",
@@ -35,8 +38,8 @@
         "uuid": "^11.0.2"
     },
     "devDependencies": {
+        "@eslint/eslintrc": "^3",
         "eslint": "^9",
-        "eslint-config-next": "15.1.6",
-        "@eslint/eslintrc": "^3"
+        "eslint-config-next": "15.1.6"
     }
 }
