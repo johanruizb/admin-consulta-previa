@@ -46,7 +46,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import useSWRImmutable from "swr/immutable";
 
 import Registros from ".";
-import { Tooltip } from "@mui/joy";
+import Tooltip from "@mui/joy/Tooltip";
 
 export default function Wrapper() {
     const { isLoading: permissionIsLoading, hasPermission } =
