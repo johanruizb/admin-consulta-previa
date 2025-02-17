@@ -159,7 +159,7 @@ function View({ defaultValues }) {
             });
     };
 
-    const validado = defaultValues.info_validada;
+    const validado = defaultValues?.info_validada;
 
     return (
         <Registros>

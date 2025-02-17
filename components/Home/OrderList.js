@@ -1,31 +1,16 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
+import BlockIcon from "@mui/icons-material/Block";
+import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/joy/Box";
+import Button from "@mui/joy/Button";
 import Chip from "@mui/joy/Chip";
+import CircularProgress from "@mui/joy/CircularProgress";
 import Divider from "@mui/joy/Divider";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import IconButton from "@mui/joy/IconButton";
 import Input from "@mui/joy/Input";
-import Option from "@mui/joy/Option";
-import Select from "@mui/joy/Select";
-import Sheet from "@mui/joy/Sheet";
-import Typography from "@mui/joy/Typography";
-
-import BlockIcon from "@mui/icons-material/Block";
-import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
-import SearchIcon from "@mui/icons-material/Search";
-import Pagination from "@mui/material/Pagination";
-
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
-
-import Stack from "@mui/material/Stack";
-
-import dayjs from "dayjs";
-
-import { debounce } from "lodash";
-
-import Button from "@mui/joy/Button";
-import CircularProgress from "@mui/joy/CircularProgress";
 import List from "@mui/joy/List";
 import ListDivider from "@mui/joy/ListDivider";
 import ListItem from "@mui/joy/ListItem";
@@ -33,6 +18,14 @@ import ListItemContent from "@mui/joy/ListItemContent";
 import Modal from "@mui/joy/Modal";
 import ModalClose from "@mui/joy/ModalClose";
 import ModalDialog from "@mui/joy/ModalDialog";
+import Option from "@mui/joy/Option";
+import Select from "@mui/joy/Select";
+import Sheet from "@mui/joy/Sheet";
+import Typography from "@mui/joy/Typography";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+import dayjs from "dayjs";
+import { debounce } from "lodash";
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { filterTable } from "./functions";
 import usePermissionContext from "./permissionContext/usePermission";
@@ -48,6 +41,7 @@ export default function OrderList({ data, onView }) {
 
     const [rows, setRows] = useState();
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const debounceFilter = useCallback(
         debounce((d, f) => filterTable(d, f, setRows), 300),
         []
@@ -55,6 +49,7 @@ export default function OrderList({ data, onView }) {
 
     useEffect(() => {
         debounceFilter(data, filter);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data, filter]);
 
     const ready = useMemo(
@@ -235,7 +230,7 @@ export default function OrderList({ data, onView }) {
                                             >
                                                 <Typography level="body-xs">
                                                     {dayjs(
-                                                        row.created_at
+                                                        row.ultimo_registro
                                                     ).format(
                                                         "DD/MM/YYYY HH:mm:ss A"
                                                     )}

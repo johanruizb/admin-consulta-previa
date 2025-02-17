@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import Box from "@mui/joy/Box";
 import Chip from "@mui/joy/Chip";
 import FormControl from "@mui/joy/FormControl";
@@ -276,7 +275,7 @@ export default function OrderTable({ data, onView }) {
                                     >
                                         <td>
                                             <Typography level="body-sm">
-                                                {dayjs(row.created_at).format(
+                                                {dayjs(row.ultimo_registro).format(
                                                     "DD/MM/YYYY"
                                                 )}
                                                 {/* HH:mm:ss A */}
