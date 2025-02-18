@@ -8,19 +8,15 @@ import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import Stack from "@mui/joy/Stack";
 import Grid from "@mui/material/Grid2";
-import { debounce } from "lodash";
+import { useSessionStorage } from "@uidotdev/usehooks";
+import Fuse from "fuse.js";
+import { cloneDeep, debounce } from "lodash";
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { useFormContext, useWatch } from "react-hook-form";
 import FormularioCursos, { FormularioGrupos } from "./constants";
 
-import Fuse from "fuse.js";
-
-import { chunk } from "lodash";
-
-import { useSessionStorage } from "@uidotdev/usehooks";
-import { cloneDeep } from "lodash";
-import { useFormContext, useWatch } from "react-hook-form";
-
 function filter(originalData, searchValue, callback) {
+    console.log(originalData, searchValue);
     if (searchValue !== undefined && searchValue !== "") {
         let result = cloneDeep(originalData);
         const fuse = new Fuse(result, {
@@ -29,19 +25,7 @@ function filter(originalData, searchValue, callback) {
             // threshold: 0.3,
         });
         result = fuse.search("'" + searchValue).map((item) => item.item);
-
-        const chunkedList = chunk(result, 50);
-
-        console.log({
-            searchValue,
-            chunked: chunkedList,
-            pages: chunkedList.length,
-        });
-
-        callback({
-            chunked: chunkedList,
-            pages: chunkedList.length,
-        });
+        callback(result);
     } else {
         callback();
     }
@@ -63,7 +47,7 @@ export default function FiltrarCursos({ setFilter, data }) {
     );
 
     useEffect(() => {
-        filter(data?.all_res ?? [], search, setFilter);
+        filter(data?.resultados ?? [], search, setFilter);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search, data]);
 

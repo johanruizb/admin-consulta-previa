@@ -1,8 +1,8 @@
-import Typography from "@mui/joy/Typography";
 import Box from "@mui/joy/Box";
 import Checkbox from "@mui/joy/Checkbox";
 import Sheet from "@mui/joy/Sheet";
 import Tooltip from "@mui/joy/Tooltip";
+import Typography from "@mui/joy/Typography";
 import { DataGrid } from "@mui/x-data-grid";
 import { useIntersectionObserver } from "@uidotdev/usehooks";
 import dayjs from "dayjs";
@@ -173,19 +173,7 @@ export default function TablaAvancesV2({
     onView,
     filter,
 }) {
-    const {
-        actividades,
-        headers,
-        label_completado: label,
-        resultados: rows,
-    } = data ?? {};
-    const [page, setPage] = useState(1);
-
-    useEffect(() => {
-        return () => {
-            setPage(1);
-        };
-    }, [data]);
+    const { headers, resultados: rows } = data ?? {};
 
     const columns = useMemo(() => {
         const defaultColumns = [
@@ -241,7 +229,7 @@ export default function TablaAvancesV2({
                     }}
                 >
                     <DataGrid
-                        rows={rows ?? []}
+                        rows={filter ?? rows ?? []}
                         columns={columns}
                         columnVisibilityModel={{
                             id: false,
