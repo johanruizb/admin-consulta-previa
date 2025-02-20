@@ -6,7 +6,7 @@ import Typography from "@mui/joy/Typography";
 import { DataGrid } from "@mui/x-data-grid";
 import { useIntersectionObserver } from "@uidotdev/usehooks";
 import dayjs from "dayjs";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useMemo } from "react";
 import { v4 } from "uuid";
 
 function Status({ params, header } = {}) {
@@ -178,7 +178,11 @@ export default function TablaAvancesV2({
     const columns = useMemo(() => {
         const defaultColumns = [
             { field: "id", headerName: "ID", width: 50 },
-            { field: "documento", headerName: "Documento", width: 120 },
+            {
+                field: "documento",
+                headerName: "Documento",
+                width: 120,
+            },
             {
                 field: "usuario",
                 headerName: "Nombre completo",
@@ -219,7 +223,8 @@ export default function TablaAvancesV2({
                     className="OrderTableContainer"
                     variant="outlined"
                     sx={{
-                        display: { xs: "none", sm: "initial" },
+                        display: { xs: "none", sm: "block" },
+                        // position: "absolute",
                         width: "100%",
                         borderRadius: "sm",
                         flexShrink: 1,
@@ -292,6 +297,7 @@ export default function TablaAvancesV2({
                             )
                                 onView(params.row.id);
                         }}
+                        // autosizeOnMount
                     />
                 </Sheet>
             </Fragment>
