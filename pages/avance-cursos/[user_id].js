@@ -126,7 +126,6 @@ function View({ defaultValues }) {
                         }}
                     >
                         <DialogTitle>
-                            Ver información —
                             {defaultValues &&
                                 ` ${defaultValues.nombres} ${
                                     defaultValues.apellidos
@@ -134,7 +133,11 @@ function View({ defaultValues }) {
                                     DOCUMENTOS[defaultValues.tipo_doc].split(
                                         " "
                                     )[0]
-                                } ${defaultValues.num_doc}`}
+                                } ${defaultValues.num_doc}${
+                                    defaultValues.grupos
+                                        ? " — " + defaultValues.grupos
+                                        : ""
+                                }`}
                         </DialogTitle>
                         <DialogContent>
                             <Stack spacing={2}>
