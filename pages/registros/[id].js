@@ -184,10 +184,10 @@ function View({ defaultValues }) {
                         }}
                     >
                         <DialogTitle>
-                            {validado
+                            {/* {validado
                                 ? "Editar información"
                                 : "Verificar inscripción"}
-                            {" — "}
+                            {" — "} */}
                             {defaultValues &&
                                 `${defaultValues.nombres} ${
                                     defaultValues.apellidos
@@ -195,7 +195,11 @@ function View({ defaultValues }) {
                                     DOCUMENTOS[defaultValues.tipo_doc].split(
                                         " "
                                     )[0]
-                                } ${defaultValues.num_doc}`}
+                                } ${defaultValues.num_doc}${
+                                    defaultValues.grupos
+                                        ? " — " + defaultValues.grupos
+                                        : ""
+                                }`}
                         </DialogTitle>
                         <DialogContent>
                             {validado
