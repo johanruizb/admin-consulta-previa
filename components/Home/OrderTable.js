@@ -1,5 +1,9 @@
+import BlockIcon from "@mui/icons-material/Block";
+import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
+import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/joy/Box";
 import Chip from "@mui/joy/Chip";
+import CircularProgress from "@mui/joy/CircularProgress";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import { iconButtonClasses } from "@mui/joy/IconButton";
@@ -7,27 +11,17 @@ import Input from "@mui/joy/Input";
 import Option from "@mui/joy/Option";
 import Select from "@mui/joy/Select";
 import Sheet from "@mui/joy/Sheet";
+import Stack from "@mui/joy/Stack";
 import Table from "@mui/joy/Table";
 import Typography from "@mui/joy/Typography";
-
-import BlockIcon from "@mui/icons-material/Block";
-import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
-import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "@mui/material/Pagination";
-
-import dayjs from "dayjs";
-
-import { debounce } from "lodash";
-
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
-
-import CircularProgress from "@mui/joy/CircularProgress";
-import Stack from "@mui/joy/Stack";
-import { v4 as uuidv4 } from "uuid";
-import usePermissionContext from "./permissionContext/usePermission";
-
 import { useSessionStorage } from "@uidotdev/usehooks";
+import dayjs from "dayjs";
+import { debounce } from "lodash";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { filterTable } from "./functions";
+import usePermissionContext from "./permissionContext/usePermission";
 
 export default function OrderTable({ data, onView }) {
     const { isLoading: permissionIsLoading, hasPermission } =
@@ -247,14 +241,6 @@ export default function OrderTable({ data, onView }) {
                                             padding: "12px 6px",
                                         }}
                                     >
-                                        Grupo
-                                    </th>
-                                    <th
-                                        style={{
-                                            width: 80,
-                                            padding: "12px 6px",
-                                        }}
-                                    >
                                         Curso - 20 horas
                                     </th>
                                     <th
@@ -264,6 +250,14 @@ export default function OrderTable({ data, onView }) {
                                         }}
                                     >
                                         Diplomado - 120 horas
+                                    </th>
+                                    <th
+                                        style={{
+                                            width: 80,
+                                            padding: "12px 6px",
+                                        }}
+                                    >
+                                        Grupo
                                     </th>
                                 </tr>
                             </thead>
@@ -342,17 +336,17 @@ export default function OrderTable({ data, onView }) {
                                         </td>
                                         <td>
                                             <Typography level="body-sm">
-                                                {row.grupos}
-                                            </Typography>
-                                        </td>
-                                        <td>
-                                            <Typography level="body-sm">
                                                 {row.curso_20horas}
                                             </Typography>
                                         </td>
                                         <td>
                                             <Typography level="body-sm">
                                                 {row.diplomado_120horas}
+                                            </Typography>
+                                        </td>
+                                        <td>
+                                            <Typography level="body-sm">
+                                                {row.grupos}
                                             </Typography>
                                         </td>
                                     </tr>
