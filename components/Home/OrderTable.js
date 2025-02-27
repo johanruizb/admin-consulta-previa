@@ -247,6 +247,14 @@ export default function OrderTable({ data, onView }) {
                                             padding: "12px 6px",
                                         }}
                                     >
+                                        Grupo
+                                    </th>
+                                    <th
+                                        style={{
+                                            width: 80,
+                                            padding: "12px 6px",
+                                        }}
+                                    >
                                         Curso - 20 horas
                                     </th>
                                     <th
@@ -275,9 +283,9 @@ export default function OrderTable({ data, onView }) {
                                     >
                                         <td>
                                             <Typography level="body-sm">
-                                                {dayjs(row.ultimo_registro).format(
-                                                    "DD/MM/YYYY"
-                                                )}
+                                                {dayjs(
+                                                    row.ultimo_registro
+                                                ).format("DD/MM/YYYY")}
                                                 {/* HH:mm:ss A */}
                                             </Typography>
                                         </td>
@@ -331,6 +339,11 @@ export default function OrderTable({ data, onView }) {
                                                     ? "Validado"
                                                     : "Sin validar"}
                                             </Chip>
+                                        </td>
+                                        <td>
+                                            <Typography level="body-sm">
+                                                {row.grupos}
+                                            </Typography>
                                         </td>
                                         <td>
                                             <Typography level="body-sm">
