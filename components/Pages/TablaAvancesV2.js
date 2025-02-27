@@ -205,14 +205,26 @@ export default function TablaAvancesV2({
         ];
         if (!headers) return defaultColumns;
         return defaultColumns.concat(
-            headers.map((header) => ({
-                ...header,
-                field: header.field.toString(),
-                width: headers.length > 5 ? 100 : 200,
-                renderCell: (params) => getStatus(params, header),
-                valueGetter: (value, row) => row[header.field]?.estado > 0,
-                type: "boolean",
-            }))
+            headers.map((header) => {
+                const isNumber = Number(header.field);
+                const h = {
+                    ...header,
+                    field: header.field.toString(),
+                    width: headers.length > 5 ? 100 : 200,
+                };
+                if (
+                    isNumber ||
+                    header.field.toLowerCase().includes("completado")
+                )
+                    return {
+                        ...h,
+                        renderCell: (params) => getStatus(params, header),
+                        valueGetter: (value, row) =>
+                            row[header.field]?.estado > 0,
+                        type: "boolean",
+                    };
+                return h;
+            })
         );
     }, [headers]);
 
