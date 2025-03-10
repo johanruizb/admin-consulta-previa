@@ -108,10 +108,24 @@ export default function Avances({ children }) {
         router.push(`/avance-cursos/${id}`, undefined, { shallow: true });
     };
 
-    const [personas_sin_actividad, modulo_completado] = useWatch({
+    const [
+        personas_sin_actividad,
+        modulo_completado,
+        activity__module__course_id,
+    ] = useWatch({
         control,
-        name: ["personas_sin_actividad", "modulo_completado"],
+        name: [
+            "personas_sin_actividad",
+            "modulo_completado",
+            "activity__module__course_id",
+        ],
     });
+
+    useEffect(() => {
+        if ([1, 2].includes(activity__module__course_id))
+            setValue("activity__module_id", "all");
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activity__module__course_id]);
 
     useEffect(() => {
         if (
