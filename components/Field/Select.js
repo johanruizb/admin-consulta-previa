@@ -30,6 +30,7 @@ export default function CustomSelect({ inputProps }) {
                     <FormControl
                         error={Boolean(error?.type || error?.types)}
                         required={controllerProps.rules?.required?.value}
+                        disabled={fieldProps.readOnly}
                     >
                         <FormLabel>{formLabel}</FormLabel>
                         <Select
