@@ -19,7 +19,7 @@ function Status({ params, header } = {}) {
     const { estado, fecha } = params?.row[header?.field] || {};
 
     const estadoNumero = Number(estado);
-    const completado = estadoNumero >= 1;
+    const completado = estadoNumero >= 1 || params?.row[header?.field] === true;
 
     return (
         <Box ref={ref}>
@@ -207,10 +207,14 @@ export default function TablaAvancesV2({
         return defaultColumns.concat(
             headers.map((header) => {
                 const isNumber = Number(header.field);
+                const isCheckbox =
+                    isNumber ||
+                    header.field.toLowerCase().includes("completado");
+
                 const h = {
                     ...header,
                     field: header.field.toString(),
-                    width: headers.length > 5 ? 100 : 200,
+                    width: headers.length > 5 && isCheckbox ? 100 : 70,
                 };
                 if (
                     isNumber ||
@@ -227,6 +231,8 @@ export default function TablaAvancesV2({
             })
         );
     }, [headers]);
+
+    const __rows = useMemo(() => filter ?? rows ?? [], [filter, rows]);
 
     return (
         <Fragment>
@@ -246,7 +252,8 @@ export default function TablaAvancesV2({
                     }}
                 >
                     <DataGrid
-                        rows={filter ?? rows ?? []}
+                        key={v4()}
+                        rows={__rows}
                         columns={columns}
                         columnVisibilityModel={{
                             id: false,
