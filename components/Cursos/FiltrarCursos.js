@@ -31,7 +31,7 @@ function filter(originalData, searchValue, callback) {
     }
 }
 
-export default function FiltrarCursos({ setFilter, data }) {
+export default function FiltrarCursos({ setFilter, data, isLoading }) {
     const [expanded, setExpanded] = useSessionStorage(
         "FiltrarCursos__expanded",
         false
@@ -136,7 +136,15 @@ export default function FiltrarCursos({ setFilter, data }) {
                                             return Component ? (
                                                 <Grid key={index} size={size}>
                                                     <Component
-                                                        inputProps={inputProps}
+                                                        inputProps={{
+                                                            ...inputProps,
+                                                            fieldProps: {
+                                                                readOnly: true,
+                                                                disabled: true,
+                                                                ...(inputProps?.fieldProps ??
+                                                                    {}),
+                                                            },
+                                                        }}
                                                     />
                                                 </Grid>
                                             ) : null;
