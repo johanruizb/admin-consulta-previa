@@ -14,6 +14,7 @@ import { cloneDeep, debounce } from "lodash";
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import FormularioCursos, { FormularioGrupos } from "./constants";
+import RangeSlider from "../Field/RangeSlider";
 
 function filter(originalData, searchValue, callback) {
     console.log(originalData, searchValue);
@@ -34,7 +35,7 @@ function filter(originalData, searchValue, callback) {
 export default function FiltrarCursos({ setFilter, data }) {
     const [expanded, setExpanded] = useSessionStorage(
         "FiltrarCursos__expanded",
-        false,
+        false
     );
     const [search, setSearch] = useState();
 
@@ -43,7 +44,7 @@ export default function FiltrarCursos({ setFilter, data }) {
         debounce((value) => {
             setSearch(value);
         }, 250),
-        [],
+        []
     );
 
     useEffect(() => {
@@ -157,6 +158,13 @@ export default function FiltrarCursos({ setFilter, data }) {
                                 </Fragment>
                             ) : null;
                         })}
+                        <RangeSlider
+                            inputProps={{
+                                controller: {
+                                    name: "porcentaje_avance",
+                                },
+                            }}
+                        />
                     </Grid>
                 </AccordionDetails>
             </Accordion>
