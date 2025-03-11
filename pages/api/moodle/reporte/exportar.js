@@ -26,7 +26,7 @@ export default async function handler(req, res) {
                     Authorization: "Bearer " + session.accessToken,
                 },
                 body: JSON.stringify(req.body),
-            }
+            },
         );
 
         if (!response.ok)

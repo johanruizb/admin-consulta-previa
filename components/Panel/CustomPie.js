@@ -146,7 +146,7 @@ export default function CustomPie({ data = [], slotProps = {} }) {
                                 />
                                 <Tooltip
                                     title={`${item.label} (${formatNumber(
-                                        item.value
+                                        item.value,
                                     )})`}
                                     arrow
                                 >

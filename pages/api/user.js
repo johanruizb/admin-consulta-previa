@@ -23,10 +23,10 @@ export default async function handler(req, res) {
                 Authorization: "Bearer " + session.accessToken,
                 "Content-Type": "application/json",
             },
-        }
+        },
     );
 
     res.status(response.status).json(
-        (await response.json()) || response.statusText
+        (await response.json()) || response.statusText,
     );
 }

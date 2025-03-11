@@ -41,7 +41,7 @@ export default async function handler(req, res) {
                     "Content-Type": "multipart/form-data; boundary=----",
                 },
                 body: formDataBuffer,
-            }
+            },
         );
 
         const result = await response.json();
@@ -54,7 +54,7 @@ export default async function handler(req, res) {
                 headers: {
                     Authorization: "Bearer " + session.accessToken,
                 },
-            }
+            },
         );
         const result = await response.json();
         res.status(response.status).json(result);

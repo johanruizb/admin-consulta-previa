@@ -37,7 +37,7 @@ export default async function handler(req, res) {
                     "Content-Type": "multipart/form-data; boundary=----",
                 },
                 body: formDataBuffer,
-            }
+            },
         );
     } else if (req.method === "GET") {
         response = await fetch(
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
                 headers: {
                     Authorization: "Bearer " + session.accessToken,
                 },
-            }
+            },
         );
     }
 

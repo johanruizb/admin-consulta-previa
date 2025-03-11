@@ -34,7 +34,7 @@ function filter(originalData, searchValue, callback) {
 export default function FiltrarCursos({ setFilter, data }) {
     const [expanded, setExpanded] = useSessionStorage(
         "FiltrarCursos__expanded",
-        false
+        false,
     );
     const [search, setSearch] = useState();
 
@@ -43,7 +43,7 @@ export default function FiltrarCursos({ setFilter, data }) {
         debounce((value) => {
             setSearch(value);
         }, 250),
-        []
+        [],
     );
 
     useEffect(() => {
@@ -117,6 +117,7 @@ export default function FiltrarCursos({ setFilter, data }) {
                                     xs: 12,
                                     md: 3,
                                 },
+                                gridless,
                                 ...inputProps
                             } = slotProps;
 
@@ -141,9 +142,18 @@ export default function FiltrarCursos({ setFilter, data }) {
                                                 </Grid>
                                             ) : null;
                                         })}
-                                    <Grid key={index} size={size}>
-                                        <Component inputProps={inputProps} />
-                                    </Grid>
+                                    {gridless ? (
+                                        <Component
+                                            key={index}
+                                            inputProps={inputProps}
+                                        />
+                                    ) : (
+                                        <Grid key={index} size={size}>
+                                            <Component
+                                                inputProps={inputProps}
+                                            />
+                                        </Grid>
+                                    )}
                                 </Fragment>
                             ) : null;
                         })}

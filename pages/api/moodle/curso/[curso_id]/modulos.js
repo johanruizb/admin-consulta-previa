@@ -17,7 +17,7 @@ export default async function handler(req, res) {
                 Authorization: "Bearer " + session.accessToken,
                 "X-Referer": req.headers.referer,
             },
-        }
+        },
     );
 
     const result = await response.json();

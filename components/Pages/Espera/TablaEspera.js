@@ -55,7 +55,7 @@ export default function TablaEspera({ data }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const setFilterDebounced = useCallback(
         debounce((value) => setFilter(value), 250),
-        []
+        [],
     );
 
     useEffect(() => {
@@ -64,7 +64,7 @@ export default function TablaEspera({ data }) {
 
     const ready = useMemo(
         () => !permissionIsLoading && rows,
-        [permissionIsLoading, rows]
+        [permissionIsLoading, rows],
     );
 
     return (
@@ -173,7 +173,7 @@ export default function TablaEspera({ data }) {
                                         <td>
                                             <Typography level="body-sm">
                                                 {dayjs(row.created_at).format(
-                                                    "DD/MM/YYYY HH:mm:ss A"
+                                                    "DD/MM/YYYY HH:mm:ss A",
                                                 )}
                                                 {/* HH:mm:ss A */}
                                             </Typography>

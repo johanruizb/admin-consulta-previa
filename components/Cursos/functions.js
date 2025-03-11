@@ -16,7 +16,7 @@ function filter(
         "tipo_cliente",
         "zona",
         "conectividad",
-    ]
+    ],
 ) {
     const { search, ...rest } = state;
 

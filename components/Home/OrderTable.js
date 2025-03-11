@@ -35,7 +35,7 @@ export default function OrderTable({ data, onView }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const setFilterDebounced = useCallback(
         debounce((value) => setFilter(value), 250),
-        []
+        [],
     );
 
     useEffect(() => {
@@ -44,7 +44,7 @@ export default function OrderTable({ data, onView }) {
 
     const ready = useMemo(
         () => !permissionIsLoading && rows,
-        [permissionIsLoading, rows]
+        [permissionIsLoading, rows],
     );
 
     // const ready = false;
@@ -268,7 +268,7 @@ export default function OrderTable({ data, onView }) {
                                         // onClick={() => onView(row.id)}
                                         className="pointer-row"
                                         {...(hasPermission(
-                                            "usuario.change_persona"
+                                            "usuario.change_persona",
                                         )
                                             ? {
                                                   onClick: () => onView(row.id),
@@ -278,7 +278,7 @@ export default function OrderTable({ data, onView }) {
                                         <td>
                                             <Typography level="body-sm">
                                                 {dayjs(
-                                                    row.ultimo_registro
+                                                    row.ultimo_registro,
                                                 ).format("DD/MM/YYYY")}
                                                 {/* HH:mm:ss A */}
                                             </Typography>

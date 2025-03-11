@@ -3,7 +3,7 @@ export function openSidebar() {
         document.body.style.overflow = "hidden";
         document.documentElement.style.setProperty(
             "--SideNavigation-slideIn",
-            "1"
+            "1",
         );
     }
 }
@@ -11,7 +11,7 @@ export function openSidebar() {
 export function closeSidebar() {
     if (typeof window !== "undefined") {
         document.documentElement.style.removeProperty(
-            "--SideNavigation-slideIn"
+            "--SideNavigation-slideIn",
         );
         document.body.style.removeProperty("overflow");
     }

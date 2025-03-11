@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     // Eliminar la cookie de sesión
     res.setHeader(
         "Set-Cookie",
-        `session=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0`
+        `session=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0`,
     );
 
     res.status(200).json({ message: "Sesión cerrada" });

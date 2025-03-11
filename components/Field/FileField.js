@@ -23,7 +23,7 @@ import { useDropzone } from "react-dropzone";
 
 const CustomImage = forwardRef(function CustomImage(
     { url, field, readOnly },
-    ref
+    ref,
 ) {
     const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
         accept: {

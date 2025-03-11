@@ -18,7 +18,7 @@ function PermissionProvider({ children }) {
             if (!permissions) return false;
             return permissions.includes(permission);
         },
-        [permissions]
+        [permissions],
     );
 
     return (

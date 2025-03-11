@@ -25,7 +25,7 @@ export default async function handler(req, res) {
                 headers: {
                     Authorization: "Bearer " + session.accessToken,
                 },
-            }
+            },
         );
 
         if (!response.ok)
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
             res.setHeader("Content-Type", contentType);
             res.setHeader(
                 "Content-Disposition",
-                response.headers.get("content-disposition")
+                response.headers.get("content-disposition"),
             );
             res.status(response.status).send(content);
         }

@@ -59,6 +59,7 @@ export default function Avances({ children }) {
             user__zona: "all",
             user__conectividad: "all",
             modulo_completado: "all",
+            porcentaje_avance: [0, 100],
         },
     });
 
@@ -88,7 +89,7 @@ export default function Avances({ children }) {
                       status: res.status,
                       statusText: res.statusText,
                   });
-        }
+        },
     );
 
     const [filter, setFilter] = useState();
@@ -178,10 +179,10 @@ export default function Avances({ children }) {
                     isLoading
                         ? "Cargando información..."
                         : isValidating
-                        ? "Validando información..."
-                        : // : filtering
-                          // ? "Filtrando información..."
-                          "Recargar información"
+                          ? "Validando información..."
+                          : // : filtering
+                            // ? "Filtrando información..."
+                            "Recargar información"
                 }
                 arrow
             >

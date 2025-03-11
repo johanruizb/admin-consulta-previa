@@ -19,7 +19,7 @@ export default async function handler(req, res) {
                 state_id,
             {
                 method: "GET",
-            }
+            },
         );
 
         const result = await response.json();

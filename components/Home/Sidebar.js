@@ -206,7 +206,7 @@ export default function Sidebar() {
                             </ListItem>
                         )}
                         {hasPermission(
-                            "moodle.view_actividadescompletadas"
+                            "moodle.view_actividadescompletadas",
                         ) && (
                             <ListItem>
                                 <ListItemButton

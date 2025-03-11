@@ -43,9 +43,9 @@ function Export() {
                 if (!response.ok) {
                     onOpen(
                         `No se pudo exportar el archivo. (${String(
-                            response?.statusText ?? response
+                            response?.statusText ?? response,
                         )})`,
-                        "danger"
+                        "danger",
                     );
                 } else {
                     const blob = await response.blob();
@@ -54,7 +54,7 @@ function Export() {
                         const link = document.createElement("a");
                         link.href = reader.result;
                         link.download = `Avance cursos_${dayjs().format(
-                            "YYYY-MM-DD HH-mm-ss"
+                            "YYYY-MM-DD HH-mm-ss",
                         )}.xlsx`;
                         link.click();
                     };
@@ -65,9 +65,9 @@ function Export() {
             .catch((error) => {
                 onOpen(
                     `No se pudo exportar el archivo. (${String(
-                        error?.statusText ?? error ?? "UNKNOWN_ERROR"
+                        error?.statusText ?? error ?? "UNKNOWN_ERROR",
                     )})`,
-                    "danger"
+                    "danger",
                 );
             })
             .finally(() => {
@@ -78,7 +78,7 @@ function Export() {
     return (
         <Fragment>
             {permissionIsLoading ? null : hasPermission(
-                  "usuario.change_persona"
+                  "usuario.change_persona",
               ) ? (
                 <Fragment>
                     <Button

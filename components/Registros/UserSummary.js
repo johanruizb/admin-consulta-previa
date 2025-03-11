@@ -34,7 +34,7 @@ export default function UserSummary() {
                                 </Typography>
                                 <Typography level="h3">
                                     {formatNumber(
-                                        data?.cursos.sociedad_civil.registrados
+                                        data?.cursos.sociedad_civil.registrados,
                                     )}
                                 </Typography>
                             </Stack>
@@ -49,7 +49,7 @@ export default function UserSummary() {
                                 </Typography>
                                 <Typography level="h3">
                                     {formatNumber(
-                                        data?.cursos.sociedad_civil.validados
+                                        data?.cursos.sociedad_civil.validados,
                                     )}
                                 </Typography>
                             </Stack>
@@ -80,7 +80,7 @@ export default function UserSummary() {
                                 </Typography>
                                 <Typography level="h3">
                                     {formatNumber(
-                                        data?.cursos.funcionarios.registrados
+                                        data?.cursos.funcionarios.registrados,
                                     )}
                                 </Typography>
                             </Stack>
@@ -95,7 +95,7 @@ export default function UserSummary() {
                                 </Typography>
                                 <Typography level="h3">
                                     {formatNumber(
-                                        data?.cursos.funcionarios.validados
+                                        data?.cursos.funcionarios.validados,
                                     )}
                                 </Typography>
                             </Stack>
@@ -127,7 +127,7 @@ export default function UserSummary() {
                                 <Typography level="h3">
                                     {formatNumber(
                                         data?.diplomados.sociedad_civil
-                                            .registrados
+                                            .registrados,
                                     )}
                                 </Typography>
                             </Stack>
@@ -143,7 +143,7 @@ export default function UserSummary() {
                                 <Typography level="h3">
                                     {formatNumber(
                                         data?.diplomados.sociedad_civil
-                                            .validados
+                                            .validados,
                                     )}
                                 </Typography>
                             </Stack>
@@ -175,7 +175,7 @@ export default function UserSummary() {
                                 <Typography level="h3">
                                     {formatNumber(
                                         data?.diplomados.funcionarios
-                                            .registrados
+                                            .registrados,
                                     )}
                                 </Typography>
                             </Stack>
@@ -190,7 +190,7 @@ export default function UserSummary() {
                                 </Typography>
                                 <Typography level="h3">
                                     {formatNumber(
-                                        data?.diplomados.funcionarios.validados
+                                        data?.diplomados.funcionarios.validados,
                                     )}
                                 </Typography>
                             </Stack>

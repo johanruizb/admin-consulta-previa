@@ -55,12 +55,12 @@ export default function Page() {
         },
         {
             fetcher: fetcherWithCurso,
-        }
+        },
     );
 
     const { data: cursos, isLoading: cursosIsLoading } = useSWR(
         getURL("api/usuarios/cursos/disponibles"),
-        fetcher
+        fetcher,
     );
 
     const [mounted, setMounted] = useState(false);

@@ -27,7 +27,7 @@ function DialogoCarga({ open, setOpen }) {
     const { onOpen } = useAlert();
 
     const { data: procesando, mutate: mutateProcesando } = useSWR(
-        getURL("/api/moodle/reporte/procesando")
+        getURL("/api/moodle/reporte/procesando"),
     );
 
     const [loading, setLoading] = useState(false);
@@ -53,14 +53,14 @@ function DialogoCarga({ open, setOpen }) {
                     onOpen(
                         result?.message ??
                             `Se ha producido un error (${response.statusText})`,
-                        "danger"
+                        "danger",
                     );
                 }
             })
             .catch((error) => {
                 onOpen(
                     `Se ha producido un error (${error.toString()})`,
-                    "danger"
+                    "danger",
                 );
             })
             .finally(() => {
@@ -109,7 +109,7 @@ function DialogoCarga({ open, setOpen }) {
                     <Typography>
                         Ultima actualización:{" "}
                         {dayjs(procesando.last_task).format(
-                            "DD/MM/YYYY HH:mm:ss"
+                            "DD/MM/YYYY HH:mm:ss",
                         )}{" "}
                         ({procesando.last_task_status ? "Exitoso" : "Fallido"})
                     </Typography>
@@ -149,7 +149,7 @@ export default function UploadAvances() {
     const { data, isLoading, isValidating, error } = useSWR(
         getURL("/api/moodle/reporte/procesando"),
         fetcher,
-        options
+        options,
     );
 
     const { mutate } = useSWRConfig();
@@ -165,7 +165,7 @@ export default function UploadAvances() {
         } else if (previousData?.task_in_progress) {
             onOpen(
                 data?.last_task_message,
-                data?.last_task_status ? "success" : "danger"
+                data?.last_task_status ? "success" : "danger",
             );
             mutate((key) => Array.isArray(key));
             setOptions({});

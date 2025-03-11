@@ -132,16 +132,17 @@ export default function TablaAvances({ data, hasPermission, onView, filter }) {
                                     hasPermission={hasPermission}
                                 />
                             )}
-                            {(filter ?? rows)?.chunked?.[page - 1]?.map((row) =>
-                                row.id === "resumen" ? null : (
-                                    <Row
-                                        key={row.id}
-                                        row={row}
-                                        onView={onView}
-                                        actividades={actividades}
-                                        hasPermission={hasPermission}
-                                    />
-                                )
+                            {(filter ?? rows)?.chunked?.[page - 1]?.map(
+                                (row) =>
+                                    row.id === "resumen" ? null : (
+                                        <Row
+                                            key={row.id}
+                                            row={row}
+                                            onView={onView}
+                                            actividades={actividades}
+                                            hasPermission={hasPermission}
+                                        />
+                                    ),
                             )}
                             {(filter ?? rows)?.pages === 0 && (
                                 <tr>
@@ -210,9 +211,9 @@ function Row({ row, onView, hasPermission }) {
                     row.id === "resumen"
                         ? "rgba(11, 107, 203, 0.25) !important"
                         : (row.modulo_completado || row.curso_completado) &&
-                          mc_filtro === "all"
-                        ? "rgba(31, 122, 31, 0.2) !important"
-                        : "transparent",
+                            mc_filtro === "all"
+                          ? "rgba(31, 122, 31, 0.2) !important"
+                          : "transparent",
             }}
             {...(hasPermission("usuario.change_persona") && row.id !== "resumen"
                 ? {
@@ -293,14 +294,14 @@ function Row({ row, onView, hasPermission }) {
                                         actividad.fecha
                                             ? completado
                                                 ? `${dayjs(
-                                                      actividad.fecha
+                                                      actividad.fecha,
                                                   ).format(
-                                                      "DD [de] MMMM [de] YYYY, [a las] HH:mm:ss a"
+                                                      "DD [de] MMMM [de] YYYY, [a las] HH:mm:ss a",
                                                   )}`
                                                 : "Actividad no completada"
                                             : completado
-                                            ? "Módulo completado"
-                                            : "Módulo no completado"
+                                              ? "Módulo completado"
+                                              : "Módulo no completado"
                                     }
                                     placement="top"
                                     arrow

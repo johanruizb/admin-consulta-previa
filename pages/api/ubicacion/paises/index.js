@@ -17,7 +17,7 @@ export default async function handler(req, res) {
                 // get client path
                 "X-Referer": req.headers.referer,
             },
-        }
+        },
     );
 
     const result = await response.json();

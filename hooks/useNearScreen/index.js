@@ -12,7 +12,7 @@ export const useNearScreen = ({ rootMargin = "0px" } = {}) => {
             Promise.resolve(
                 typeof window.IntersectionObserver !== "undefined"
                     ? window.IntersectionObserver
-                    : import("intersection-observer")
+                    : import("intersection-observer"),
             ).then(() => {
                 const onIntersect = (entries, observer) => {
                     const { isIntersecting } = entries[0];
@@ -31,7 +31,7 @@ export const useNearScreen = ({ rootMargin = "0px" } = {}) => {
 
             return () => observer && observer.disconnect();
         },
-        [el, rootMargin]
+        [el, rootMargin],
     );
 
     return [isNear, el];

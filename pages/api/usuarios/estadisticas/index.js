@@ -24,7 +24,7 @@ export default async function handler(req, res) {
                 "Content-Type": "application/json",
             },
             body: req.body,
-        }
+        },
     );
 
     if (response.ok) {

@@ -50,7 +50,7 @@ export default function JoySignInSideTemplate() {
                     result?.message ||
                         result ||
                         "Ha ocurrido un error al iniciar sesión",
-                    "danger"
+                    "danger",
                 );
                 console.error("Error al iniciar sesión", response);
                 setLoading(false);

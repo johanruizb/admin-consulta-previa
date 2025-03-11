@@ -143,7 +143,7 @@ function View({ defaultValues }) {
                         res?.message ??
                             `Se ha producido un error (${response.statusText})`,
 
-                        "danger"
+                        "danger",
                     );
                 }
             })
@@ -151,7 +151,7 @@ function View({ defaultValues }) {
                 openAlert(
                     `Se ha producido un error (${error.toString()})`,
 
-                    "danger"
+                    "danger",
                 );
             })
             .finally(() => {
@@ -193,7 +193,7 @@ function View({ defaultValues }) {
                                     defaultValues.apellidos
                                 } ${
                                     DOCUMENTOS[defaultValues.tipo_doc].split(
-                                        " "
+                                        " ",
                                     )[0]
                                 } ${defaultValues.num_doc}${
                                     defaultValues.grupos
@@ -249,7 +249,7 @@ function View({ defaultValues }) {
                                                         </Grid>
                                                     )
                                                 ) : null;
-                                            }
+                                            },
                                         )}
                                     </Grid>
                                 </FormProvider>
@@ -278,7 +278,7 @@ function View({ defaultValues }) {
                                                                         color: item.changes
                                                                             ? "info"
                                                                             : undefined,
-                                                                    }
+                                                                    },
                                                                 )}
                                                             </ListItemDecorator>
                                                             <ListItemContent>
@@ -304,9 +304,9 @@ function View({ defaultValues }) {
                                                                     noWrap
                                                                 >
                                                                     {dayjs(
-                                                                        item.history_date
+                                                                        item.history_date,
                                                                     ).format(
-                                                                        "DD/MM/YYYY HH:mm:ss A"
+                                                                        "DD/MM/YYYY HH:mm:ss A",
                                                                     )}
                                                                 </Typography>
                                                             </ListItemContent>
@@ -320,14 +320,14 @@ function View({ defaultValues }) {
                                                                 // rowSpacing={2}
                                                             >
                                                                 {Object.entries(
-                                                                    item.changes
+                                                                    item.changes,
                                                                 ).map(
                                                                     (
                                                                         [
                                                                             field,
                                                                             changes,
                                                                         ],
-                                                                        index
+                                                                        index,
                                                                     ) => (
                                                                         <Grid
                                                                             key={
@@ -337,12 +337,12 @@ function View({ defaultValues }) {
                                                                                 field ===
                                                                                     "Cursos inscritos" &&
                                                                                 Object.values(
-                                                                                    changes
+                                                                                    changes,
                                                                                 ).every(
                                                                                     (
-                                                                                        change
+                                                                                        change,
                                                                                     ) =>
-                                                                                        change
+                                                                                        change,
                                                                                 )
                                                                                     ? 12
                                                                                     : 6
@@ -425,7 +425,7 @@ function View({ defaultValues }) {
                                                                                 </ListItemContent>
                                                                             </ListItem>
                                                                         </Grid>
-                                                                    )
+                                                                    ),
                                                                 )}
                                                             </Grid>
                                                             <Divider
@@ -441,7 +441,7 @@ function View({ defaultValues }) {
                                                 <ListItem key={index}>
                                                     <ListItemDecorator>
                                                         {getIconHistory(
-                                                            item.history_type
+                                                            item.history_type,
                                                         )}
                                                     </ListItemDecorator>
                                                     <ListItemContent>
@@ -465,14 +465,14 @@ function View({ defaultValues }) {
                                                             noWrap
                                                         >
                                                             {dayjs(
-                                                                item.history_date
+                                                                item.history_date,
                                                             ).format(
-                                                                "DD/MM/YYYY HH:mm:ss A"
+                                                                "DD/MM/YYYY HH:mm:ss A",
                                                             )}
                                                         </Typography>
                                                     </ListItemContent>
                                                 </ListItem>
-                                            )
+                                            ),
                                     )}
                                 </List>
                             </Box>
@@ -537,7 +537,7 @@ function View({ defaultValues }) {
                                                             {modulo.actividades.map(
                                                                 (
                                                                     actividad,
-                                                                    index
+                                                                    index,
                                                                 ) => (
                                                                     <ListItem
                                                                         key={
@@ -572,15 +572,15 @@ function View({ defaultValues }) {
                                                                             >
                                                                                 {actividad?.completado
                                                                                     ? `Completado — ${dayjs(
-                                                                                          actividad.date
+                                                                                          actividad.date,
                                                                                       ).format(
-                                                                                          "DD/MM/YYYY HH:mm:ss A"
+                                                                                          "DD/MM/YYYY HH:mm:ss A",
                                                                                       )}`
                                                                                     : "Incompleto"}
                                                                             </Typography>
                                                                         </ListItemContent>
                                                                     </ListItem>
-                                                                )
+                                                                ),
                                                             )}
                                                             {index <
                                                                 defaultValues
@@ -591,7 +591,7 @@ function View({ defaultValues }) {
                                                             )}
                                                         </AccordionDetails>
                                                     </Accordion>
-                                                )
+                                                ),
                                             ) // Actividades
                                         }
                                     </List>

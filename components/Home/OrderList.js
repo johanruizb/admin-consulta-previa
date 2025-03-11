@@ -44,7 +44,7 @@ export default function OrderList({ data, onView }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const debounceFilter = useCallback(
         debounce((d, f) => filterTable(d, f, setRows), 300),
-        []
+        [],
     );
 
     useEffect(() => {
@@ -54,7 +54,7 @@ export default function OrderList({ data, onView }) {
 
     const ready = useMemo(
         () => !permissionIsLoading && rows,
-        [permissionIsLoading, rows]
+        [permissionIsLoading, rows],
     );
 
     return (
@@ -230,9 +230,9 @@ export default function OrderList({ data, onView }) {
                                             >
                                                 <Typography level="body-xs">
                                                     {dayjs(
-                                                        row.ultimo_registro
+                                                        row.ultimo_registro,
                                                     ).format(
-                                                        "DD/MM/YYYY HH:mm:ss A"
+                                                        "DD/MM/YYYY HH:mm:ss A",
                                                     )}
                                                 </Typography>
                                                 <Typography level="body-xs">
@@ -276,7 +276,7 @@ export default function OrderList({ data, onView }) {
                                                 : "Sin validar"}
                                         </Chip>
                                         {hasPermission(
-                                            "usuario.change_persona"
+                                            "usuario.change_persona",
                                         ) && (
                                             <Button
                                                 variant="solid"

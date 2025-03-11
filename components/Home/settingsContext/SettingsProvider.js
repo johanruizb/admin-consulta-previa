@@ -18,7 +18,7 @@ function SettingsProvider({ children }) {
             STORAGE.load("settings_app", STORAGE.LOCAL_STORAGE, {
                 colorScheme: "light",
                 useWideInterface: false,
-            })
+            }),
         );
         setLoaded(true);
     });

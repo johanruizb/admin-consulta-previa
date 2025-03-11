@@ -33,7 +33,7 @@ export default function Registros({ children }) {
 
     const { data, isLoading } = useSWR(
         getURL("/api/usuarios/inscritos"),
-        fetcher
+        fetcher,
     );
 
     const onView = (id) => {

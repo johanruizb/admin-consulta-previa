@@ -1,5 +1,6 @@
 import AsyncSelect from "@/components/Field/AsyncSelect";
 import CustomCheckbox from "../Field/CheckBox";
+import RangeSlider from "../Field/RangeSlider";
 import CustomSelect from "../Field/Select";
 import ThreeCheckBox from "../Field/ThreeCheckBox";
 import CustomAsyncSelect from "../Form/CustomAsyncSelect";
@@ -55,6 +56,13 @@ const FormularioCursos = [
         },
         url: "/api/moodle/curso/$1/modulos",
         dependencies: ["activity__module__course_id"],
+    },
+    {
+        Component: RangeSlider,
+        gridless: true,
+        controller: {
+            name: "porcentaje_avance",
+        },
     },
     {
         Component: ThreeCheckBox,

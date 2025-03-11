@@ -22,7 +22,7 @@ export default async function handler(req, res) {
             headers: {
                 Authorization: "Bearer " + session.accessToken,
             },
-        }
+        },
     );
 
     if (response.ok) {
