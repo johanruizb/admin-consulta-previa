@@ -38,7 +38,7 @@ export default function CustomAsyncSelect({ inputProps }) {
 
     const { data, error, isLoading } = useSWR(
         validURL ? customURL : null,
-        fetcher,
+        fetcher
     );
 
     return isLoading || error ? (
@@ -75,12 +75,12 @@ function AsyncSelect({ inputProps }) {
 
     const {
         controller: controllerProps,
-        field: { label: formLabel, options, ...fieldProps },
+        field: { label: formLabel, options = [], ...fieldProps },
     } = inputProps;
 
     const opciones = useMemo(
         () => options.filter((option) => option.value !== "all"),
-        [options],
+        [options]
     );
 
     useEffect(() => {
