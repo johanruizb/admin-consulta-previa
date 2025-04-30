@@ -24,7 +24,7 @@ export default async function handler(req, res) {
                 Authorization: "Bearer " + session.accessToken,
             },
             body: JSON.stringify(req.body),
-        },
+        }
     );
 
     try {
@@ -42,6 +42,9 @@ export const config = {
     api: {
         responseLimit: false,
         maxDuration: 60,
+        bodyParser: {
+            sizeLimit: "4mb", // ajusta según tus necesidades
+        },
         // bodyParser: false,
     },
 };

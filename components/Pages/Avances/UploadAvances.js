@@ -1,11 +1,11 @@
+import fetcher from "@/components/fetcher";
+import { getURL } from "@/components/utils";
+import useAlert from "@/hooks/useAlert";
+import usePermission from "@/hooks/usePermission";
 import CloseIcon from "@mui/icons-material/Close";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import ReportProblemIcon from "@mui/icons-material/ReportProblem";
-
-import { convertToFormData, getURL } from "@/components/utils";
-import useAlert from "@/hooks/useAlert";
-import usePermission from "@/hooks/usePermission";
 import Button from "@mui/joy/Button";
 import DialogActions from "@mui/joy/DialogActions";
 import DialogContent from "@mui/joy/DialogContent";
@@ -21,13 +21,23 @@ import { Fragment, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import useSWR, { useSWRConfig } from "swr";
 import CSVField from "./CSVField";
-import fetcher from "@/components/fetcher";
+
+import pako from "pako";
+
+async function compressGzip(file) {
+    // 1. Leer el archivo como ArrayBuffer
+    const arrayBuffer = await file.arrayBuffer(); // Fetch API/Blob API :contentReference[oaicite:3]{index=3}
+    // 2. Comprimir con pako.gzip (nivel máximo)
+    const compressed = pako.gzip(new Uint8Array(arrayBuffer), { level: 9 }); // API pako.gzip :contentReference[oaicite:4]{index=4}
+    // 3. Crear un Blob con el tipo adecuado
+    return new Blob([compressed], { type: "application/gzip" });
+}
 
 function DialogoCarga({ open, setOpen }) {
     const { onOpen } = useAlert();
 
     const { data: procesando, mutate: mutateProcesando } = useSWR(
-        getURL("/api/moodle/reporte/procesando"),
+        getURL("/api/moodle/reporte/procesando")
     );
 
     const [loading, setLoading] = useState(false);
@@ -35,13 +45,25 @@ function DialogoCarga({ open, setOpen }) {
     const methods = useForm();
     const { handleSubmit, reset } = methods;
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         setLoading(true);
+        // const formData = new FormData();
+        // formData.append("csv", data.csv);
 
-        const formData = convertToFormData(data);
+        const compressedBlob = await compressGzip(data.csv);
+        const formData = new FormData();
+        // Es importante pasar nombre de fichero para que el servidor lo reconozca
+        formData.append("csv", compressedBlob, "reporte.csv.gz"); // MDN FormData.append :contentReference[oaicite:5]{index=5}
+
+        // Calcular el tamaño del archivo comprimido
+        const fileSize = compressedBlob.size;
+        const fileSizeInMB = (fileSize / (1024 * 1024)).toFixed(2); // Convertir a MB
+        console.log(`Tamaño del archivo comprimido: ${fileSizeInMB} MB`);
 
         fetch(getURL("/api/moodle/reporte"), {
             method: "POST",
+            // headers: { "Content-Encoding": "gzip", "Content-Type": "text/csv" },
+            headers: { "Content-Encoding": "gzip" }, // Indica al servidor que el cuerpo está gzippeado
             body: formData,
         })
             .then(async (response) => {
@@ -53,14 +75,14 @@ function DialogoCarga({ open, setOpen }) {
                     onOpen(
                         result?.message ??
                             `Se ha producido un error (${response.statusText})`,
-                        "danger",
+                        "danger"
                     );
                 }
             })
             .catch((error) => {
                 onOpen(
                     `Se ha producido un error (${error.toString()})`,
-                    "danger",
+                    "danger"
                 );
             })
             .finally(() => {
@@ -81,8 +103,8 @@ function DialogoCarga({ open, setOpen }) {
                 <DialogContent>
                     Por favor, seleccione un archivo CSV con los avances a
                     cargar. Unicamente se aceptan archivos que provengan de la
-                    exportación de avances de moodle usando el plugin "Consultas
-                    ad hoc de la base de datos".
+                    exportación de avances de moodle usando el plugin
+                    &quot;Consultas ad hoc de la base de datos&quot;.
                     <br />
                     <br />
                     <Typography>
@@ -109,7 +131,7 @@ function DialogoCarga({ open, setOpen }) {
                     <Typography>
                         Ultima actualización:{" "}
                         {dayjs(procesando.last_task).format(
-                            "DD/MM/YYYY HH:mm:ss",
+                            "DD/MM/YYYY HH:mm:ss"
                         )}{" "}
                         ({procesando.last_task_status ? "Exitoso" : "Fallido"})
                     </Typography>
@@ -149,7 +171,7 @@ export default function UploadAvances() {
     const { data, isLoading, isValidating, error } = useSWR(
         getURL("/api/moodle/reporte/procesando"),
         fetcher,
-        options,
+        options
     );
 
     const { mutate } = useSWRConfig();
@@ -165,7 +187,7 @@ export default function UploadAvances() {
         } else if (previousData?.task_in_progress) {
             onOpen(
                 data?.last_task_message,
-                data?.last_task_status ? "success" : "danger",
+                data?.last_task_status ? "success" : "danger"
             );
             mutate((key) => Array.isArray(key));
             setOptions({});

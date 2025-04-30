@@ -17,7 +17,7 @@ import FormularioCursos, { FormularioGrupos } from "./constants";
 import RangeSlider from "../Field/RangeSlider";
 
 function filter(originalData, searchValue, callback) {
-    console.log(originalData, searchValue);
+    // console.log(originalData, searchValue);
     if (searchValue !== undefined && searchValue !== "") {
         let result = cloneDeep(originalData);
         const fuse = new Fuse(result, {
