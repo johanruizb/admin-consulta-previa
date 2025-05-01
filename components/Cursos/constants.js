@@ -257,6 +257,10 @@ const FormularioGrupos = {
                         value: 12,
                         label: "Grupo F6",
                     },
+                    {
+                        value: 13,
+                        label: "Administrativo",
+                    },
                 ],
                 label: "Grupo",
                 placeholder: "Seleccione un grupo",
