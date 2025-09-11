@@ -23,7 +23,7 @@ export default async function handler(req, res) {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({ username, password }),
-        },
+        }
     );
 
     if (response.ok) {
@@ -45,13 +45,15 @@ export default async function handler(req, res) {
 
         res.status(200).end();
     } else {
-        response
-            .json()
-            .then((data) => {
-                res.status(response.status).json(data);
-            })
-            .catch(() => {
-                res.status(response.status).json(response.statusText);
+        try {
+            const error = await response.json();
+            res.status(response.status).json(error);
+        } catch (error) {
+            res.status(response.status).json({
+                message: "Error de autenticación",
+                error: error?.message,
+                status: response.status,
             });
+        }
     }
 }
