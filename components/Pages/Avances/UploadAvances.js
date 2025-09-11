@@ -112,7 +112,7 @@ function DialogoCarga({ open, setOpen }) {
                         siguiente{" "}
                         <Link
                             component="a"
-                            href="https://campus.consultaprevia.co/report/customsql/view.php?id=2"
+                            href="https://campus.consultaprevia.net/report/customsql/view.php?id=2"
                             target="_blank"
                             rel="noopener noreferrer"
                             sx={{
