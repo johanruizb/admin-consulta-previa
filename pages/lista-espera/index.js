@@ -1,31 +1,24 @@
 "use client";
 
-import Box from "@mui/joy/Box";
-import Breadcrumbs from "@mui/joy/Breadcrumbs";
-import Link from "@mui/joy/Link";
-import Typography from "@mui/joy/Typography";
-
-import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-
+import fetcher from "@/components/fetcher";
 import Layout from "@/components/Home/Layout";
 import OrderList from "@/components/Home/OrderList";
-import Head from "next/head";
-
-import CircularProgress from "@mui/joy/CircularProgress";
-import Stack from "@mui/joy/Stack";
-import { Fragment } from "react";
-
-import useSWR from "swr";
-
-import fetcher from "@/components/fetcher";
-import { getURL } from "@/components/utils";
-
-import { useRouter } from "next/navigation";
-
 import EsperaSummary from "@/components/Pages/Espera/Summary";
-import ExportUsers from "@/components/Registros/ExportUsers";
+import ExportEspera from "@/components/Pages/Espera/ExportEspera";
+import { getURL } from "@/components/utils";
 import usePermission from "@/hooks/usePermission";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import Box from "@mui/joy/Box";
+import Breadcrumbs from "@mui/joy/Breadcrumbs";
+import CircularProgress from "@mui/joy/CircularProgress";
+import Link from "@mui/joy/Link";
+import Stack from "@mui/joy/Stack";
+import Typography from "@mui/joy/Typography";
+import Head from "next/head";
+import { useRouter } from "next/navigation";
+import { Fragment } from "react";
+import useSWR from "swr";
 import TablaEspera from "../../components/Pages/Espera/TablaEspera";
 
 export default function Registros({ children }) {
@@ -90,7 +83,7 @@ export default function Registros({ children }) {
                     <Typography level="h2" component="h1">
                         Lista de espera
                     </Typography>
-                    {/* <ExportUsers /> */}
+                    <ExportEspera />
                 </Stack>
                 <Stack flex={1}>
                     <EsperaSummary />
