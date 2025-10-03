@@ -14,9 +14,12 @@ export default async function handler(req, res) {
         password: process.env.SESSION_SECRET,
         cookieName: "session",
     });
-
+    
+    const queryParams = new URLSearchParams(req.query).toString();
     const response = await fetch(
-        process.env.NEXT_PUBLIC_BASE_URL + "/api/usuarios/estadisticas",
+        process.env.NEXT_PUBLIC_BASE_URL +
+            "/api/usuarios/estadisticas?" +
+            queryParams,
         {
             method: "POST",
             headers: {
@@ -24,7 +27,7 @@ export default async function handler(req, res) {
                 "Content-Type": "application/json",
             },
             body: req.body,
-        },
+        }
     );
 
     if (response.ok) {
