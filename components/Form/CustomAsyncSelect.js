@@ -126,6 +126,11 @@ function AsyncSelect({ inputProps }) {
                                     {option.label}
                                 </Option>
                             ))}
+                            {options?.length === 0 && (
+                                <Option disabled>
+                                    No hay opciones disponibles
+                                </Option>
+                            )}
                         </JoySelect>
 
                         <FormHelperText>{error?.message ?? " "}</FormHelperText>
