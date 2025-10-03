@@ -8,16 +8,13 @@ import { getIconHistory } from "@/components/Registros/functions";
 import { convertToFormData, getURL } from "@/components/utils";
 import useAlert from "@/hooks/useAlert";
 import usePermission from "@/hooks/usePermission";
-
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon from "@mui/icons-material/Save";
-
 import Accordion from "@mui/joy/Accordion";
 import AccordionDetails from "@mui/joy/AccordionDetails";
 import AccordionSummary from "@mui/joy/AccordionSummary";
-import ListDivider from "@mui/joy/ListDivider";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import CircularProgress from "@mui/joy/CircularProgress";
@@ -25,28 +22,26 @@ import DialogActions from "@mui/joy/DialogActions";
 import DialogContent from "@mui/joy/DialogContent";
 import DialogTitle from "@mui/joy/DialogTitle";
 import List from "@mui/joy/List";
+import ListDivider from "@mui/joy/ListDivider";
 import ListItem from "@mui/joy/ListItem";
 import ListItemContent from "@mui/joy/ListItemContent";
 import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import Modal from "@mui/joy/Modal";
 import ModalDialog from "@mui/joy/ModalDialog";
 import Stack from "@mui/joy/Stack";
+import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
-
-import Divider from "@mui/material/Divider";
 import Backdrop from "@mui/material/Backdrop";
+import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid2";
 import useMediaQuery from "@mui/material/useMediaQuery";
-
 import dayjs from "dayjs";
 import { useRouter as useNavigate } from "next/navigation";
 import { useRouter } from "next/router";
 import { Fragment, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import useSWRImmutable from "swr/immutable";
-
 import Registros from ".";
-import Tooltip from "@mui/joy/Tooltip";
 
 export default function Wrapper() {
     const { isLoading: permissionIsLoading, hasPermission } =

@@ -1,37 +1,31 @@
+import CicloSelector from "@/components/Ciclos/CicloSelector";
+import fetcher from "@/components/fetcher";
+import Layout from "@/components/Home/Layout";
+import CustomPie from "@/components/Panel/CustomPie";
+import { formatNumber, getURL } from "@/components/utils";
+import { useCiclo } from "@/contexts/CicloContext";
+import useClient from "@/hooks/useClient";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
-import Checkbox from "@mui/joy/Checkbox";
+import Chip from "@mui/joy/Chip";
 import CircularProgress from "@mui/joy/CircularProgress";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
 import Link from "@mui/joy/Link";
-import List from "@mui/joy/List";
-import ListItem from "@mui/joy/ListItem";
+import Option from "@mui/joy/Option";
+import Select from "@mui/joy/Select";
 import Typography from "@mui/joy/Typography";
-
-import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import Close from "@mui/icons-material/Close";
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-
 import Grid from "@mui/material/Grid2";
 import Stack from "@mui/material/Stack";
-
 import { BarChart } from "@mui/x-charts/BarChart";
-
-import Layout from "@/components/Home/Layout";
-
-import Head from "next/head";
-
 import dayjs from "dayjs";
 import "dayjs/locale/es";
-
+import Head from "next/head";
 import { useState } from "react";
-
-import fetcher from "@/components/fetcher";
-import CustomPie from "@/components/Panel/CustomPie";
-import { formatNumber, getURL } from "@/components/utils";
-
-import useClient from "@/hooks/useClient";
 import useSWR from "swr";
 
 dayjs.locale("es");
@@ -41,40 +35,37 @@ const fetcherWithCurso = ({ url, args: { options } }) => {
 };
 
 export default function Page() {
+    const { selectedCicloId } = useCiclo();
     const [curso, setCurso] = useState([1, 2, 3, 4]);
 
     const { data, isLoading } = useSWR(
-        {
-            url: getURL("api/usuarios/estadisticas"),
-            args: {
-                options: {
-                    method: "POST",
-                    body: JSON.stringify(curso),
-                },
-            },
-        },
-        {
-            fetcher: fetcherWithCurso,
-        },
+        selectedCicloId
+            ? {
+                  url: getURL(
+                      `api/usuarios/estadisticas?ciclo_id=${selectedCicloId}`
+                  ),
+                  args: {
+                      options: {
+                          method: "POST",
+                          body: JSON.stringify(curso),
+                      },
+                  },
+              }
+            : null,
+        fetcherWithCurso
     );
 
     const { data: cursos, isLoading: cursosIsLoading } = useSWR(
-        getURL("api/usuarios/cursos/disponibles"),
-        fetcher,
+        getURL(`api/usuarios/cursos/disponibles?ciclo_id=${selectedCicloId}`),
+        fetcher
     );
 
     const [mounted, setMounted] = useState(false);
 
     useClient(() => setMounted(true));
 
-    const handleCursoChange = (event) => {
-        const newValue = parseInt(event.target.value);
-
-        if (curso.includes(newValue)) {
-            setCurso((prev) => prev.filter((item) => item !== newValue));
-        } else {
-            setCurso((prev) => [...prev, newValue]);
-        }
+    const handleCursoChange = (event, newValue) => {
+        setCurso(newValue || []);
     };
 
     if (!mounted) return null;
@@ -112,56 +103,79 @@ export default function Page() {
                     justifyContent: "space-between",
                 }}
             >
-                <Typography level="h2" component="h1">
-                    Estadísticas
-                </Typography>
-
+                <Stack
+                    spacing={1.25 / 2}
+                    direction={{ xs: "row", md: "column" }}
+                    flex={{ xs: 1, md: "unset" }}
+                    justifyContent={{ xs: "space-between", md: "normal" }}
+                    sx={{
+                        width: { xs: "100%", md: "unset" },
+                    }}
+                >
+                    <Typography level="h2" component="h1">
+                        Estadísticas
+                    </Typography>
+                    <CicloSelector />
+                </Stack>
                 <Box
                     sx={{
                         flex: { xs: 1, md: 0.5 },
-                        maxWidth: { md: "calc(60% - 152.23px)" },
+                        maxWidth: { md: "calc(50% - 152.23px)" },
                         width: "100%",
                     }}
                 >
-                    <Typography
-                        id="sandwich-group"
-                        level="body-sm"
-                        sx={{ fontWeight: "lg", mb: 1 }}
-                    >
-                        Estadísticas por curso
-                    </Typography>
-                    {cursosIsLoading ? (
-                        <CircularProgress />
-                    ) : (
-                        <div role="group" aria-labelledby="sandwich-group">
-                            <List size="sm">
-                                {cursos?.map((item, index) => {
-                                    const checked = curso.includes(item.id);
+                    <FormControl>
+                        <FormLabel id="cursos-select-label">
+                            Estadísticas por curso
+                        </FormLabel>
+                        {cursosIsLoading ? (
+                            <CircularProgress />
+                        ) : (
+                            <Select
+                                multiple
+                                value={curso}
+                                onChange={handleCursoChange}
+                                placeholder="Seleccione cursos..."
+                                renderValue={(selected) => (
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            flexWrap: "wrap",
+                                            gap: 0.5,
+                                        }}
+                                    >
+                                        {selected.map(({ value }) => {
+                                            const cursoItem = cursos?.find(
+                                                (item) => item.id === value
+                                            );
 
-                                    return (
-                                        <ListItem key={index}>
-                                            <Checkbox
-                                                value={item.id}
-                                                label={item.shortname}
-                                                checked={checked}
-                                                onChange={handleCursoChange}
-                                                color={
-                                                    checked
-                                                        ? "primary"
-                                                        : "warning"
-                                                }
-                                                variant="solid"
-                                                uncheckedIcon={<Close />}
-                                                sx={{
-                                                    my: 0.25,
-                                                }}
-                                            />
-                                        </ListItem>
-                                    );
-                                })}
-                            </List>
-                        </div>
-                    )}
+                                            return (
+                                                <Chip
+                                                    key={value}
+                                                    variant="soft"
+                                                    color="primary"
+                                                    size="sm"
+                                                >
+                                                    {cursoItem?.shortname}
+                                                </Chip>
+                                            );
+                                        })}
+                                    </Box>
+                                )}
+                            >
+                                {cursos?.map((item) => (
+                                    <Option key={item.id} value={item.id}>
+                                        {item.shortname}
+                                    </Option>
+                                ))}
+                                {cursos?.length === 0 && (
+                                    <Option disabled>
+                                        No hay cursos disponibles
+                                    </Option>
+                                )}
+                            </Select>
+                        )}
+                    </FormControl>
                 </Box>
             </Box>
             {isLoading ? (
