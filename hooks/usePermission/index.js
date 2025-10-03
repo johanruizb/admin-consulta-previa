@@ -14,5 +14,5 @@ export default function usePermission(permissions = "" | []) {
                 : hasPermission(permissions);
             if (!hasAllPermissions) router.replace("/");
         }
-    }, [isLoading, hasPermission, permissions]);
+    }, [isLoading, hasPermission, permissions, router]);
 }
