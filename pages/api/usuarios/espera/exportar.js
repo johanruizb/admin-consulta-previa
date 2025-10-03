@@ -15,9 +15,11 @@ export default async function handler(req, res) {
         cookieName: "session",
     });
     try {
+        const queryParams = new URLSearchParams(req.query).toString();
         const response = await fetch(
             process.env.NEXT_PUBLIC_BASE_URL +
-                "/api/v1/inscripcion/exportar-lista-espera",
+                "/api/v1/inscripcion/exportar-lista-espera" +
+                (queryParams ? `?${queryParams}` : ""),
             {
                 method: "POST",
                 headers: {

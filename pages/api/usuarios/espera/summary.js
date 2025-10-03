@@ -14,15 +14,17 @@ export default async function handler(req, res) {
         password: process.env.SESSION_SECRET,
         cookieName: "session",
     });
-
+    const queryParams = new URLSearchParams(req.query).toString();
     const response = await fetch(
-        process.env.NEXT_PUBLIC_BASE_URL + "/api/usuarios/espera/summary",
+        process.env.NEXT_PUBLIC_BASE_URL +
+            "/api/usuarios/espera/summary" +
+            (queryParams ? `?${queryParams}` : ""),
         {
             method: "GET",
             headers: {
                 Authorization: "Bearer " + session.accessToken,
             },
-        },
+        }
     );
 
     const result = await response.json();
