@@ -23,67 +23,6 @@ function Status({ params, header } = {}) {
 
     return (
         <Box ref={ref}>
-            {/* <AnimatePresence initial={false}>
-                {isNear ? (
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0 }}
-                        key={v4()}
-                    >
-                        {completado ? (
-                            <Tooltip
-                                component="span"
-                                // key={id}
-                                title={
-                                    fecha
-                                        ? completado
-                                            ? `${dayjs(fecha).format(
-                                                  "DD [de] MMMM [de] YYYY, [a las] HH:mm:ss a"
-                                              )}`
-                                            : "Actividad no completada"
-                                        : completado
-                                        ? "Módulo completado"
-                                        : "Módulo no completado"
-                                }
-                                placement="top"
-                                arrow
-                            >
-                                <Box
-                                    component="span"
-                                    sx={{
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        height: "100%",
-                                        flex: 1,
-                                    }}
-                                >
-                                    <Checkbox readOnly checked={completado} />
-                                </Box>
-                            </Tooltip>
-                        ) : (
-                            <Tooltip
-                                component="span"
-                                key={v4()}
-                                title="Aun sin completar"
-                                placement="top"
-                                arrow
-                            >
-                                <Box
-                                    component="span"
-                                    sx={{
-                                        display: "flex",
-                                        justifyContent: "center",
-                                    }}
-                                >
-                                    <Checkbox readOnly />
-                                </Box>
-                            </Tooltip>
-                        )}
-                    </motion.div>
-                ) : null}
-            </AnimatePresence> */}
             {entry?.isIntersecting ? (
                 completado ? (
                     <Tooltip
@@ -93,12 +32,12 @@ function Status({ params, header } = {}) {
                             fecha
                                 ? completado
                                     ? `${dayjs(fecha).format(
-                                          "DD [de] MMMM [de] YYYY, [a las] HH:mm:ss a",
+                                          "DD [de] MMMM [de] YYYY, [a las] HH:mm:ss a"
                                       )}`
                                     : "Actividad no completada"
                                 : completado
-                                  ? "Completado"
-                                  : "Módulo no completado"
+                                ? "Completado"
+                                : "Módulo no completado"
                         }
                         placement="top"
                         arrow
@@ -228,7 +167,7 @@ export default function TablaAvancesV2({
                         type: "boolean",
                     };
                 return h;
-            }),
+            })
         );
     }, [headers]);
 
