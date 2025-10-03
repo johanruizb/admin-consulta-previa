@@ -6,6 +6,8 @@ import OrderList from "@/components/Home/OrderList";
 import EsperaSummary from "@/components/Pages/Espera/Summary";
 import ExportEspera from "@/components/Pages/Espera/ExportEspera";
 import { getURL } from "@/components/utils";
+import { useCiclo } from "@/contexts/CicloContext";
+import CicloSelector from "@/components/Ciclos/CicloSelector";
 import usePermission from "@/hooks/usePermission";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
@@ -23,8 +25,16 @@ import TablaEspera from "../../components/Pages/Espera/TablaEspera";
 
 export default function Registros({ children }) {
     const router = useRouter();
+    const { selectedCicloId } = useCiclo();
 
-    const { data, isLoading } = useSWR(getURL("/api/usuarios/espera"), fetcher);
+    // Nota: La lista de espera es global, no filtrada por ciclo
+    // pero mantenemos la integración del contexto para consistencia UI
+    const { data, isLoading } = useSWR(
+        selectedCicloId
+            ? getURL(`/api/usuarios/espera?ciclo_id=${selectedCicloId}`)
+            : null,
+        fetcher
+    );
 
     const onView = (id) => {
         router.push(`/registros/${id}`, undefined, { shallow: true });
