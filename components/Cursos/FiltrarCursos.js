@@ -15,6 +15,7 @@ import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import FormularioCursos, { FormularioGrupos } from "./constants";
 import RangeSlider from "../Field/RangeSlider";
+import CicloSelector from "../Ciclos/CicloSelector";
 
 function filter(originalData, searchValue, callback) {
     // console.log(originalData, searchValue);
@@ -63,9 +64,6 @@ export default function FiltrarCursos({ setFilter, data }) {
         return FormularioGrupos[course_id];
     }, [course_id]);
 
-    // console.log(course_id);
-    // console.log(FormularioGrupos[course_id]);
-
     return (
         <Box
             sx={{
@@ -94,6 +92,7 @@ export default function FiltrarCursos({ setFilter, data }) {
                             startDecorator={<SearchIcon />}
                         />
                     </FormControl>
+                    <CicloSelector />
                     <AccordionSummary
                         sx={{
                             pt: "24px",
