@@ -51,6 +51,11 @@ export default function CustomSelect({ inputProps }) {
                                     {option.label}
                                 </Option>
                             ))}
+                            {options?.length === 0 && (
+                                <Option disabled value="">
+                                    No hay opciones disponibles
+                                </Option>
+                            )}
                         </Select>
                         <FormHelperText>{error?.message ?? " "}</FormHelperText>
                     </FormControl>
