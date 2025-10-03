@@ -15,11 +15,7 @@ import fetcher from "@/components/fetcher";
 import { getURL } from "../utils";
 
 export default function Profile() {
-    const {
-        data: user,
-        error,
-        isLoading,
-    } = useSWR(getURL("api/user"), fetcher);
+    const { data: user, isLoading } = useSWR(getURL("api/user"), fetcher);
 
     const [logout, setLogout] = useState(false);
     const router = useRouter();

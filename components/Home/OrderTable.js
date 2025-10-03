@@ -22,6 +22,7 @@ import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { filterTable } from "./functions";
 import usePermissionContext from "./permissionContext/usePermission";
+import CicloSelector from "../Ciclos/CicloSelector";
 
 export default function OrderTable({ data, onView }) {
     const { isLoading: permissionIsLoading, hasPermission } =
@@ -35,7 +36,7 @@ export default function OrderTable({ data, onView }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const setFilterDebounced = useCallback(
         debounce((value) => setFilter(value), 250),
-        [],
+        []
     );
 
     useEffect(() => {
@@ -44,7 +45,7 @@ export default function OrderTable({ data, onView }) {
 
     const ready = useMemo(
         () => !permissionIsLoading && rows,
-        [permissionIsLoading, rows],
+        [permissionIsLoading, rows]
     );
 
     // const ready = false;
@@ -100,54 +101,7 @@ export default function OrderTable({ data, onView }) {
                         <Option value={"false"}>No validado</Option>
                     </Select>
                 </FormControl>
-                <FormControl size="sm">
-                    <FormLabel>Curso - 20 horas</FormLabel>
-                    <Select
-                        size="sm"
-                        placeholder="Filtrar por curso inscrito"
-                        slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
-                        onChange={(e, newValue) => {
-                            setFilterDebounced((prev) => ({
-                                ...prev,
-                                curso_20horas:
-                                    newValue !== "" ? newValue : undefined,
-                            }));
-                        }}
-                        value={filter.curso_20horas ?? ""}
-                    >
-                        <Option value={""}>Todos</Option>
-                        <Option value={"Sociedad civil"}>
-                            Sociedad civil (20 horas)
-                        </Option>
-                        <Option value={"Funcionarios"}>
-                            Funcionarios (20 horas)
-                        </Option>
-                    </Select>
-                </FormControl>
-                <FormControl size="sm">
-                    <FormLabel>Diplomado - 120 horas</FormLabel>
-                    <Select
-                        size="sm"
-                        placeholder="Filtrar por curso inscrito"
-                        slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
-                        onChange={(e, newValue) => {
-                            setFilterDebounced((prev) => ({
-                                ...prev,
-                                diplomado_120horas:
-                                    newValue !== "" ? newValue : undefined,
-                            }));
-                        }}
-                        value={filter.diplomado_120horas ?? ""}
-                    >
-                        <Option value={""}>Todos</Option>
-                        <Option value={"Sociedad civil"}>
-                            Sociedad civil (20 horas)
-                        </Option>
-                        <Option value={"Funcionarios"}>
-                            Funcionarios (20 horas)
-                        </Option>
-                    </Select>
-                </FormControl>
+                <CicloSelector />
             </Box>
             {ready ? (
                 <Fragment>
@@ -268,7 +222,7 @@ export default function OrderTable({ data, onView }) {
                                         // onClick={() => onView(row.id)}
                                         className="pointer-row"
                                         {...(hasPermission(
-                                            "usuario.change_persona",
+                                            "usuario.change_persona"
                                         )
                                             ? {
                                                   onClick: () => onView(row.id),
@@ -278,7 +232,7 @@ export default function OrderTable({ data, onView }) {
                                         <td>
                                             <Typography level="body-sm">
                                                 {dayjs(
-                                                    row.ultimo_registro,
+                                                    row.ultimo_registro
                                                 ).format("DD/MM/YYYY")}
                                                 {/* HH:mm:ss A */}
                                             </Typography>
