@@ -15,15 +15,19 @@ export default async function handler(req, res) {
         cookieName: "session",
     });
 
-    const response = await fetch(
-        process.env.NEXT_PUBLIC_BASE_URL + "/api/usuarios/inscritos",
-        {
-            method: "GET",
-            headers: {
-                Authorization: "Bearer " + session.accessToken,
-            },
+    // Construir la URL con query parameters
+    const queryParams = new URLSearchParams(req.query).toString();
+    const url =
+        process.env.NEXT_PUBLIC_BASE_URL +
+        "/api/usuarios/inscritos" +
+        (queryParams ? `?${queryParams}` : "");
+
+    const response = await fetch(url, {
+        method: "GET",
+        headers: {
+            Authorization: "Bearer " + session.accessToken,
         },
-    );
+    });
 
     if (response.ok) {
         const inscritos = await response.json();
