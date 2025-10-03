@@ -1,5 +1,5 @@
 ---
-applyTo: '**'
+applyTo: '/home/jr0237/Documentos/consulta-previa-registro/consulta-previa-admin/**'
 ---
 
 # Consulta Previa - AI Coding Guidelines
@@ -8,7 +8,7 @@ applyTo: '**'
 
 ### ⚠️ CUMPLIMIENTO OBLIGATORIO ⚠️
 
-- **GENERAR O EDITAR ÚNICAMENTE LO SOLICITADO**: Evitar generar código innecesario como código con pruebas, códigos de ejemplo, o comentarios innecesarios.
+- **GENERAR O EDITAR ÚNICAMENTE LO SOLICITADO**: Evitar generar código innecesario como código con pruebas, códigos de ejemplo, o comentarios innecesarios, ni archivos con instrucciones a menos que se solicite explícitamente, en especial con archivos markdown.
 - **SOLO EL CÓDIGO NECESARIO**: No crear archivos README, markdown, ni datos de prueba a menos que sea explícitamente solicitado.
 - **ENFOQUE MINIMALISTA**: Producir únicamente el código funcional requerido para cumplir la solicitud específica.
 - **CAPITALIZACIÓN DE COMPONENTES**: Usar sentence case en títulos, botones y otros componentes; sólo la primera letra de la frase en mayúscula y el resto en minúsculas.
