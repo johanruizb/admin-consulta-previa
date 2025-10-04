@@ -19,13 +19,13 @@ import Link from "@mui/joy/Link";
 import Option from "@mui/joy/Option";
 import Select from "@mui/joy/Select";
 import Typography from "@mui/joy/Typography";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import { BarChart } from "@mui/x-charts/BarChart";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 
 dayjs.locale("es");
@@ -36,7 +36,7 @@ const fetcherWithCurso = ({ url, args: { options } }) => {
 
 export default function Page() {
     const { selectedCicloId } = useCiclo();
-    const [curso, setCurso] = useState([1, 2, 3, 4]);
+    const [curso, setCurso] = useState();
 
     const { data, isLoading } = useSWR(
         selectedCicloId
@@ -67,6 +67,13 @@ export default function Page() {
     const handleCursoChange = (event, newValue) => {
         setCurso(newValue || []);
     };
+
+    useEffect(() => {
+        if (!isLoading) {
+            console.log(cursos);
+            setCurso(cursos?.map((item) => item.id));
+        }
+    }, [cursos, isLoading]);
 
     if (!mounted) return null;
 
@@ -239,27 +246,7 @@ export default function Page() {
                                         </Typography>
                                     </Stack>
                                 </Stack>
-                                {/* <Typography level="title-lg">
-                                    Personas validadas
-                                    ({data?.percentage} %)
-                                </Typography> */}
-                                <Stack
-                                    // flex={0.5}
-                                    justifyContent="center"
-                                >
-                                    {/* <Stack
-                                        direction="row"
-                                        alignItems="center"
-                                        justifyContent="space-between"
-                                        spacing={1.25}
-                                    >
-                                        <Typography level="body-md">
-                                            Personas registradas
-                                        </Typography>
-                                        <Typography level="h2">
-                                            {formatNumber(data.total)}
-                                        </Typography>
-                                    </Stack> */}
+                                <Stack justifyContent="center">
                                     <Stack
                                         direction="row"
                                         alignItems="center"
@@ -274,34 +261,6 @@ export default function Page() {
                                         </Typography>
                                     </Stack>
                                 </Stack>
-                                {/* <Stack
-                                    flex={0.5}
-                                    // flex={1}
-                                    // spacing={0}
-                                    justifyContent="center"
-                                >
-                                    <Stack
-                                        direction="row"
-                                        // alignItems="center"
-                                        alignItems="baseline"
-                                        // justifyContent="center"
-                                        justifyContent={{
-                                            md: "center",
-                                            xs: "space-evenly",
-                                        }}
-                                        spacing={1.25}
-                                    >
-                                        <Typography level="h2">
-                                            {formatNumber(data.validated)}
-                                        </Typography>
-                                        <Typography level="body-md">
-                                            de
-                                        </Typography>
-                                        <Typography level="h2">
-                                            {formatNumber(data.total)}
-                                        </Typography>
-                                    </Stack>
-                                </Stack> */}
                             </CardContent>
                         </Card>
                     </Grid>
@@ -435,7 +394,7 @@ export default function Page() {
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid size={{ xs: 12, md: 6 }}>
+                    {/* <Grid size={{ xs: 12, md: 6 }}>
                         <Card
                             variant="outlined"
                             sx={{
@@ -451,7 +410,7 @@ export default function Page() {
                                 <CustomPie data={data?.continuar_curso} />
                             </CardContent>
                         </Card>
-                    </Grid>
+                    </Grid> */}
                     <Grid size={12}>
                         <Card
                             variant="outlined"
