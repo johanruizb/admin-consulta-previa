@@ -33,7 +33,7 @@ import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
 
 import Backdrop from "@mui/material/Backdrop";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 import dayjs from "dayjs";
