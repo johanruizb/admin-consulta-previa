@@ -7,7 +7,7 @@ import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import Stack from "@mui/joy/Stack";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import { useSessionStorage } from "@uidotdev/usehooks";
 import Fuse from "fuse.js";
 import { cloneDeep, debounce } from "lodash";
