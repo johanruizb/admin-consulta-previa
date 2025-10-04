@@ -8,7 +8,7 @@ import { useEffect } from "react";
 export default function CicloSelector({
     value,
     onChange,
-    label = "Ciclo académico",
+    label = "Versión",
     placeholder = "Seleccione un ciclo",
     size = "sm",
     required = false,
@@ -37,7 +37,7 @@ export default function CicloSelector({
         return (
             <FormControl size={size} disabled>
                 <FormLabel>{label}</FormLabel>
-                <Select placeholder="Cargando ciclos..." size={size} disabled />
+                <Select placeholder="Cargando..." size={size} disabled />
             </FormControl>
         );
     }
@@ -47,7 +47,7 @@ export default function CicloSelector({
             <FormControl size={size} disabled>
                 <FormLabel>{label}</FormLabel>
                 <Select
-                    placeholder="Error al cargar ciclos"
+                    placeholder="Error al cargar la información"
                     size={size}
                     disabled
                     value=""
