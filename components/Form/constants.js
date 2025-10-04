@@ -461,16 +461,6 @@ const FormularioVerificacion = [
             required: true,
         },
     },
-    // {
-    //     Component: PhoneField,
-    //     controller: {
-    //         name: "whatsapp",
-    //         defaultValue: "",
-    //     },
-    //     field: {
-    //         label: "Número de WhatsApp",
-    //     },
-    // },
     {
         Component: TextField,
         controller: {
@@ -530,23 +520,6 @@ const FormularioVerificacion = [
         dependencies: ["estado_res"],
         url: "/api/ubicacion/ciudades/$1",
     },
-    // {
-    //     Component: TextField,
-    //     controller: {
-    //         name: "direccion",
-    //         defaultValue: "",
-    //         rules: {
-    //             required: {
-    //                 value: true,
-    //                 message: "Este campo no puede estar vacio",
-    //             },
-    //         },
-    //     },
-    //     field: {
-    //         label: "Dirección de residencia",
-    //         required: true,
-    //     },
-    // },
     {
         Component: TextField,
         controller: {
@@ -649,46 +622,57 @@ const FormularioVerificacion = [
         },
     },
     {
-        Component: MultiSelect,
+        Component: AsyncSelect,
         controller: {
             name: "cursos_inscritos",
             defaultValue: [],
         },
         field: {
             label: "Curso inscrito",
-            options: [
-                {
-                    value: 1,
-                    label: "Curso virtual de autoformación en Consulta Previa - Grupos étnicos (20 horas)",
-                },
-                {
-                    value: 2,
-                    label: "Curso virtual de autoformación en consulta previa para fortalecimiento de capacidades institucionales (20 horas)",
-                },
-                {
-                    value: 3,
-                    label: "Diplomado - Derecho Fundamental a la Consulta Previa - Grupos Étnicos (120 horas)",
-                },
-                {
-                    value: 4,
-                    label: "Diplomado - Derecho Fundamental a la Consulta Previa - Funcionarios y/o Contratistas (120 horas)",
-                },
-            ],
+            // options: [
+            //     {
+            //         value: 1,
+            //         label: "Curso virtual de autoformación en Consulta Previa - Grupos étnicos (20 horas)",
+            //     },
+            //     {
+            //         value: 2,
+            //         label: "Curso virtual de autoformación en consulta previa para fortalecimiento de capacidades institucionales (20 horas)",
+            //     },
+            //     {
+            //         value: 3,
+            //         label: "Diplomado - Derecho Fundamental a la Consulta Previa - Grupos Étnicos (120 horas)",
+            //     },
+            //     {
+            //         value: 4,
+            //         label: "Diplomado - Derecho Fundamental a la Consulta Previa - Funcionarios y/o Contratistas (120 horas)",
+            //     },
+            //     {
+            //         value: 5,
+            //         label: "Diplomado Funcionarios 2025",
+            //     },
+            //     {
+            //         value: 6,
+            //         label: "Diplomado Sociedad Civil 2025",
+            //     },
+            // ],
+            multiple: true,
         },
+        url: "/api/usuarios/cursos/disponibles",
+        useVersion: true,
     },
-    {
-        Component: TextField,
-        controller: {
-            name: "continuar_curso_120",
-            defaultValue: "",
-        },
-        field: {
-            label: "Le interesa seguir fortaleciendo sus conocimiento y competencias sobre Consulta Previa a través de un diplomado virtual gratuito de 120 horas certificado por la Universidad del Valle.",
-            onChange: (e) => {},
-            readOnly: true,
-        },
-        size: 12,
-    },
+    // {
+    //     Component: TextField,
+    //     controller: {
+    //         name: "continuar_curso_120",
+    //         defaultValue: "",
+    //     },
+    //     field: {
+    //         label: "Le interesa seguir fortaleciendo sus conocimiento y competencias sobre Consulta Previa a través de un diplomado virtual gratuito de 120 horas certificado por la Universidad del Valle.",
+    //         onChange: (e) => {},
+    //         readOnly: true,
+    //     },
+    //     size: 12,
+    // },
 ];
 
 const DOCUMENTOS = {
