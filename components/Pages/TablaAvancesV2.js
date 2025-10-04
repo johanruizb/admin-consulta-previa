@@ -4,93 +4,70 @@ import Sheet from "@mui/joy/Sheet";
 import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
 import { DataGrid } from "@mui/x-data-grid";
-import { useIntersectionObserver } from "@uidotdev/usehooks";
 import dayjs from "dayjs";
-import { Fragment, useMemo } from "react";
-import { v4 } from "uuid";
+import { Fragment, memo, useCallback, useMemo } from "react";
 
-function Status({ params, header } = {}) {
-    const [ref, entry] = useIntersectionObserver({
-        threshold: 0,
-        root: null,
-        rootMargin: "24px",
-    });
-
+// Componente optimizado con React.memo para evitar re-renders innecesarios
+const Status = memo(function Status({ params, header }) {
     const { estado, fecha } = params?.row[header?.field] || {};
 
     const estadoNumero = Number(estado);
     const completado = estadoNumero >= 1 || params?.row[header?.field] === true;
 
-    return (
-        <Box ref={ref}>
-            {entry?.isIntersecting ? (
-                completado ? (
-                    <Tooltip
-                        component="span"
-                        // key={id}
-                        title={
-                            fecha
-                                ? completado
-                                    ? `${dayjs(fecha).format(
-                                          "DD [de] MMMM [de] YYYY, [a las] HH:mm:ss a"
-                                      )}`
-                                    : "Actividad no completada"
-                                : completado
-                                ? "Completado"
-                                : "Módulo no completado"
-                        }
-                        placement="top"
-                        arrow
-                    >
-                        <Box
-                            component="span"
-                            sx={{
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                height: "100%",
-                                flex: 1,
-                            }}
-                        >
-                            <Checkbox readOnly checked={completado} />
-                        </Box>
-                    </Tooltip>
-                ) : (
-                    <Tooltip
-                        component="span"
-                        key={v4()}
-                        title="Aun sin completar"
-                        placement="top"
-                        arrow
-                    >
-                        <Box
-                            component="span"
-                            sx={{
-                                display: "flex",
-                                justifyContent: "center",
-                            }}
-                        >
-                            <Checkbox readOnly />
-                        </Box>
-                    </Tooltip>
-                )
-            ) : null}
-        </Box>
-    );
-}
+    const tooltipTitle = fecha
+        ? completado
+            ? dayjs(fecha).format("DD [de] MMMM [de] YYYY, [a las] HH:mm:ss a")
+            : "Actividad no completada"
+        : completado
+        ? "Completado"
+        : "Módulo no completado";
 
-function getStatus(params, header) {
-    const { id } = params.row;
-    if (id === "resumen")
-        return (
-            <Fragment>
+    return (
+        <Tooltip
+            component="span"
+            title={completado ? tooltipTitle : "Aun sin completar"}
+            placement="top"
+            arrow
+            enterDelay={500}
+            enterNextDelay={500}
+        >
+            <Box
+                component="span"
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100%",
+                    flex: 1,
+                }}
+            >
+                <Checkbox readOnly checked={completado} />
+            </Box>
+        </Tooltip>
+    );
+});
+
+export default function TablaAvancesV2({
+    data,
+    hasPermission,
+    onView,
+    filter,
+}) {
+    const { headers, resultados: rows } = data ?? {};
+
+    // Memoizar getStatus para evitar recreación en cada render
+    const getStatus = useCallback((params, header) => {
+        const { id } = params.row;
+        if (id === "resumen")
+            return (
                 <Tooltip
-                    key={id}
                     title={`Usuarios que lo han completado: ${
                         params.row[header.field]
                     }`}
                     placement="top"
                     arrow
+                    enterDelay={500}
+                    enterNextDelay={500}
                 >
                     <Typography
                         level="body-sm"
@@ -101,18 +78,9 @@ function getStatus(params, header) {
                         {params.row[header.field]}
                     </Typography>
                 </Tooltip>
-            </Fragment>
-        );
-    return <Status params={params} header={header} />;
-}
-
-export default function TablaAvancesV2({
-    data,
-    hasPermission,
-    onView,
-    filter,
-}) {
-    const { headers, resultados: rows } = data ?? {};
+            );
+        return <Status params={params} header={header} />;
+    }, []);
 
     const columns = useMemo(() => {
         const defaultColumns = [
@@ -169,7 +137,7 @@ export default function TablaAvancesV2({
                 return h;
             })
         );
-    }, [headers]);
+    }, [headers, getStatus]);
 
     const __rows = useMemo(() => filter ?? rows ?? [], [filter, rows]);
 
@@ -191,7 +159,6 @@ export default function TablaAvancesV2({
                     }}
                 >
                     <DataGrid
-                        // key={v4()}
                         rows={__rows}
                         columns={columns}
                         columnVisibilityModel={{
@@ -202,6 +169,8 @@ export default function TablaAvancesV2({
                         disableColumnMenu
                         showCellVerticalBorder
                         showColumnVerticalBorder
+                        rowBuffer={10}
+                        columnBuffer={5}
                         getCellClassName={(params) => {
                             let className = "";
 
