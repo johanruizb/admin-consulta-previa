@@ -1,7 +1,7 @@
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import Typography from "@mui/joy/Typography";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import useSWR from "swr";
 import { useCiclo } from "@/contexts/CicloContext";
