@@ -191,7 +191,7 @@ export default function TablaAvancesV2({
                     }}
                 >
                     <DataGrid
-                        key={v4()}
+                        // key={v4()}
                         rows={__rows}
                         columns={columns}
                         columnVisibilityModel={{
@@ -236,17 +236,21 @@ export default function TablaAvancesV2({
                                 // overflow: "visible",
                                 transform: "rotate(-90deg)",
                             },
-                            "& .MuiDataGrid-columnHeaderTitle:before": {
-                                content: `""`,
-                                paddingTop: "120%",
-                                /* takes width as reference, + 10% for faking some extra padding */
-                                display: "inline-block",
-                                verticalAlign: "middle",
-                            },
-                            "& .MuiDataGrid-columnHeader": {
-                                height: "auto !important",
-                                // width: "250px !important",
-                            },
+                            "& .MuiDataGrid-columnHeaderTitleContainerContent":
+                                {
+                                    height: 136,
+                                },
+                            // "& .MuiDataGrid-columnHeaderTitle:before": {
+                            //     content: `""`,
+                            //     paddingTop: "120%",
+                            //     /* takes width as reference, + 10% for faking some extra padding */
+                            //     display: "inline-block",
+                            //     verticalAlign: "middle",
+                            // },
+                            // "& .MuiDataGrid-columnHeader": {
+                            //     height: "auto !important",
+                            //     // width: "250px !important",
+                            // },
                         }}
                         onRowClick={(params) => {
                             if (
@@ -256,6 +260,7 @@ export default function TablaAvancesV2({
                                 onView(params.row.id);
                         }}
                         // autosizeOnMount
+                        columnHeaderHeight={136}
                     />
                 </Sheet>
             </Fragment>
