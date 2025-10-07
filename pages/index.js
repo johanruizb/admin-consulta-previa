@@ -2,6 +2,7 @@ import CicloSelector from "@/components/Ciclos/CicloSelector";
 import fetcher from "@/components/fetcher";
 import Layout from "@/components/Home/Layout";
 import CustomPie from "@/components/Panel/CustomPie";
+import InscripcionesPorPeriodo from "@/components/Panel/InscripcionesPorPeriodo";
 import { formatNumber, getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
 import useClient from "@/hooks/useClient";
@@ -203,6 +204,9 @@ export default function Page() {
                         pb: "10px",
                     }}
                 >
+                    <Grid size={12}>
+                        <InscripcionesPorPeriodo />
+                    </Grid>
                     <Grid size={{ xs: 12, md: 4 }}>
                         <Card
                             variant="outlined"
@@ -435,7 +439,7 @@ export default function Page() {
                                             // label: "London",
                                         },
                                     ]}
-                                    height={400}
+                                    height={300}
                                 />
                             </CardContent>
                         </Card>
