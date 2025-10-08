@@ -19,9 +19,7 @@ export default function MultiSelect({ inputProps }) {
             control={control}
             render={({ field, fieldState: { error } }) => {
                 const { onChange: onChangeController } = field;
-
-                console.log(field.value);
-
+                
                 return (
                     <FormControl
                         error={Boolean(error?.type || error?.types)}

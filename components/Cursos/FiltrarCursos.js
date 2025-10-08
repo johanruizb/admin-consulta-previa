@@ -18,7 +18,6 @@ import RangeSlider from "../Field/RangeSlider";
 import CicloSelector from "../Ciclos/CicloSelector";
 
 function filter(originalData, searchValue, callback) {
-    // console.log(originalData, searchValue);
     if (searchValue !== undefined && searchValue !== "") {
         let result = cloneDeep(originalData);
         const fuse = new Fuse(result, {

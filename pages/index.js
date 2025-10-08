@@ -71,7 +71,6 @@ export default function Page() {
 
     useEffect(() => {
         if (!isLoading) {
-            console.log(cursos);
             setCurso(cursos?.map((item) => item.id));
         }
     }, [cursos, isLoading]);

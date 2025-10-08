@@ -58,7 +58,6 @@ function DialogoCarga({ open, setOpen }) {
         // Calcular el tamaño del archivo comprimido
         const fileSize = compressedBlob.size;
         const fileSizeInMB = (fileSize / (1024 * 1024)).toFixed(2); // Convertir a MB
-        console.log(`Tamaño del archivo comprimido: ${fileSizeInMB} MB`);
 
         fetch(getURL("/api/moodle/reporte"), {
             method: "POST",
@@ -192,6 +191,7 @@ export default function UploadAvances() {
             mutate((key) => Array.isArray(key));
             setOptions({});
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data, previousData]);
 
     usePermission("moodle.add_actividadescompletadas");

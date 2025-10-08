@@ -98,7 +98,6 @@ function Export() {
                     )}.xlsx`;
 
                     if (contentDisposition) {
-                        console.log(contentDisposition);
                         const match = contentDisposition.match(/filename=(.+)/);
                         if (match.length === 2) {
                             filename = match[1];
