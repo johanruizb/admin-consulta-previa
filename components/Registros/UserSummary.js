@@ -2,61 +2,68 @@ import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import Typography from "@mui/joy/Typography";
 import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
 import useSWR from "swr";
 import { useCiclo } from "@/contexts/CicloContext";
 import { formatNumber, getURL } from "../utils";
 import { Fragment } from "react";
+import { Stack } from "@mui/material";
+import { Tooltip } from "@mui/joy";
 
-export default function UserSummary() {
+export default function UserSummary({ slotProps }) {
     const { selectedCicloId } = useCiclo();
 
     const { data } = useSWR(
         getURL(`/api/usuarios/summary?ciclo_id=${selectedCicloId}`)
     );
 
+    const { root, content, item } = slotProps || {};
+
     // Función para renderizar las tarjetas de cursos
     const renderCourseCards = (courses, type) => {
         if (!courses || courses.length === 0) return null;
 
+        // Calcular el tamaño por defecto si no se proporciona itemSize
+        const defaultSize = {
+            xs: 12,
+            md: courses.length >= 4 ? 3 : 12 / courses.length,
+        };
+
         return courses.map((course) => (
             <Grid
                 key={`${type}-${course.id}`}
-                size={{
-                    xs: 12,
-                    md: courses.length >= 4 ? 3 : 12 / courses.length,
-                }}
+                size={defaultSize}
+                direction="row"
+                {...(item || {})}
             >
                 <Card variant="outlined">
-                    <CardContent>
+                    <CardContent
+                        sx={{
+                            ...(content?.sx || {}),
+                        }}
+                    >
                         <Typography level="title-md">
                             {course.shortname}
                         </Typography>
-                        <Stack>
-                            <Stack
-                                direction="row"
-                                alignItems="center"
-                                justifyContent="space-between"
-                            >
-                                <Typography level="body-md">
-                                    Registrados
-                                </Typography>
-                                <Typography level="h3">
+                        <Stack direction="row" spacing={1}>
+                            <Tooltip title="Registrados" arrow>
+                                <Typography
+                                    level="body-lg"
+                                    color="primary"
+                                    fontWeight="bold"
+                                >
                                     {formatNumber(course.registrados)}
                                 </Typography>
-                            </Stack>
-                            <Stack
-                                direction="row"
-                                alignItems="center"
-                                justifyContent="space-between"
-                            >
-                                <Typography level="body-md">
-                                    Validados
-                                </Typography>
-                                <Typography level="h3">
+                            </Tooltip>
+                            <Typography level="body-lg">/</Typography>
+                            <Tooltip title="Validados" arrow>
+                                <Typography
+                                    level="body-lg"
+                                    color="success"
+                                    fontWeight="bold"
+                                >
                                     {formatNumber(course.validados)}
                                 </Typography>
-                            </Stack>
+                            </Tooltip>
                         </Stack>
                     </CardContent>
                 </Card>
@@ -74,6 +81,7 @@ export default function UserSummary() {
             sx={{
                 height: "100%",
             }}
+            {...(root || {})}
         >
             {allCourses.length > 0 ? (
                 renderCourseCards(allCourses, "all")

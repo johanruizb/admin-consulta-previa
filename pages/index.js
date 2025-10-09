@@ -3,6 +3,7 @@ import fetcher from "@/components/fetcher";
 import Layout from "@/components/Home/Layout";
 import CustomPie from "@/components/Panel/CustomPie";
 import InscripcionesPorPeriodo from "@/components/Panel/InscripcionesPorPeriodo";
+import UserSummary from "@/components/Registros/UserSummary";
 import { formatNumber, getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
 import useClient from "@/hooks/useClient";
@@ -200,7 +201,18 @@ export default function Page() {
                     <Grid size={12}>
                         <InscripcionesPorPeriodo />
                     </Grid>
-                    <Grid size={{ xs: 12, md: 4 }}>
+                    <Grid size={{ xs: 12, md: 3 }}>
+                        <UserSummary
+                            slotProps={{
+                                item: { size: 12 },
+                                root: {
+                                    spacing: 1.25 / 2,
+                                    direction: "column",
+                                },
+                            }}
+                        />
+                    </Grid>
+                    <Grid size={{ xs: 12, md: 3 }}>
                         <Card
                             variant="outlined"
                             sx={{
@@ -261,7 +273,7 @@ export default function Page() {
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid size={{ xs: 12, md: 8 }}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <Card
                             variant="outlined"
                             sx={{
