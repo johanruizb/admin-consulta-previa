@@ -12,13 +12,12 @@ import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
-import Chip from "@mui/joy/Chip";
 import CircularProgress from "@mui/joy/CircularProgress";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Link from "@mui/joy/Link";
-import Option from "@mui/joy/Option";
-import Select from "@mui/joy/Select";
+import Radio from "@mui/joy/Radio";
+import RadioGroup from "@mui/joy/RadioGroup";
 import Typography from "@mui/joy/Typography";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
@@ -65,15 +64,23 @@ export default function Page() {
 
     useClient(() => setMounted(true));
 
-    const handleCursoChange = (event, newValue) => {
-        setCurso(newValue || []);
+    const handleCursoChange = (event) => {
+        const value = event.target.value;
+        // Si el valor es una cadena con comas, es el array de "Todos los cursos"
+        if (typeof value === "string" && value.includes(",")) {
+            setCurso(value.split(",").map((id) => parseInt(id)));
+        } else {
+            // Es un ID individual de curso
+            setCurso([parseInt(value)]);
+        }
     };
 
     useEffect(() => {
-        if (!isLoading) {
-            setCurso(cursos?.map((item) => item.id));
+        if (!isLoading && cursos?.length > 0 && !curso) {
+            // Por defecto, seleccionar "Todos los cursos"
+            setCurso(cursos.map((item) => item.id));
         }
-    }, [cursos, isLoading]);
+    }, [curso, cursos, isLoading]);
 
     if (!mounted) return null;
 
@@ -138,49 +145,32 @@ export default function Page() {
                         {cursosIsLoading ? (
                             <CircularProgress />
                         ) : (
-                            <Select
-                                multiple
-                                value={curso}
+                            <RadioGroup
+                                value={
+                                    Array.isArray(curso) &&
+                                    curso.length === cursos?.length
+                                        ? cursos?.map((c) => c.id).join(",")
+                                        : curso?.[0]?.toString() || ""
+                                }
                                 onChange={handleCursoChange}
-                                placeholder="Seleccione cursos..."
-                                renderValue={(selected) => (
-                                    <Box
-                                        sx={{
-                                            display: "flex",
-                                            flexWrap: "wrap",
-                                            gap: 0.5,
-                                        }}
-                                    >
-                                        {selected.map(({ value }) => {
-                                            const cursoItem = cursos?.find(
-                                                (item) => item.id === value
-                                            );
-
-                                            return (
-                                                <Chip
-                                                    key={value}
-                                                    variant="soft"
-                                                    color="primary"
-                                                    size="sm"
-                                                >
-                                                    {cursoItem?.shortname}
-                                                </Chip>
-                                            );
-                                        })}
-                                    </Box>
-                                )}
                             >
+                                <Radio
+                                    value={cursos?.map((c) => c.id).join(",")}
+                                    label="Todos los cursos"
+                                />
                                 {cursos?.map((item) => (
-                                    <Option key={item.id} value={item.id}>
-                                        {item.shortname}
-                                    </Option>
+                                    <Radio
+                                        key={item.id}
+                                        value={item.id.toString()}
+                                        label={item.shortname}
+                                    />
                                 ))}
                                 {cursos?.length === 0 && (
-                                    <Option disabled>
+                                    <Typography level="body-sm">
                                         No hay cursos disponibles
-                                    </Option>
+                                    </Typography>
                                 )}
-                            </Select>
+                            </RadioGroup>
                         )}
                     </FormControl>
                 </Box>
