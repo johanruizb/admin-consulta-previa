@@ -76,7 +76,11 @@ export default function Page() {
     };
 
     useEffect(() => {
-        if (!isLoading && cursos?.length > 0 && !curso) {
+        if (
+            !isLoading &&
+            cursos?.length > 0 &&
+            (!curso || cursos.some((c) => !curso.includes(c.id)))
+        ) {
             // Por defecto, seleccionar "Todos los cursos"
             setCurso(cursos.map((item) => item.id));
         }
