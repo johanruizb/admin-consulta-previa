@@ -137,7 +137,7 @@ const FormularioVerificacion = [
     {
         Component: FileField,
         controller: {
-            name: "foto_doc1",
+            name: "foto_doc1_url",
         },
         field: {
             label: "Foto del frente del documento",
@@ -146,7 +146,7 @@ const FormularioVerificacion = [
     {
         Component: FileField,
         controller: {
-            name: "foto_doc2",
+            name: "foto_doc2_url",
         },
         field: {
             label: "Foto del reverso del documento",
