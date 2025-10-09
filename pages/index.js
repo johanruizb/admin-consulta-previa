@@ -80,7 +80,7 @@ export default function Page() {
             // Por defecto, seleccionar "Todos los cursos"
             setCurso(cursos.map((item) => item.id));
         }
-    }, [curso, cursos, isLoading]);
+    }, [curso, cursos, isLoading, selectedCicloId]);
 
     if (!mounted) return null;
 
