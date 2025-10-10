@@ -48,7 +48,7 @@ export default function UserSummary({ slotProps }) {
                             <Tooltip title="Registrados" arrow>
                                 <Typography
                                     level="body-lg"
-                                    color="primary"
+                                    // color="primary"
                                     fontWeight="bold"
                                 >
                                     {formatNumber(course.registrados)}
@@ -58,7 +58,7 @@ export default function UserSummary({ slotProps }) {
                             <Tooltip title="Validados" arrow>
                                 <Typography
                                     level="body-lg"
-                                    color="success"
+                                    // color="success"
                                     fontWeight="bold"
                                 >
                                     {formatNumber(course.validados)}
