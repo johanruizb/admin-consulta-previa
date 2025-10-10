@@ -108,7 +108,8 @@ export default function InscripcionesPorPeriodo() {
                                 ? "día"
                                 : periodo === "semanas"
                                 ? "semana"
-                                : "mes"}
+                                : "mes"}{" "}
+                            (por plataforma)
                         </Typography>
                         <Typography level="body-sm" color="neutral">
                             Total: {formatNumber(data.total_inscripciones)}{" "}
@@ -145,21 +146,31 @@ export default function InscripcionesPorPeriodo() {
                     ]}
                     series={[
                         {
-                            dataKey: "total",
-                            label: "Inscripciones",
+                            dataKey: "total_web",
+                            label: "Formulario Web",
                             color: "#1976d2",
                         },
+                        {
+                            dataKey: "total_whatsapp",
+                            label: "WhatsApp",
+                            color: "#25D366",
+                        },
                     ]}
-                    height={300}
+                    height={350}
                     margin={{
                         top: 20,
                         right: 20,
-                        bottom: data.data.length > 15 ? 100 : 60,
+                        bottom: data.data.length > 15 ? 100 : 80,
                         left: 60,
                     }}
                     slotProps={{
                         legend: {
-                            hidden: true,
+                            direction: "row",
+                            position: {
+                                vertical: "bottom",
+                                horizontal: "middle",
+                            },
+                            padding: 0,
                         },
                     }}
                 />

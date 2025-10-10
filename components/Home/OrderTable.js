@@ -223,6 +223,16 @@ export default function OrderTable({ data, onView }) {
                                     >
                                         Grupo
                                     </th>
+                                    {selectedCicloId === 2 && (
+                                        <th
+                                            style={{
+                                                width: 80,
+                                                padding: "12px 6px",
+                                            }}
+                                        >
+                                            Plataforma de registro
+                                        </th>
+                                    )}
                                 </tr>
                             </thead>
                             <tbody>
@@ -315,6 +325,19 @@ export default function OrderTable({ data, onView }) {
                                                 {row.grupos}
                                             </Typography>
                                         </td>
+                                        {selectedCicloId === 2 && (
+                                            <td>
+                                                <Typography level="body-sm">
+                                                    {row.plataforma_registro ===
+                                                    "web"
+                                                        ? "Formulario web"
+                                                        : row.plataforma_registro ===
+                                                          "whatsapp"
+                                                        ? "WhatsApp"
+                                                        : "Desconocida"}
+                                                </Typography>
+                                            </td>
+                                        )}
                                     </tr>
                                 ))}
                                 {rows.pages === 0 && (
