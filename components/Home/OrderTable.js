@@ -48,8 +48,13 @@ export default function OrderTable({ data, onView }) {
         [permissionIsLoading, rows]
     );
 
-    // const ready = false;
-
+    // Corregir paginación si esta fuera de rango
+    useEffect(() => {
+        if (ready && page > rows.pages) {
+            setPage(rows.pages || 1);
+        }
+    }, [ready, page, rows, setPage]);
+    
     return (
         <Fragment>
             <Box
