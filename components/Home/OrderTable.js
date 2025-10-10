@@ -23,6 +23,7 @@ import { v4 as uuidv4 } from "uuid";
 import { filterTable } from "./functions";
 import usePermissionContext from "./permissionContext/usePermission";
 import CicloSelector from "../Ciclos/CicloSelector";
+import { useCiclo } from "@/contexts/CicloContext";
 
 export default function OrderTable({ data, onView }) {
     const { isLoading: permissionIsLoading, hasPermission } =
@@ -54,7 +55,9 @@ export default function OrderTable({ data, onView }) {
             setPage(rows.pages || 1);
         }
     }, [ready, page, rows, setPage]);
-    
+
+    const { selectedCicloId } = useCiclo();
+
     return (
         <Fragment>
             <Box
@@ -194,14 +197,16 @@ export default function OrderTable({ data, onView }) {
                                     >
                                         Estado
                                     </th>
-                                    <th
-                                        style={{
-                                            width: 80,
-                                            padding: "12px 6px",
-                                        }}
-                                    >
-                                        Curso - 20 horas
-                                    </th>
+                                    {selectedCicloId === 1 && (
+                                        <th
+                                            style={{
+                                                width: 80,
+                                                padding: "12px 6px",
+                                            }}
+                                        >
+                                            Curso - 20 horas
+                                        </th>
+                                    )}
                                     <th
                                         style={{
                                             width: 80,
@@ -293,11 +298,13 @@ export default function OrderTable({ data, onView }) {
                                                     : "Sin validar"}
                                             </Chip>
                                         </td>
-                                        <td>
-                                            <Typography level="body-sm">
-                                                {row.curso_20horas}
-                                            </Typography>
-                                        </td>
+                                        {selectedCicloId === 1 && (
+                                            <td>
+                                                <Typography level="body-sm">
+                                                    {row.curso_20horas}
+                                                </Typography>
+                                            </td>
+                                        )}
                                         <td>
                                             <Typography level="body-sm">
                                                 {row.diplomado_120horas}
