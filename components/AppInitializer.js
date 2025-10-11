@@ -49,7 +49,7 @@ export default function AppInitializer({ children }) {
                 height="100vh"
                 spacing={2}
             >
-                <CircularProgress size="lg" />
+                <CircularProgress size="md" />
                 <Typography level="body-md" textColor="text.secondary">
                     Cargando configuración
                 </Typography>
