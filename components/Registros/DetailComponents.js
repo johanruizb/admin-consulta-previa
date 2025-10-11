@@ -20,6 +20,24 @@ import dayjs from "dayjs";
 import PropTypes from "prop-types";
 
 /**
+ * Helper function to safely render values that might be objects
+ * @param {*} value - The value to render
+ * @returns {string} A string representation of the value
+ */
+function safeRenderValue(value) {
+    if (value === null || value === undefined) {
+        return "N/A";
+    }
+    if (typeof value === "object") {
+        if (Array.isArray(value)) {
+            return value.join(", ");
+        }
+        return JSON.stringify(value);
+    }
+    return String(value);
+}
+
+/**
  * Componente para renderizar un item del historial con cambios
  */
 function HistoryItemWithChanges({ item, index }) {
@@ -92,7 +110,9 @@ function HistoryItemWithChanges({ item, index }) {
                                                 sx={{ cursor: "pointer" }}
                                             >
                                                 <Tooltip
-                                                    title={changes.old}
+                                                    title={safeRenderValue(
+                                                        changes.old
+                                                    )}
                                                     arrow
                                                 >
                                                     <Typography
@@ -100,12 +120,16 @@ function HistoryItemWithChanges({ item, index }) {
                                                         color="danger"
                                                         noWrap
                                                     >
-                                                        {changes.old}
+                                                        {safeRenderValue(
+                                                            changes.old
+                                                        )}
                                                     </Typography>
                                                 </Tooltip>
                                                 <span>{"»»"}</span>
                                                 <Tooltip
-                                                    title={changes.new}
+                                                    title={safeRenderValue(
+                                                        changes.new
+                                                    )}
                                                     arrow
                                                 >
                                                     <Typography
@@ -113,7 +137,9 @@ function HistoryItemWithChanges({ item, index }) {
                                                         color="success"
                                                         noWrap
                                                     >
-                                                        {changes.new}
+                                                        {safeRenderValue(
+                                                            changes.new
+                                                        )}
                                                     </Typography>
                                                 </Tooltip>
                                             </Stack>

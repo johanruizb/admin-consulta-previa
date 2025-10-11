@@ -1,6 +1,7 @@
 import CustomAlert from "@/components/Alert";
 import PermissionProvider from "@/components/Home/permissionContext/PermissionProvider";
 import SettingsProvider from "@/components/Home/settingsContext/SettingsProvider";
+import PreloadManager from "@/components/PreloadManager";
 import { CicloProvider } from "@/contexts/CicloContext";
 import "@/styles/Avances.css";
 import "@/styles/globals.css";
@@ -67,6 +68,7 @@ export default function App({ Component, pageProps }) {
                             <PermissionProvider>
                                 <SettingsProvider>
                                     <CicloProvider>
+                                        <PreloadManager />
                                         <Fragment>
                                             <Component {...pageProps} />
                                             <CustomAlert />

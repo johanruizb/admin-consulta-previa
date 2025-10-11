@@ -9,11 +9,13 @@
  * - Gráfica de barras interactiva
  * - Se actualiza automáticamente al cambiar el ciclo
  * - Muestra total de inscripciones en el período
+ * - Precarga inteligente de datos usando SWR preload
  */
 
 import fetcher from "@/components/fetcher";
 import { formatNumber, getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
+import { preloadInscripcionesPorPeriodo } from "@/utils/preloadData";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import CircularProgress from "@mui/joy/CircularProgress";
@@ -24,17 +26,25 @@ import Select from "@mui/joy/Select";
 import Typography from "@mui/joy/Typography";
 import Stack from "@mui/material/Stack";
 import { BarChart } from "@mui/x-charts/BarChart";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 
-export default function InscripcionesPorPeriodo() {
+export default function InscripcionesPorPeriodo({ courses = [] }) {
     const { selectedCicloId } = useCiclo();
     const [periodo, setPeriodo] = useState("dias");
+
+    const params = new URLSearchParams();
+    params.append("ciclo_id", selectedCicloId);
+    params.append("periodo", periodo);
+
+    courses.forEach((courseId) => {
+        params.append("courses", courseId);
+    });
 
     const { data, isLoading, error } = useSWR(
         selectedCicloId
             ? getURL(
-                  `api/usuarios/inscripciones-por-periodo?ciclo_id=${selectedCicloId}&periodo=${periodo}`
+                  `api/usuarios/inscripciones-por-periodo/?${params.toString()}`
               )
             : null,
         fetcher
@@ -42,7 +52,22 @@ export default function InscripcionesPorPeriodo() {
 
     const handlePeriodoChange = (event, newValue) => {
         setPeriodo(newValue);
+        
+        // Precargar datos del nuevo período
+        if (selectedCicloId && courses.length > 0) {
+            preloadInscripcionesPorPeriodo(selectedCicloId, newValue, courses);
+        }
     };
+
+    // Precargar otros períodos cuando el componente se monta o cambian los cursos
+    useEffect(() => {
+        if (selectedCicloId && courses.length > 0) {
+            const otherPeriodos = ["dias", "semanas", "meses"].filter(p => p !== periodo);
+            otherPeriodos.forEach(p => {
+                preloadInscripcionesPorPeriodo(selectedCicloId, p, courses);
+            });
+        }
+    }, [selectedCicloId, courses, periodo]);
 
     if (isLoading) {
         return (

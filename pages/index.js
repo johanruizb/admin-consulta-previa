@@ -7,6 +7,7 @@ import UserSummary from "@/components/Registros/UserSummary";
 import { formatNumber, getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
 import useClient from "@/hooks/useClient";
+import { preloadCursosDisponibles, preloadEstadisticas } from "@/utils/preloadData";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import Box from "@mui/joy/Box";
@@ -67,25 +68,51 @@ export default function Page() {
 
     const handleCursoChange = (event) => {
         const value = event.target.value;
+        let newCurso;
+        
         // Si el valor es una cadena con comas, es el array de "Todos los cursos"
         if (typeof value === "string" && value.includes(",")) {
-            setCurso(value.split(",").map((id) => parseInt(id)));
+            newCurso = value.split(",").map((id) => parseInt(id));
         } else {
             // Es un ID individual de curso
-            setCurso([parseInt(value)]);
+            newCurso = [parseInt(value)];
+        }
+        
+        setCurso(newCurso);
+        
+        // Precargar estadísticas del nuevo curso seleccionado
+        if (selectedCicloId) {
+            preloadEstadisticas(selectedCicloId, newCurso);
         }
     };
 
+    // Precargar datos cuando cambia el ciclo o se cargan los cursos
     useEffect(() => {
-        if (
-            !isLoading &&
-            cursos?.length > 0 &&
-            (!curso || cursos.some((c) => !curso.includes(c.id)))
-        ) {
-            // Por defecto, seleccionar "Todos los cursos"
-            setCurso(cursos.map((item) => item.id));
+        if (selectedCicloId && cursos?.length > 0) {
+            // Precargar cursos disponibles
+            preloadCursosDisponibles(selectedCicloId);
+            
+            // Precargar estadísticas para todos los cursos
+            const allCourseIds = cursos.map((c) => c.id);
+            preloadEstadisticas(selectedCicloId, allCourseIds);
+            
+            // Precargar estadísticas para cada curso individual
+            cursos.forEach((c) => {
+                preloadEstadisticas(selectedCicloId, [c.id]);
+            });
         }
-    }, [curso, cursos, isLoading, selectedCicloId]);
+    }, [selectedCicloId, cursos]);
+
+    // useEffect(() => {
+    //     if (
+    //         !isLoading &&
+    //         cursos?.length > 0 &&
+    //         (!curso || cursos.some((c) => !curso.includes(c.id)))
+    //     ) {
+    //         // Por defecto, seleccionar "Todos los cursos"
+    //         setCurso(cursos.map((item) => item.id));
+    //     }
+    // }, [curso, cursos, isLoading, selectedCicloId]);
 
     if (!mounted) return null;
 
@@ -199,7 +226,7 @@ export default function Page() {
                     }}
                 >
                     <Grid size={12}>
-                        <InscripcionesPorPeriodo />
+                        <InscripcionesPorPeriodo courses={curso} />
                     </Grid>
                     <Grid size={{ xs: 12, md: 3 }}>
                         <UserSummary
