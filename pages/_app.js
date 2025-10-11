@@ -1,7 +1,6 @@
 import CustomAlert from "@/components/Alert";
+import AppInitializer from "@/components/AppInitializer";
 import PermissionProvider from "@/components/Home/permissionContext/PermissionProvider";
-import SettingsProvider from "@/components/Home/settingsContext/SettingsProvider";
-import PreloadManager from "@/components/PreloadManager";
 import { CicloProvider } from "@/contexts/CicloContext";
 import "@/styles/Avances.css";
 import "@/styles/globals.css";
@@ -66,15 +65,14 @@ export default function App({ Component, pageProps }) {
                             autoHideDuration={5000}
                         >
                             <PermissionProvider>
-                                <SettingsProvider>
+                                <AppInitializer>
                                     <CicloProvider>
-                                        <PreloadManager />
                                         <Fragment>
                                             <Component {...pageProps} />
                                             <CustomAlert />
                                         </Fragment>
                                     </CicloProvider>
-                                </SettingsProvider>
+                                </AppInitializer>
                             </PermissionProvider>
                         </SnackbarProvider>
                     </SWRConfig>

@@ -7,7 +7,8 @@ import UserSummary from "@/components/Registros/UserSummary";
 import { formatNumber, getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
 import useClient from "@/hooks/useClient";
-import { preloadCursosDisponibles, preloadEstadisticas } from "@/utils/preloadData";
+import getParams from "@/utils/params";
+import { initializePreload } from "@/utils/preloadData";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import Box from "@mui/joy/Box";
@@ -24,41 +25,37 @@ import Typography from "@mui/joy/Typography";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import { BarChart } from "@mui/x-charts/BarChart";
+import { usePrevious } from "@uidotdev/usehooks";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 import useSWR from "swr";
 
 dayjs.locale("es");
-
-const fetcherWithCurso = ({ url, args: { options } }) => {
-    return fetcher(url, options);
-};
 
 export default function Page() {
     const { selectedCicloId } = useCiclo();
     const [curso, setCurso] = useState();
 
     const { data, isLoading } = useSWR(
-        selectedCicloId
-            ? {
-                  url: getURL(
-                      `api/usuarios/estadisticas?ciclo_id=${selectedCicloId}`
-                  ),
-                  args: {
-                      options: {
-                          method: "POST",
-                          body: JSON.stringify(curso),
-                      },
-                  },
-              }
+        selectedCicloId && curso
+            ? getURL(
+                  `api/usuarios/estadisticas?${getParams({
+                      ciclo_id: selectedCicloId,
+                      courses: Array.isArray(curso) ? curso : curso?.split(","),
+                  })}`
+              )
             : null,
-        fetcherWithCurso
+        fetcher
     );
 
     const { data: cursos, isLoading: cursosIsLoading } = useSWR(
-        getURL(`api/usuarios/cursos/disponibles?ciclo_id=${selectedCicloId}`),
+        selectedCicloId
+            ? getURL(
+                  `api/usuarios/cursos/disponibles?ciclo_id=${selectedCicloId}`
+              )
+            : null,
         fetcher
     );
 
@@ -69,7 +66,7 @@ export default function Page() {
     const handleCursoChange = (event) => {
         const value = event.target.value;
         let newCurso;
-        
+
         // Si el valor es una cadena con comas, es el array de "Todos los cursos"
         if (typeof value === "string" && value.includes(",")) {
             newCurso = value.split(",").map((id) => parseInt(id));
@@ -77,44 +74,27 @@ export default function Page() {
             // Es un ID individual de curso
             newCurso = [parseInt(value)];
         }
-        
+
         setCurso(newCurso);
-        
-        // Precargar estadísticas del nuevo curso seleccionado
-        if (selectedCicloId) {
-            preloadEstadisticas(selectedCicloId, newCurso);
-        }
     };
 
-    // Precargar datos cuando cambia el ciclo o se cargan los cursos
-    useEffect(() => {
-        if (selectedCicloId && cursos?.length > 0) {
-            // Precargar cursos disponibles
-            preloadCursosDisponibles(selectedCicloId);
-            
-            // Precargar estadísticas para todos los cursos
-            const allCourseIds = cursos.map((c) => c.id);
-            preloadEstadisticas(selectedCicloId, allCourseIds);
-            
-            // Precargar estadísticas para cada curso individual
-            cursos.forEach((c) => {
-                preloadEstadisticas(selectedCicloId, [c.id]);
-            });
-        }
-    }, [selectedCicloId, cursos]);
+    const prevCicloId = usePrevious(selectedCicloId);
 
-    // useEffect(() => {
-    //     if (
-    //         !isLoading &&
-    //         cursos?.length > 0 &&
-    //         (!curso || cursos.some((c) => !curso.includes(c.id)))
-    //     ) {
-    //         // Por defecto, seleccionar "Todos los cursos"
-    //         setCurso(cursos.map((item) => item.id));
-    //     }
-    // }, [curso, cursos, isLoading, selectedCicloId]);
+    // Reiniciar selección de curso si cambia el ciclo
+    const resetSelectedCurso = useEffectEvent(() => {
+        setCurso(cursos?.map((c) => c.id));
+    });
+
+    useEffect(() => {
+        if (selectedCicloId && selectedCicloId !== prevCicloId) {
+            resetSelectedCurso();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedCicloId, prevCicloId, cursos]);
 
     if (!mounted) return null;
+
+    const loading = isLoading || cursosIsLoading || !curso;
 
     return (
         <Layout>
@@ -207,7 +187,7 @@ export default function Page() {
                     </FormControl>
                 </Box>
             </Box>
-            {isLoading ? (
+            {loading ? (
                 <Stack
                     justifyContent="center"
                     alignContent="center"
@@ -217,7 +197,7 @@ export default function Page() {
                 >
                     <CircularProgress />
                 </Stack>
-            ) : data.has_statistics ? (
+            ) : data?.has_statistics ? (
                 <Grid
                     container
                     spacing={1.25 / 2}
@@ -430,23 +410,6 @@ export default function Page() {
                             </CardContent>
                         </Card>
                     </Grid>
-                    {/* <Grid size={{ xs: 12, md: 6 }}>
-                        <Card
-                            variant="outlined"
-                            sx={{
-                                // width: "100%",
-                                height: "100%",
-                            }}
-                        >
-                            <CardContent>
-                                <Typography level="title-lg">
-                                    Personas interesadas en continuar con el
-                                    curso de 120 horas
-                                </Typography>
-                                <CustomPie data={data?.continuar_curso} />
-                            </CardContent>
-                        </Card>
-                    </Grid> */}
                     <Grid size={12}>
                         <Card
                             variant="outlined"

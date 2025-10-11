@@ -15,7 +15,6 @@
 import fetcher from "@/components/fetcher";
 import { formatNumber, getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
-import { preloadInscripcionesPorPeriodo } from "@/utils/preloadData";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import CircularProgress from "@mui/joy/CircularProgress";
@@ -26,7 +25,7 @@ import Select from "@mui/joy/Select";
 import Typography from "@mui/joy/Typography";
 import Stack from "@mui/material/Stack";
 import { BarChart } from "@mui/x-charts/BarChart";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useSWR from "swr";
 
 export default function InscripcionesPorPeriodo({ courses = [] }) {
@@ -52,22 +51,7 @@ export default function InscripcionesPorPeriodo({ courses = [] }) {
 
     const handlePeriodoChange = (event, newValue) => {
         setPeriodo(newValue);
-        
-        // Precargar datos del nuevo período
-        if (selectedCicloId && courses.length > 0) {
-            preloadInscripcionesPorPeriodo(selectedCicloId, newValue, courses);
-        }
     };
-
-    // Precargar otros períodos cuando el componente se monta o cambian los cursos
-    useEffect(() => {
-        if (selectedCicloId && courses.length > 0) {
-            const otherPeriodos = ["dias", "semanas", "meses"].filter(p => p !== periodo);
-            otherPeriodos.forEach(p => {
-                preloadInscripcionesPorPeriodo(selectedCicloId, p, courses);
-            });
-        }
-    }, [selectedCicloId, courses, periodo]);
 
     if (isLoading) {
         return (

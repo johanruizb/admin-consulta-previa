@@ -5,20 +5,26 @@
  * al iniciar la aplicación. No renderiza nada visible.
  */
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { initializePreload } from "@/utils/preloadData";
+import { useIsClient, useToggle } from "@uidotdev/usehooks";
 
-export default function PreloadManager() {
-    const initialized = useRef(false);
+export default function PreloadManager({ children }) {
+    const [completed, setCompleted] = useToggle(false);
+    const [initialized, toggle] = useToggle(false);
+    const isClient = useIsClient();
 
     useEffect(() => {
-        // Evitar múltiples inicializaciones en desarrollo (React 18 StrictMode)
-        if (!initialized.current) {
-            initialized.current = true;
-            initializePreload();
+        if (isClient && !initialized) {
+            initializePreload().then(() => {
+                setCompleted(true);
+            });
+            toggle();
         }
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isClient, initialized]);
 
-    // Este componente no renderiza nada
-    return null;
+    if (!completed) return null;
+
+    return children;
 }
