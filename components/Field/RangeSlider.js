@@ -2,7 +2,7 @@ import Box from "@mui/joy/Box";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Slider from "@mui/joy/Slider";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import { debounce, range } from "lodash";
 import { useCallback } from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";

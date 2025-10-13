@@ -1,4 +1,4 @@
-import { getIronSession } from "iron-session";
+import { getAuth } from "@clerk/nextjs/server";
 import { NextApiRequest, NextApiResponse } from "next";
 
 /**
@@ -10,17 +10,16 @@ import { NextApiRequest, NextApiResponse } from "next";
  * @returns {Promise<void>} - Una promesa que se resuelve cuando la operación de inicio de sesión se completa.
  **/
 export default async function handler(req, res) {
-    const session = await getIronSession(req, res, {
-        password: process.env.SESSION_SECRET,
-        cookieName: "session",
-    });
+    const { getToken } = getAuth(req);
+    const token = await getToken();
+
 
     const response = await fetch(
         process.env.NEXT_PUBLIC_BASE_URL + "/api/v1/moodle/reporte/procesando",
         {
             method: "GET",
             headers: {
-                Authorization: "Bearer " + session.accessToken,
+                Authorization: `Bearer ${token}`,
             },
         },
     );

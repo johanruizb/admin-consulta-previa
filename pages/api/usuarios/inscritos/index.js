@@ -1,4 +1,4 @@
-import { getIronSession } from "iron-session";
+import { getAuth } from "@clerk/nextjs/server";
 import { NextApiRequest, NextApiResponse } from "next";
 
 /**
@@ -10,20 +10,23 @@ import { NextApiRequest, NextApiResponse } from "next";
  * @returns {Promise<void>} - Una promesa que se resuelve cuando la operación de inicio de sesión se completa.
  **/
 export default async function handler(req, res) {
-    const session = await getIronSession(req, res, {
-        password: process.env.SESSION_SECRET,
-        cookieName: "session",
-    });
+    const { getToken } = getAuth(req);
+    const token = await getToken();
 
-    const response = await fetch(
-        process.env.NEXT_PUBLIC_BASE_URL + "/api/usuarios/inscritos",
-        {
-            method: "GET",
-            headers: {
-                Authorization: "Bearer " + session.accessToken,
-            },
+
+    // Construir la URL con query parameters
+    const queryParams = new URLSearchParams(req.query).toString();
+    const url =
+        process.env.NEXT_PUBLIC_BASE_URL +
+        "/api/usuarios/inscritos" +
+        (queryParams ? `?${queryParams}` : "");
+
+    const response = await fetch(url, {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${token}`,
         },
-    );
+    });
 
     if (response.ok) {
         const inscritos = await response.json();

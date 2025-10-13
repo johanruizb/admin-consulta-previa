@@ -1,4 +1,5 @@
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
+import CicloSelector from "@/components/Ciclos/CicloSelector";
 import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/joy/Box";
 import CircularProgress from "@mui/joy/CircularProgress";
@@ -98,6 +99,7 @@ export default function TablaEspera({ data }) {
                         startDecorator={<SearchIcon />}
                     />
                 </FormControl>
+                <CicloSelector />
             </Box>
             {ready ? (
                 <Fragment>
@@ -197,7 +199,7 @@ export default function TablaEspera({ data }) {
                                 ))}
                                 {rows.pages === 0 && (
                                     <tr>
-                                        <td colSpan={7}>
+                                        <td colSpan={4}>
                                             <Typography textAlign="center">
                                                 No hay registros.
                                             </Typography>

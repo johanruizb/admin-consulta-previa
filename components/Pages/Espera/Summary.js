@@ -2,7 +2,7 @@ import { formatNumber } from "@/components/utils";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import Typography from "@mui/joy/Typography";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import useSWR from "swr";
 
@@ -12,7 +12,6 @@ export default function EsperaSummary() {
     return (
         <Grid
             container
-            spacing={1.25 / 2}
             sx={{
                 flex: 1,
                 justifyContent: "flex-end",
@@ -21,20 +20,17 @@ export default function EsperaSummary() {
             <Grid
                 size={{
                     xs: 12,
-                    md: 3,
+                    md: "auto",
                 }}
             >
                 <Card variant="outlined">
                     <CardContent>
-                        <Typography level="title-md">
-                            Personas en espera
-                        </Typography>
                         <Stack>
                             <Stack
                                 direction="row"
                                 alignItems="center"
                                 justifyContent="space-between"
-                                // spacing={1.25}
+                                spacing={2.25}
                             >
                                 <Typography level="body-md">
                                     Registrados hoy
@@ -47,7 +43,7 @@ export default function EsperaSummary() {
                                 direction="row"
                                 alignItems="center"
                                 justifyContent="space-between"
-                                // spacing={1.25}
+                                spacing={2.25}
                             >
                                 <Typography level="body-md">
                                     Registrados en total

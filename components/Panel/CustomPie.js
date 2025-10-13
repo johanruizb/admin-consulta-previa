@@ -1,14 +1,10 @@
 import Box from "@mui/joy/Box";
 import Typography from "@mui/joy/Typography";
-
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
-
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
-
 import dayjs from "dayjs";
 import "dayjs/locale/es";
-
 import { formatNumber } from "@/components/utils";
 import Tooltip from "@mui/joy/Tooltip";
 
@@ -46,35 +42,8 @@ export default function CustomPie({ data = [], slotProps = {} }) {
     } = slotProps;
 
     return (
-        <Stack
-            flexDirection="row"
-            flexWrap="wrap"
-            flex={1}
-            sx={{
-                "& > *:first-of-type": {
-                    "& > *:first-of-type": {
-                        width: "200px !important",
-                        flexGrow: "unset !important",
-                        "& > *:first-of-type": {
-                            "& > *:first-of-type": {
-                                transform: "translateY(-50px) scale(1.5)",
-                            },
-                        },
-                    },
-                },
-            }}
-        >
-            <Box
-                {...pieRootProps}
-                sx={{
-                    width: { xs: "100%", md: "40%" },
-                    // height: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    ...pieRootProps.sx,
-                }}
-            >
+        <Stack flexDirection="row" flexWrap="wrap" flex={1}>
+            <Box {...pieRootProps}>
                 <PieChart
                     colors={COLORS}
                     series={[
@@ -83,9 +52,6 @@ export default function CustomPie({ data = [], slotProps = {} }) {
                             arcLabel: (item) => `${item.value}`,
                             arcLabelMinAngle: 35,
                             arcLabelRadius: "60%",
-                            // paddingAngle: 5,
-                            // innerRadius: 60,
-                            // outerRadius: 80,
                         },
                     ]}
                     height={200}
@@ -95,11 +61,7 @@ export default function CustomPie({ data = [], slotProps = {} }) {
                             fontWeight: "bold",
                         },
                     }}
-                    slotProps={{
-                        legend: {
-                            hidden: true,
-                        },
-                    }}
+                    hideLegend
                 />
             </Box>
             <Box
@@ -146,7 +108,7 @@ export default function CustomPie({ data = [], slotProps = {} }) {
                                 />
                                 <Tooltip
                                     title={`${item.label} (${formatNumber(
-                                        item.value,
+                                        item.value
                                     )})`}
                                     arrow
                                 >

@@ -3,6 +3,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import GlobalStyles from "@mui/joy/GlobalStyles";
 import IconButton from "@mui/joy/IconButton";
 import Sheet from "@mui/joy/Sheet";
+import Button from "@mui/joy/Button";
 
 import Box from "@mui/joy/Box";
 import Typography from "@mui/joy/Typography";
@@ -11,6 +12,7 @@ import { toggleSidebar } from "../utils";
 import ColorSchemeToggle from "./ColorSchemeToggle";
 import { EXPERIMENTAL } from "./constants";
 import useSettingsContext from "./settingsContext/useSettings";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 export default function Header() {
     const { settings } = useSettingsContext();
@@ -66,30 +68,38 @@ export default function Header() {
             >
                 <MenuIcon />
             </IconButton>
-            {EXPERIMENTAL && (
-                <Box
-                    sx={{
-                        display: "flex",
-                        gap: 1,
-                        alignItems: "center",
-                        flex: 1,
-                    }}
-                >
-                    <IconButton variant="plain" color="primary" size="lg">
-                        <UnivalleIcon
-                            sx={(theme) => ({
-                                fontSize: "38px",
-                                fill: "#D9000C",
-                                [theme.getColorSchemeSelector("dark")]: {
-                                    fill: "white",
-                                },
-                            })}
-                        />
-                    </IconButton>
-                    <Typography level="title-lg">Consulta previa</Typography>
-                    <ColorSchemeToggle sx={{ ml: "auto" }} />
+            <Box
+                sx={{
+                    display: "flex",
+                    gap: 1,
+                    alignItems: "center",
+                    flex: 1,
+                }}
+            >
+                {EXPERIMENTAL && (
+                    <>
+                        <IconButton variant="plain" color="primary" size="lg">
+                            <UnivalleIcon
+                                sx={(theme) => ({
+                                    fontSize: "38px",
+                                    fill: "#D9000C",
+                                    [theme.getColorSchemeSelector("dark")]: {
+                                        fill: "white",
+                                    },
+                                })}
+                            />
+                        </IconButton>
+                        <Typography level="title-lg">
+                            Consulta previa
+                        </Typography>
+                    </>
+                )}
+                <Box sx={{ flexGrow: 0, ml: "auto" }}>
+                    <SignedIn>
+                        <UserButton showName userProfileMode="modal" />
+                    </SignedIn>
                 </Box>
-            )}
+            </Box>
         </Sheet>
     );
 }

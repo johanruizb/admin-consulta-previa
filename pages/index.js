@@ -1,66 +1,62 @@
+import CicloSelector from "@/components/Ciclos/CicloSelector";
+import fetcher from "@/components/fetcher";
+import Layout from "@/components/Home/Layout";
+import CustomPie from "@/components/Panel/CustomPie";
+import InscripcionesPorPeriodo from "@/components/Panel/InscripcionesPorPeriodo";
+import UserSummary from "@/components/Registros/UserSummary";
+import { formatNumber, getURL } from "@/components/utils";
+import { useCiclo } from "@/contexts/CicloContext";
+import useClient from "@/hooks/useClient";
+import getParams from "@/utils/params";
+import { initializePreload } from "@/utils/preloadData";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
-import Checkbox from "@mui/joy/Checkbox";
 import CircularProgress from "@mui/joy/CircularProgress";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
 import Link from "@mui/joy/Link";
-import List from "@mui/joy/List";
-import ListItem from "@mui/joy/ListItem";
+import Radio from "@mui/joy/Radio";
+import RadioGroup from "@mui/joy/RadioGroup";
 import Typography from "@mui/joy/Typography";
-
-import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import Close from "@mui/icons-material/Close";
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
-
 import { BarChart } from "@mui/x-charts/BarChart";
-
-import Layout from "@/components/Home/Layout";
-
-import Head from "next/head";
-
+import { usePrevious } from "@uidotdev/usehooks";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
-
-import { useState } from "react";
-
-import fetcher from "@/components/fetcher";
-import CustomPie from "@/components/Panel/CustomPie";
-import { formatNumber, getURL } from "@/components/utils";
-
-import useClient from "@/hooks/useClient";
+import Head from "next/head";
+import { useEffect, useEffectEvent, useState } from "react";
 import useSWR from "swr";
 
 dayjs.locale("es");
 
-const fetcherWithCurso = ({ url, args: { options } }) => {
-    return fetcher(url, options);
-};
-
 export default function Page() {
-    const [curso, setCurso] = useState([1, 2, 3, 4]);
+    const { selectedCicloId } = useCiclo();
+    const [curso, setCurso] = useState();
 
     const { data, isLoading } = useSWR(
-        {
-            url: getURL("api/usuarios/estadisticas"),
-            args: {
-                options: {
-                    method: "POST",
-                    body: JSON.stringify(curso),
-                },
-            },
-        },
-        {
-            fetcher: fetcherWithCurso,
-        },
+        selectedCicloId && curso
+            ? getURL(
+                  `api/usuarios/estadisticas?${getParams({
+                      ciclo_id: selectedCicloId,
+                      courses: Array.isArray(curso) ? curso : curso?.split(","),
+                  })}`
+              )
+            : null,
+        fetcher
     );
 
     const { data: cursos, isLoading: cursosIsLoading } = useSWR(
-        getURL("api/usuarios/cursos/disponibles"),
-        fetcher,
+        selectedCicloId
+            ? getURL(
+                  `api/usuarios/cursos/disponibles?ciclo_id=${selectedCicloId}`
+              )
+            : null,
+        fetcher
     );
 
     const [mounted, setMounted] = useState(false);
@@ -68,16 +64,37 @@ export default function Page() {
     useClient(() => setMounted(true));
 
     const handleCursoChange = (event) => {
-        const newValue = parseInt(event.target.value);
+        const value = event.target.value;
+        let newCurso;
 
-        if (curso.includes(newValue)) {
-            setCurso((prev) => prev.filter((item) => item !== newValue));
+        // Si el valor es una cadena con comas, es el array de "Todos los cursos"
+        if (typeof value === "string" && value.includes(",")) {
+            newCurso = value.split(",").map((id) => parseInt(id));
         } else {
-            setCurso((prev) => [...prev, newValue]);
+            // Es un ID individual de curso
+            newCurso = [parseInt(value)];
         }
+
+        setCurso(newCurso);
     };
 
+    const prevCicloId = usePrevious(selectedCicloId);
+
+    // Reiniciar selección de curso si cambia el ciclo
+    const resetSelectedCurso = useEffectEvent(() => {
+        setCurso(cursos?.map((c) => c.id));
+    });
+
+    useEffect(() => {
+        if (selectedCicloId && selectedCicloId !== prevCicloId) {
+            resetSelectedCurso();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedCicloId, prevCicloId, cursos]);
+
     if (!mounted) return null;
+
+    const loading = isLoading || cursosIsLoading || !curso;
 
     return (
         <Layout>
@@ -112,59 +129,65 @@ export default function Page() {
                     justifyContent: "space-between",
                 }}
             >
-                <Typography level="h2" component="h1">
-                    Estadísticas
-                </Typography>
-
+                <Stack
+                    spacing={1.25 / 2}
+                    direction={{ xs: "row", md: "column" }}
+                    flex={{ xs: 1, md: "unset" }}
+                    justifyContent={{ xs: "space-between", md: "normal" }}
+                    sx={{
+                        width: { xs: "100%", md: "unset" },
+                    }}
+                >
+                    <Typography level="h2" component="h1">
+                        Estadísticas
+                    </Typography>
+                    <CicloSelector />
+                </Stack>
                 <Box
                     sx={{
                         flex: { xs: 1, md: 0.5 },
-                        maxWidth: { md: "calc(60% - 152.23px)" },
+                        maxWidth: { md: "calc(50% - 152.23px)" },
                         width: "100%",
                     }}
                 >
-                    <Typography
-                        id="sandwich-group"
-                        level="body-sm"
-                        sx={{ fontWeight: "lg", mb: 1 }}
-                    >
-                        Estadísticas por curso
-                    </Typography>
-                    {cursosIsLoading ? (
-                        <CircularProgress />
-                    ) : (
-                        <div role="group" aria-labelledby="sandwich-group">
-                            <List size="sm">
-                                {cursos?.map((item, index) => {
-                                    const checked = curso.includes(item.id);
-
-                                    return (
-                                        <ListItem key={index}>
-                                            <Checkbox
-                                                value={item.id}
-                                                label={item.shortname}
-                                                checked={checked}
-                                                onChange={handleCursoChange}
-                                                color={
-                                                    checked
-                                                        ? "primary"
-                                                        : "warning"
-                                                }
-                                                variant="solid"
-                                                uncheckedIcon={<Close />}
-                                                sx={{
-                                                    my: 0.25,
-                                                }}
-                                            />
-                                        </ListItem>
-                                    );
-                                })}
-                            </List>
-                        </div>
-                    )}
+                    <FormControl>
+                        <FormLabel id="cursos-select-label">
+                            Estadísticas por curso
+                        </FormLabel>
+                        {cursosIsLoading ? (
+                            <CircularProgress />
+                        ) : (
+                            <RadioGroup
+                                value={
+                                    Array.isArray(curso) &&
+                                    curso.length === cursos?.length
+                                        ? cursos?.map((c) => c.id).join(",")
+                                        : curso?.[0]?.toString() || ""
+                                }
+                                onChange={handleCursoChange}
+                            >
+                                <Radio
+                                    value={cursos?.map((c) => c.id).join(",")}
+                                    label="Todos los cursos"
+                                />
+                                {cursos?.map((item) => (
+                                    <Radio
+                                        key={item.id}
+                                        value={item.id.toString()}
+                                        label={item.shortname}
+                                    />
+                                ))}
+                                {cursos?.length === 0 && (
+                                    <Typography level="body-sm">
+                                        No hay cursos disponibles
+                                    </Typography>
+                                )}
+                            </RadioGroup>
+                        )}
+                    </FormControl>
                 </Box>
             </Box>
-            {isLoading ? (
+            {loading ? (
                 <Stack
                     justifyContent="center"
                     alignContent="center"
@@ -174,7 +197,7 @@ export default function Page() {
                 >
                     <CircularProgress />
                 </Stack>
-            ) : data.has_statistics ? (
+            ) : data?.has_statistics ? (
                 <Grid
                     container
                     spacing={1.25 / 2}
@@ -182,7 +205,21 @@ export default function Page() {
                         pb: "10px",
                     }}
                 >
-                    <Grid size={{ xs: 12, md: 4 }}>
+                    <Grid size={12}>
+                        <InscripcionesPorPeriodo courses={curso} />
+                    </Grid>
+                    <Grid size={{ xs: 12, md: 3 }}>
+                        <UserSummary
+                            slotProps={{
+                                item: { size: 12 },
+                                root: {
+                                    spacing: 1.25 / 2,
+                                    direction: "column",
+                                },
+                            }}
+                        />
+                    </Grid>
+                    <Grid size={{ xs: 12, md: 3 }}>
                         <Card
                             variant="outlined"
                             sx={{
@@ -225,27 +262,7 @@ export default function Page() {
                                         </Typography>
                                     </Stack>
                                 </Stack>
-                                {/* <Typography level="title-lg">
-                                    Personas validadas
-                                    ({data?.percentage} %)
-                                </Typography> */}
-                                <Stack
-                                    // flex={0.5}
-                                    justifyContent="center"
-                                >
-                                    {/* <Stack
-                                        direction="row"
-                                        alignItems="center"
-                                        justifyContent="space-between"
-                                        spacing={1.25}
-                                    >
-                                        <Typography level="body-md">
-                                            Personas registradas
-                                        </Typography>
-                                        <Typography level="h2">
-                                            {formatNumber(data.total)}
-                                        </Typography>
-                                    </Stack> */}
+                                <Stack justifyContent="center">
                                     <Stack
                                         direction="row"
                                         alignItems="center"
@@ -260,38 +277,10 @@ export default function Page() {
                                         </Typography>
                                     </Stack>
                                 </Stack>
-                                {/* <Stack
-                                    flex={0.5}
-                                    // flex={1}
-                                    // spacing={0}
-                                    justifyContent="center"
-                                >
-                                    <Stack
-                                        direction="row"
-                                        // alignItems="center"
-                                        alignItems="baseline"
-                                        // justifyContent="center"
-                                        justifyContent={{
-                                            md: "center",
-                                            xs: "space-evenly",
-                                        }}
-                                        spacing={1.25}
-                                    >
-                                        <Typography level="h2">
-                                            {formatNumber(data.validated)}
-                                        </Typography>
-                                        <Typography level="body-md">
-                                            de
-                                        </Typography>
-                                        <Typography level="h2">
-                                            {formatNumber(data.total)}
-                                        </Typography>
-                                    </Stack>
-                                </Stack> */}
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid size={{ xs: 12, md: 8 }}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <Card
                             variant="outlined"
                             sx={{
@@ -421,23 +410,6 @@ export default function Page() {
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid size={{ xs: 12, md: 6 }}>
-                        <Card
-                            variant="outlined"
-                            sx={{
-                                // width: "100%",
-                                height: "100%",
-                            }}
-                        >
-                            <CardContent>
-                                <Typography level="title-lg">
-                                    Personas interesadas en continuar con el
-                                    curso de 120 horas
-                                </Typography>
-                                <CustomPie data={data?.continuar_curso} />
-                            </CardContent>
-                        </Card>
-                    </Grid>
                     <Grid size={12}>
                         <Card
                             variant="outlined"
@@ -462,7 +434,7 @@ export default function Page() {
                                             // label: "London",
                                         },
                                     ]}
-                                    height={400}
+                                    height={300}
                                 />
                             </CardContent>
                         </Card>

@@ -7,7 +7,7 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import SaveIcon from "@mui/icons-material/Save";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import { SettingsForm } from "./constants";
 
 import { useColorScheme as useJoyColorScheme } from "@mui/joy/styles";

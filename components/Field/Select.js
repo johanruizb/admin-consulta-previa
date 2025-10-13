@@ -30,7 +30,7 @@ export default function CustomSelect({ inputProps }) {
                     <FormControl
                         error={Boolean(error?.type || error?.types)}
                         required={controllerProps.rules?.required?.value}
-                        disabled={fieldProps.readOnly}
+                        // disabled={fieldProps.readOnly}
                     >
                         <FormLabel>{formLabel}</FormLabel>
                         <Select
@@ -51,6 +51,11 @@ export default function CustomSelect({ inputProps }) {
                                     {option.label}
                                 </Option>
                             ))}
+                            {options?.length === 0 && (
+                                <Option disabled value="">
+                                    No hay opciones disponibles
+                                </Option>
+                            )}
                         </Select>
                         <FormHelperText>{error?.message ?? " "}</FormHelperText>
                     </FormControl>

@@ -1,23 +1,26 @@
+import { useCiclo } from "@/contexts/CicloContext";
 import ReportIcon from "@mui/icons-material/Report";
-
 import CircularProgress from "@mui/joy/CircularProgress";
 import FormControl from "@mui/joy/FormControl";
 import FormHelperText from "@mui/joy/FormHelperText";
 import FormLabel from "@mui/joy/FormLabel";
 import Option from "@mui/joy/Option";
 import { default as JoySelect } from "@mui/joy/Select";
-
 import { Controller, useFormContext } from "react-hook-form";
-
 import useSWRImmutable from "swr/immutable";
-
 import { v4 } from "uuid";
 import fetcher from "../fetcher";
 import { getURL } from "../utils";
 
 export default function SelectWrapper({ inputProps }) {
-    const { url, ...otherProps } = inputProps;
-    const { data, error, isLoading } = useSWRImmutable(getURL(url), fetcher);
+    const { url, useVersion = false, ...otherProps } = inputProps;
+
+    const { selectedCicloId } = useCiclo();
+    const fullURL = useVersion ? `${url}?ciclo_id=${selectedCicloId}` : url;
+    const { data, error, isLoading } = useSWRImmutable(
+        getURL(fullURL),
+        fetcher
+    );
 
     const {
         controller: controllerProps,
@@ -60,6 +63,7 @@ function AsyncSelect({ inputProps }) {
         controller: controllerProps,
         field: {
             label: formLabel,
+            multiple = false,
             // options,
             ...fieldProps
         },
@@ -78,7 +82,9 @@ function AsyncSelect({ inputProps }) {
                         <JoySelect
                             {...field}
                             value={
-                                isNaN(parseInt(field.value))
+                                multiple
+                                    ? field.value || []
+                                    : isNaN(parseInt(field.value))
                                     ? field.value
                                     : parseInt(field.value)
                             }
@@ -89,6 +95,7 @@ function AsyncSelect({ inputProps }) {
                                     disabled: fieldProps.readOnly,
                                 },
                             }}
+                            multiple={multiple}
                         >
                             {fieldProps?.options?.map((option) => (
                                 <Option

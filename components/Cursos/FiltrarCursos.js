@@ -7,7 +7,7 @@ import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import Stack from "@mui/joy/Stack";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import { useSessionStorage } from "@uidotdev/usehooks";
 import Fuse from "fuse.js";
 import { cloneDeep, debounce } from "lodash";
@@ -15,9 +15,9 @@ import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import FormularioCursos, { FormularioGrupos } from "./constants";
 import RangeSlider from "../Field/RangeSlider";
+import CicloSelector from "../Ciclos/CicloSelector";
 
 function filter(originalData, searchValue, callback) {
-    // console.log(originalData, searchValue);
     if (searchValue !== undefined && searchValue !== "") {
         let result = cloneDeep(originalData);
         const fuse = new Fuse(result, {
@@ -63,9 +63,6 @@ export default function FiltrarCursos({ setFilter, data }) {
         return FormularioGrupos[course_id];
     }, [course_id]);
 
-    // console.log(course_id);
-    // console.log(FormularioGrupos[course_id]);
-
     return (
         <Box
             sx={{
@@ -94,6 +91,7 @@ export default function FiltrarCursos({ setFilter, data }) {
                             startDecorator={<SearchIcon />}
                         />
                     </FormControl>
+                    <CicloSelector />
                     <AccordionSummary
                         sx={{
                             pt: "24px",

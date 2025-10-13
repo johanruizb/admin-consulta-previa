@@ -1,6 +1,6 @@
 import { useFormContext, useWatch } from "react-hook-form";
 
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 
 import TextField from "../Field/TextField";
 

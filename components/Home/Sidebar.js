@@ -3,6 +3,7 @@ import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import SchoolIcon from "@mui/icons-material/School";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
+import VpnKeyIcon from "@mui/icons-material/VpnKey";
 
 import Box from "@mui/joy/Box";
 import Divider from "@mui/joy/Divider";
@@ -16,7 +17,7 @@ import Sheet from "@mui/joy/Sheet";
 import Typography from "@mui/joy/Typography";
 
 import UnivalleIcon from "../Icons/Univalle";
-import { closeSidebar } from "../utils";
+import { closeSidebar, getURL } from "../utils";
 import ColorSchemeToggle from "./ColorSchemeToggle";
 
 import STORAGE from "@/hooks/storage";
@@ -24,12 +25,15 @@ import useClient from "@/hooks/useClient";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import useSWR from "swr";
 import usePermissionContext from "./permissionContext/usePermission";
 import Profile from "./Profile";
 import Settings from "./Settings";
 import useSettingsContext from "./settingsContext/useSettings";
+import fetcher from "../fetcher";
 
 export default function Sidebar() {
+    const { data: user } = useSWR(getURL("api/user"), fetcher);
     const { isLoading, hasPermission } = usePermissionContext();
 
     const router = useRouter();
@@ -206,7 +210,7 @@ export default function Sidebar() {
                             </ListItem>
                         )}
                         {hasPermission(
-                            "moodle.view_actividadescompletadas",
+                            "moodle.view_actividadescompletadas"
                         ) && (
                             <ListItem>
                                 <ListItemButton
@@ -248,6 +252,28 @@ export default function Sidebar() {
                                     <ListItemContent>
                                         <Typography level="title-sm">
                                             Lista de espera
+                                        </Typography>
+                                    </ListItemContent>
+                                </ListItemButton>
+                            </ListItem>
+                        )}
+                        {hasPermission("is_superuser") && (
+                            <ListItem>
+                                <ListItemButton
+                                    component="a"
+                                    onClick={() =>
+                                        handleRouteChange("/api-keys")
+                                    }
+                                    selected={
+                                        mounted
+                                            ? location.pathname == "/api-keys"
+                                            : false
+                                    }
+                                >
+                                    <VpnKeyIcon />
+                                    <ListItemContent>
+                                        <Typography level="title-sm">
+                                            API Keys
                                         </Typography>
                                     </ListItemContent>
                                 </ListItemButton>

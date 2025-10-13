@@ -22,6 +22,8 @@ import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { filterTable } from "./functions";
 import usePermissionContext from "./permissionContext/usePermission";
+import CicloSelector from "../Ciclos/CicloSelector";
+import { useCiclo } from "@/contexts/CicloContext";
 
 export default function OrderTable({ data, onView }) {
     const { isLoading: permissionIsLoading, hasPermission } =
@@ -35,7 +37,7 @@ export default function OrderTable({ data, onView }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const setFilterDebounced = useCallback(
         debounce((value) => setFilter(value), 250),
-        [],
+        []
     );
 
     useEffect(() => {
@@ -44,10 +46,17 @@ export default function OrderTable({ data, onView }) {
 
     const ready = useMemo(
         () => !permissionIsLoading && rows,
-        [permissionIsLoading, rows],
+        [permissionIsLoading, rows]
     );
 
-    // const ready = false;
+    // Corregir paginación si esta fuera de rango
+    useEffect(() => {
+        if (ready && page > rows.pages) {
+            setPage(rows.pages || 1);
+        }
+    }, [ready, page, rows, setPage]);
+
+    const { selectedCicloId } = useCiclo();
 
     return (
         <Fragment>
@@ -100,54 +109,7 @@ export default function OrderTable({ data, onView }) {
                         <Option value={"false"}>No validado</Option>
                     </Select>
                 </FormControl>
-                <FormControl size="sm">
-                    <FormLabel>Curso - 20 horas</FormLabel>
-                    <Select
-                        size="sm"
-                        placeholder="Filtrar por curso inscrito"
-                        slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
-                        onChange={(e, newValue) => {
-                            setFilterDebounced((prev) => ({
-                                ...prev,
-                                curso_20horas:
-                                    newValue !== "" ? newValue : undefined,
-                            }));
-                        }}
-                        value={filter.curso_20horas ?? ""}
-                    >
-                        <Option value={""}>Todos</Option>
-                        <Option value={"Sociedad civil"}>
-                            Sociedad civil (20 horas)
-                        </Option>
-                        <Option value={"Funcionarios"}>
-                            Funcionarios (20 horas)
-                        </Option>
-                    </Select>
-                </FormControl>
-                <FormControl size="sm">
-                    <FormLabel>Diplomado - 120 horas</FormLabel>
-                    <Select
-                        size="sm"
-                        placeholder="Filtrar por curso inscrito"
-                        slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
-                        onChange={(e, newValue) => {
-                            setFilterDebounced((prev) => ({
-                                ...prev,
-                                diplomado_120horas:
-                                    newValue !== "" ? newValue : undefined,
-                            }));
-                        }}
-                        value={filter.diplomado_120horas ?? ""}
-                    >
-                        <Option value={""}>Todos</Option>
-                        <Option value={"Sociedad civil"}>
-                            Sociedad civil (20 horas)
-                        </Option>
-                        <Option value={"Funcionarios"}>
-                            Funcionarios (20 horas)
-                        </Option>
-                    </Select>
-                </FormControl>
+                <CicloSelector />
             </Box>
             {ready ? (
                 <Fragment>
@@ -235,14 +197,16 @@ export default function OrderTable({ data, onView }) {
                                     >
                                         Estado
                                     </th>
-                                    <th
-                                        style={{
-                                            width: 80,
-                                            padding: "12px 6px",
-                                        }}
-                                    >
-                                        Curso - 20 horas
-                                    </th>
+                                    {selectedCicloId === 1 && (
+                                        <th
+                                            style={{
+                                                width: 80,
+                                                padding: "12px 6px",
+                                            }}
+                                        >
+                                            Curso - 20 horas
+                                        </th>
+                                    )}
                                     <th
                                         style={{
                                             width: 80,
@@ -259,6 +223,16 @@ export default function OrderTable({ data, onView }) {
                                     >
                                         Grupo
                                     </th>
+                                    {selectedCicloId === 2 && (
+                                        <th
+                                            style={{
+                                                width: 80,
+                                                padding: "12px 6px",
+                                            }}
+                                        >
+                                            Plataforma de registro
+                                        </th>
+                                    )}
                                 </tr>
                             </thead>
                             <tbody>
@@ -268,7 +242,7 @@ export default function OrderTable({ data, onView }) {
                                         // onClick={() => onView(row.id)}
                                         className="pointer-row"
                                         {...(hasPermission(
-                                            "usuario.change_persona",
+                                            "usuario.change_persona"
                                         )
                                             ? {
                                                   onClick: () => onView(row.id),
@@ -278,7 +252,7 @@ export default function OrderTable({ data, onView }) {
                                         <td>
                                             <Typography level="body-sm">
                                                 {dayjs(
-                                                    row.ultimo_registro,
+                                                    row.ultimo_registro
                                                 ).format("DD/MM/YYYY")}
                                                 {/* HH:mm:ss A */}
                                             </Typography>
@@ -334,11 +308,13 @@ export default function OrderTable({ data, onView }) {
                                                     : "Sin validar"}
                                             </Chip>
                                         </td>
-                                        <td>
-                                            <Typography level="body-sm">
-                                                {row.curso_20horas}
-                                            </Typography>
-                                        </td>
+                                        {selectedCicloId === 1 && (
+                                            <td>
+                                                <Typography level="body-sm">
+                                                    {row.curso_20horas}
+                                                </Typography>
+                                            </td>
+                                        )}
                                         <td>
                                             <Typography level="body-sm">
                                                 {row.diplomado_120horas}
@@ -349,6 +325,19 @@ export default function OrderTable({ data, onView }) {
                                                 {row.grupos}
                                             </Typography>
                                         </td>
+                                        {selectedCicloId === 2 && (
+                                            <td>
+                                                <Typography level="body-sm">
+                                                    {row.plataforma_registro ===
+                                                    "web"
+                                                        ? "Formulario web"
+                                                        : row.plataforma_registro ===
+                                                          "whatsapp"
+                                                        ? "WhatsApp"
+                                                        : "Desconocida"}
+                                                </Typography>
+                                            </td>
+                                        )}
                                     </tr>
                                 ))}
                                 {rows.pages === 0 && (

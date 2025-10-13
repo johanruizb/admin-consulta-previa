@@ -1,59 +1,42 @@
+import { SignedIn, SignOutButton, UserButton, useUser } from "@clerk/nextjs";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
-
+import { Stack } from "@mui/joy";
 import Box from "@mui/joy/Box";
 import IconButton from "@mui/joy/IconButton";
-import Typography from "@mui/joy/Typography";
-
-import { useRouter } from "next/router";
-
-import { useState } from "react";
-
 import Skeleton from "@mui/joy/Skeleton";
+import Typography from "@mui/joy/Typography";
 import useSWR from "swr";
-
-import fetcher from "@/components/fetcher";
+import fetcher from "../fetcher";
 import { getURL } from "../utils";
 
 export default function Profile() {
-    const {
-        data: user,
-        error,
-        isLoading,
-    } = useSWR(getURL("api/user"), fetcher);
-
-    const [logout, setLogout] = useState(false);
-    const router = useRouter();
-
-    const onLogout = () => {
-        setLogout(true);
-
-        fetch("/api/logout", {
-            method: "POST",
-        })
-            .then(() => {
-                router.reload();
-            })
-            .finally(() => {
-                setLogout(false);
-            });
-    };
+    const { data: djangoUser } = useSWR(getURL("api/user"), fetcher);
+    const { isLoaded, isSignedIn, user } = useUser();
+    const isLoading = !isLoaded || !isSignedIn;
 
     return (
         <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
             {/* <Avatar variant="outlined" size="sm" /> */}
             <Box sx={{ minWidth: 0, flex: 1 }}>
-                <Typography level="title-sm">
-                    <Skeleton
-                        loading={isLoading}
-                        width="100%"
-                        sx={{
-                            display: "inline-block",
-                            height: "9px",
-                        }}
-                    >
-                        {user?.fullname ?? user?.username}
-                    </Skeleton>
-                </Typography>
+                <Skeleton
+                    loading={isLoading}
+                    width="100%"
+                    sx={{
+                        display: "inline-block",
+                        height: "9px",
+                    }}
+                >
+                    <Stack direction="column" spacing={0}>
+                        <Typography component="div" level="title-sm">
+                            {user?.fullName}
+                        </Typography>
+                        <Typography component="div" level="body-xs" noWrap>
+                            {djangoUser
+                                ? ` ${djangoUser.username} — ${djangoUser.role}`
+                                : ""}
+                        </Typography>
+                    </Stack>
+                </Skeleton>
                 <Typography level="body-xs">
                     <Skeleton
                         loading={isLoading}
@@ -67,15 +50,11 @@ export default function Profile() {
                     </Skeleton>
                 </Typography>
             </Box>
-            <IconButton
-                size="sm"
-                variant="plain"
-                color="neutral"
-                onClick={onLogout}
-                loading={logout}
-            >
-                <LogoutRoundedIcon />
-            </IconButton>
+            <SignOutButton>
+                <IconButton size="sm" variant="plain" color="neutral">
+                    <LogoutRoundedIcon />
+                </IconButton>
+            </SignOutButton>
         </Box>
     );
 }

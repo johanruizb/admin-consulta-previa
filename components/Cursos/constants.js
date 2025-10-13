@@ -4,13 +4,14 @@ import CustomCheckbox from "../Field/CheckBox";
 import CustomSelect from "../Field/Select";
 import ThreeCheckBox from "../Field/ThreeCheckBox";
 import CustomAsyncSelect from "../Form/CustomAsyncSelect";
+import DynamicCursoSelect from "./DynamicCursoSelect";
 
 const FormularioCursos = [
     {
-        Component: CustomSelect,
+        Component: DynamicCursoSelect,
         controller: {
             name: "activity__module__course_id",
-            defaultValue: 1,
+            defaultValue: "",
         },
         field: {
             label: "Curso",
@@ -18,24 +19,6 @@ const FormularioCursos = [
             sx: {
                 borderColor: "var(--joy-palette-primary-500) !important",
             },
-            options: [
-                {
-                    value: 1,
-                    label: "Curso virtual de autoformación en Consulta Previa - Grupos étnicos (20h)",
-                },
-                {
-                    value: 2,
-                    label: "Curso virtual de autoformación en consulta previa para fortalecimiento de capacidades institucionales (20h)",
-                },
-                {
-                    value: 3,
-                    label: "Diplomado - Grupos Étnicos",
-                },
-                {
-                    value: 4,
-                    label: "Diplomado - Funcionarios y/o Contratistas",
-                },
-            ],
         },
         size: {
             xs: 12,
