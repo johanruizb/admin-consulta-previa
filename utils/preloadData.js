@@ -89,7 +89,7 @@ const runInitializePreload = async () => {
 
     const baseTasks = [
         safePreload(getURL("api/user")),
-        safePreload("/api/permissions"),
+        // safePreload("/api/permissions"),
         safePreload(getURL("api/usuarios/ciclos")),
     ];
 
