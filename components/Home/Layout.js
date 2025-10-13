@@ -20,10 +20,7 @@ function Layout({ children }) {
         ? {
               mt: {
                   xs: "var(--Header-height)",
-                  //  md: "65px"
               },
-              //   height: { md: "calc(100dvh - 65px)" },
-              //   height: "100dvh",
               pt: {
                   xs: "calc(12px + var(--Header-height))",
                   sm: "calc(12px + var(--Header-height))",
@@ -32,7 +29,6 @@ function Layout({ children }) {
           }
         : {
               ml: { md: "var(--Sidebar-width)" },
-              // height: "100dvh"
           };
 
     return (
