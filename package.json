@@ -12,6 +12,7 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "@clerk/nextjs": "^6.33.3",
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",
         "@mui/icons-material": "^7.3.4",
@@ -37,6 +38,7 @@
         "react-hook-form": "^7.64.0",
         "react-imask": "^7.6.1",
         "swr": "^2.3.6",
+        "tailwindcss": "^4.1.14",
         "uuid": "^13.0.0"
     },
     "devDependencies": {

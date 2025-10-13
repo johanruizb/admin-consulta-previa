@@ -3,18 +3,24 @@ import { useSessionStorage } from "@uidotdev/usehooks";
 import useSWR from "swr";
 import fetcher from "@/components/fetcher";
 import { getURL } from "@/components/utils";
+import { useUser } from "@clerk/nextjs";
 
 // Crear el contexto
 const CicloContext = createContext();
 
 // Provider del contexto
 export function CicloProvider({ children }) {
+    const { isLoaded: clerkLoaded, isSignedIn } = useUser();
+
     // SWR para obtener ciclos disponibles (una sola llamada para toda la app)
     const {
         data: ciclos,
         isLoading,
         error,
-    } = useSWR(getURL("api/usuarios/ciclos"), fetcher);
+    } = useSWR(
+        clerkLoaded && isSignedIn ? getURL("api/usuarios/ciclos") : null,
+        fetcher
+    );
 
     // SessionStorage para persistir ciclo seleccionado
     const [selectedCicloId, setSelectedCicloId] = useSessionStorage(

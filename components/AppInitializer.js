@@ -7,8 +7,11 @@ import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
 import { useState } from "react";
 import SettingsContext from "./Home/settingsContext";
+import { SignedOut, useUser } from "@clerk/nextjs";
 
 export default function AppInitializer({ children }) {
+    const { isLoaded, isSignedIn, user } = useUser();
+
     const [loadingStage, setLoadingStage] = useState("settings");
     const [settings, setSettings] = useState({
         colorScheme: "light",
@@ -40,7 +43,11 @@ export default function AppInitializer({ children }) {
         });
     };
 
-    if (loadingStage === "settings") {
+    if (isLoaded && !isSignedIn) {
+        return <SignedOut>{children}</SignedOut>;
+    }
+
+    if (loadingStage === "settings" || !isLoaded) {
         return (
             <Stack
                 justifyContent="center"
@@ -50,9 +57,6 @@ export default function AppInitializer({ children }) {
                 spacing={2}
             >
                 <CircularProgress size="md" />
-                <Typography level="body-md" textColor="text.secondary">
-                    Cargando configuración
-                </Typography>
             </Stack>
         );
     }

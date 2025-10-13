@@ -10,14 +10,12 @@ import IconButton from "@mui/joy/IconButton";
 import Input from "@mui/joy/Input";
 import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
-
 import { Fragment, useState } from "react";
-
 import Head from "next/head";
-
 import ColorSchemeToggle from "@/components/Home/ColorSchemeToggle";
 import UnivalleIcon from "@/components/Icons/Univalle";
 import useAlert from "@/hooks/useAlert";
+import { SignIn } from "@clerk/nextjs";
 
 export default function JoySignInSideTemplate() {
     const { onOpen } = useAlert();
@@ -50,7 +48,7 @@ export default function JoySignInSideTemplate() {
                     result?.message ||
                         result ||
                         "Ha ocurrido un error al iniciar sesión",
-                    "danger",
+                    "danger"
                 );
                 console.error("Error al iniciar sesión", response);
                 setLoading(false);
@@ -163,45 +161,7 @@ export default function JoySignInSideTemplate() {
                             },
                         }}
                     >
-                        <Stack sx={{ gap: 4, mt: 2 }}>
-                            <form onSubmit={onSubmit}>
-                                <FormControl required>
-                                    <FormLabel>Usuario</FormLabel>
-                                    <Input type="text" name="username" />
-                                </FormControl>
-                                <FormControl required>
-                                    <FormLabel>Contraseña</FormLabel>
-                                    <Input
-                                        type={show ? "text" : "password"}
-                                        name="password"
-                                        endDecorator={
-                                            <IconButton
-                                                aria-label="toggle password visibility"
-                                                size="sm"
-                                                onClick={() =>
-                                                    setShow((prev) => !prev)
-                                                }
-                                            >
-                                                {show ? (
-                                                    <VisibilityOffIcon />
-                                                ) : (
-                                                    <VisibilityIcon />
-                                                )}
-                                            </IconButton>
-                                        }
-                                    />
-                                </FormControl>
-                                <Stack sx={{ gap: 4, mt: 2 }}>
-                                    <Button
-                                        type="submit"
-                                        fullWidth
-                                        loading={loading}
-                                    >
-                                        Iniciar sesión
-                                    </Button>
-                                </Stack>
-                            </form>
-                        </Stack>
+                        <SignIn />
                     </Box>
                     <Box component="footer" sx={{ py: 3 }}>
                         <Typography

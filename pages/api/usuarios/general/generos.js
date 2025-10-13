@@ -1,17 +1,16 @@
-import { getIronSession } from "iron-session";
+import { getAuth } from "@clerk/nextjs/server";
 
 export default async function handler(req, res) {
-    const session = await getIronSession(req, res, {
-        password: process.env.SESSION_SECRET,
-        cookieName: "session",
-    });
+    const { getToken } = getAuth(req);
+    const token = await getToken();
+
 
     const response = await fetch(
         process.env.NEXT_PUBLIC_BASE_URL + "/api/usuarios/generos",
         {
             method: "GET",
             headers: {
-                Authorization: "Bearer " + session.accessToken,
+                Authorization: `Bearer ${token}`,
                 "X-Referer": req.headers.referer,
             },
         },
