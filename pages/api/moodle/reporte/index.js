@@ -1,4 +1,4 @@
-import { getIronSession } from "iron-session";
+import { getAuth } from "@clerk/nextjs/server";
 import { NextApiRequest, NextApiResponse } from "next";
 
 async function buffer(readable) {
@@ -18,10 +18,9 @@ async function buffer(readable) {
  * @returns {Promise<void>} - Una promesa que se resuelve cuando la operación de inicio de sesión se completa.
  **/
 export default async function handler(req, res) {
-    const session = await getIronSession(req, res, {
-        password: process.env.SESSION_SECRET,
-        cookieName: "session",
-    });
+    const { getToken } = getAuth(req);
+    const token = await getToken();
+
 
     let response;
 
@@ -33,7 +32,7 @@ export default async function handler(req, res) {
             {
                 method: "POST",
                 headers: {
-                    Authorization: "Bearer " + session.accessToken,
+                    Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data; boundary=----",
                 },
                 body: formDataBuffer,
@@ -45,7 +44,7 @@ export default async function handler(req, res) {
             {
                 method: "GET",
                 headers: {
-                    Authorization: "Bearer " + session.accessToken,
+                    Authorization: `Bearer ${token}`,
                 },
             },
         );
