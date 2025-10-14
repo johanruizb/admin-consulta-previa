@@ -32,7 +32,7 @@ export default function Profile() {
                         </Typography>
                         <Typography component="div" level="body-xs" noWrap>
                             {djangoUser
-                                ? ` ${djangoUser.username} — ${djangoUser.role}`
+                                ? `${djangoUser.role} — ${djangoUser.username}`
                                 : ""}
                         </Typography>
                     </Stack>
