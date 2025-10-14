@@ -5,7 +5,7 @@ import useSWR from "swr";
 import PermissionContext from ".";
 import fetcher from "@/components/fetcher";
 import { getURL } from "@/components/utils";
-import { useUser } from "@clerk/nextjs";
+import { SignedOut, useUser } from "@clerk/nextjs";
 
 function PermissionProvider({ children }) {
     const { isLoaded: clerkLoaded, isSignedIn } = useUser();
@@ -27,6 +27,11 @@ function PermissionProvider({ children }) {
         },
         [permissions]
     );
+
+    if (clerkLoaded && isSignedIn && !isLoading && !permissions) {
+        // Cerrar la sesion si no se pueden cargar los permisos
+        return <SignedOut />;
+    }
 
     return (
         <PermissionContext.Provider
