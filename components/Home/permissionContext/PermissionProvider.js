@@ -1,13 +1,13 @@
-import { useCallback } from "react";
-
-import useSWR from "swr";
-
-import PermissionContext from ".";
 import fetcher from "@/components/fetcher";
 import { getURL } from "@/components/utils";
-import { SignedOut, useUser } from "@clerk/nextjs";
+import { useClerk, useUser } from "@clerk/nextjs";
+import { enqueueSnackbar } from "notistack";
+import { useCallback, useEffect } from "react";
+import useSWR from "swr";
+import PermissionContext from ".";
 
 function PermissionProvider({ children }) {
+    const { signOut } = useClerk();
     const { isLoaded: clerkLoaded, isSignedIn } = useUser();
 
     const {
@@ -28,10 +28,21 @@ function PermissionProvider({ children }) {
         [permissions]
     );
 
-    if (clerkLoaded && isSignedIn && !isLoading && !permissions) {
-        // Cerrar la sesion si no se pueden cargar los permisos
-        return <SignedOut />;
-    }
+    const invalid = clerkLoaded && isSignedIn && !isLoading && !permissions;
+
+    useEffect(() => {
+        if (invalid) {
+            // Cerrar la sesion si no se pueden cargar los permisos
+            enqueueSnackbar(
+                "Sesión invalida, por favor inicie sesión de nuevo.",
+                {
+                    variant: "warning",
+                }
+            );
+            signOut();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [invalid]);
 
     return (
         <PermissionContext.Provider
