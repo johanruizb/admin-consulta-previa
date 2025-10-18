@@ -382,8 +382,12 @@ const FormularioVerificacion = [
                     label: "Empresario",
                 },
                 {
-                    value: 9,
-                    label: "Educación",
+                    value: 17,
+                    label: "Educación pública",
+                },
+                {
+                    value: 18,
+                    label: "Educación privada",
                 },
                 {
                     value: 10,
