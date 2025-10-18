@@ -578,26 +578,22 @@ const FormularioVerificacion = [
         },
         field: {
             options: [
-                {
-                    value: "nula",
-                    label: "Sin conexión",
-                },
+                { value: "nula", label: "No cuento con acceso a internet" },
                 {
                     value: "baja",
-                    label: "Solo con wifi público",
+                    label: "Accedo a internet mediante puntos públicos o compartidos",
                 },
                 {
                     value: "media",
                     label: "Por intervalos de tiempo con dificultad",
                 },
+                { value: "plena", label: "Todo el día sin dificultad" },
+                { value: "hogar", label: "Tengo internet privado en el hogar" },
                 {
-                    value: "plena",
-                    label: "Todo el día sin dificultad",
+                    value: "movil",
+                    label: "Uso internet móvil a través del plan de datos del celular",
                 },
-                {
-                    value: "otra",
-                    label: "Otra (especificar)",
-                },
+                { value: "otra", label: "Otra (especificar)" },
             ],
             label: "Conectividad",
             required: true,
@@ -619,6 +615,72 @@ const FormularioVerificacion = [
             label: "Otra conectividad (especificar)",
             required: true,
             onChange: toUpperCase,
+        },
+    },
+    {
+        Component: CustomSelect,
+        controller: {
+            name: "nivel_educativo",
+            rules: {
+                required: {
+                    value: true,
+                    message: "Este campo no puede estar vacio",
+                },
+            },
+        },
+        field: {
+            label: "Nivel educativo",
+            required: true,
+            options: [
+                {
+                    value: 2,
+                    label: "Ninguno / Sin escolaridad",
+                },
+                {
+                    value: 3,
+                    label: "Preescolar",
+                },
+                {
+                    value: 4,
+                    label: "Primaria incompleta",
+                },
+                {
+                    value: 5,
+                    label: "Primaria completa",
+                },
+                {
+                    value: 6,
+                    label: "Secundaria incompleta",
+                },
+                {
+                    value: 7,
+                    label: "Secundaria completa (Bachiller)",
+                },
+                {
+                    value: 8,
+                    label: "T\u00e9cnico profesional",
+                },
+                {
+                    value: 9,
+                    label: "Tecn\u00f3logo",
+                },
+                {
+                    value: 10,
+                    label: "Profesional universitario",
+                },
+                {
+                    value: 11,
+                    label: "Especializaci\u00f3n",
+                },
+                {
+                    value: 12,
+                    label: "Maestr\u00eda",
+                },
+                {
+                    value: 13,
+                    label: "Doctorado",
+                },
+            ],
         },
     },
     {
