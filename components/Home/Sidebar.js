@@ -1,10 +1,11 @@
 "use client";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import SchoolIcon from "@mui/icons-material/School";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
-
+import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
 import Box from "@mui/joy/Box";
 import Divider from "@mui/joy/Divider";
 import GlobalStyles from "@mui/joy/GlobalStyles";
@@ -31,6 +32,8 @@ import Profile from "./Profile";
 import Settings from "./Settings";
 import useSettingsContext from "./settingsContext/useSettings";
 import fetcher from "../fetcher";
+import { Stack } from "@mui/joy";
+import Image from "next/image";
 
 export default function Sidebar() {
     const { data: user } = useSWR(getURL("api/user"), fetcher);
@@ -275,6 +278,52 @@ export default function Sidebar() {
                                         <Typography level="title-sm">
                                             API Keys
                                         </Typography>
+                                    </ListItemContent>
+                                </ListItemButton>
+                            </ListItem>
+                        )}
+                        {hasPermission("is_superuser") && (
+                            <ListItem>
+                                <ListItemButton
+                                    component="a"
+                                    // onClick={() =>
+                                    //     handleRouteChange("/estado-sistema")
+                                    // }
+                                    // selected={
+                                    //     mounted
+                                    //         ? location.pathname ==
+                                    //           "/estado-sistema"
+                                    //         : false
+                                    // }
+                                    href="https://status.consultaprevia.net"
+                                    target="_blank"
+                                >
+                                    <div
+                                        style={{
+                                            position: "relative",
+                                            width: "24px",
+                                            height: "24px",
+                                        }}
+                                    >
+                                        <Image
+                                            layout="fill"
+                                            objectFit="contain"
+                                            src="https://status.consultaprevia.net/badge/_/dot?animate=ping"
+                                            alt="Estado del sistema"
+                                            unoptimized
+                                        />
+                                    </div>
+                                    <ListItemContent>
+                                        <Stack
+                                            direction="row"
+                                            alignItems="center"
+                                            spacing={1}
+                                        >
+                                            <Typography level="title-sm">
+                                                Estado del sistema
+                                            </Typography>
+                                            <OpenInNewIcon fontSize="small" />
+                                        </Stack>
                                     </ListItemContent>
                                 </ListItemButton>
                             </ListItem>

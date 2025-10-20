@@ -2,16 +2,16 @@ import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import IconButton from "@mui/joy/IconButton";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import Tooltip from "@mui/joy/Tooltip";
 import { useColorScheme as useJoyColorScheme } from "@mui/joy/styles";
 import { useColorScheme as useMaterialColorScheme } from "@mui/material/styles";
 
+import useClient from "@/hooks/useClient";
 import ComputerIcon from "@mui/icons-material/Computer";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import useSettingsContext from "./settingsContext/useSettings";
-import useClient from "@/hooks/useClient";
 
 function getIcon(mode) {
     switch (mode) {
@@ -39,20 +39,35 @@ function getLegend(mode) {
     }
 }
 
+export function useSchema() {
+    const { mode: MUIMode, setMode: setMaterialMode } =
+        useMaterialColorScheme();
+    const { mode, setMode: setJoyMode } = useJoyColorScheme();
+
+    const setMode = (newMode) => {
+        setMaterialMode(newMode);
+        setJoyMode(newMode);
+    };
+
+    useClient(() => {
+        if (mode !== MUIMode) setMaterialMode(mode);
+    });
+
+    return { mode, setMode };
+}
+
 export default function ColorSchemeToggle(props) {
     const { settings, saveSettings } = useSettingsContext();
 
     const { onClick, sx, ...other } = props;
-    const { mode, setMode: setMaterialMode } = useMaterialColorScheme();
-    const { mode: joyMode, setMode: setJoyMode } = useJoyColorScheme();
+    const { mode, setMode } = useSchema();
     const [mounted, setMounted] = useState(false);
 
     useClient(() => {
         setMounted(true);
-        if (mode !== joyMode) setMaterialMode(joyMode);
         saveSettings({
             ...settings,
-            colorScheme: joyMode,
+            colorScheme: mode,
         });
     });
 
@@ -67,9 +82,7 @@ export default function ColorSchemeToggle(props) {
                 color="neutral"
                 onClick={() => {
                     const colorScheme = mode === "dark" ? "light" : "dark";
-                    setMaterialMode(colorScheme);
-                    setJoyMode(colorScheme);
-
+                    setMode(colorScheme);
                     saveSettings({
                         ...settings,
                         colorScheme,

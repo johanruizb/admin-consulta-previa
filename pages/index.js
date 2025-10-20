@@ -29,7 +29,7 @@ import { usePrevious } from "@uidotdev/usehooks";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import Head from "next/head";
-import { useEffect, useEffectEvent, useState } from "react";
+import { Fragment, useEffect, useEffectEvent, useState } from "react";
 import useSWR from "swr";
 
 dayjs.locale("es");
@@ -187,264 +187,273 @@ export default function Page() {
                     </FormControl>
                 </Box>
             </Box>
-            {loading ? (
-                <Stack
-                    justifyContent="center"
-                    alignContent="center"
-                    alignItems="center"
-                    width="100%"
-                    height="100%"
-                >
-                    <CircularProgress />
-                </Stack>
-            ) : data?.has_statistics ? (
-                <Grid
-                    container
-                    spacing={1.25 / 2}
-                    sx={{
-                        pb: "10px",
-                    }}
-                >
-                    <Grid size={12}>
-                        <InscripcionesPorPeriodo courses={curso} />
-                    </Grid>
-                    <Grid size={{ xs: 12, md: 3 }}>
-                        <UserSummary
-                            slotProps={{
-                                item: { size: 12 },
-                                root: {
-                                    spacing: 1.25 / 2,
-                                    direction: "column",
-                                },
-                            }}
-                        />
-                    </Grid>
-                    <Grid size={{ xs: 12, md: 3 }}>
-                        <Card
-                            variant="outlined"
-                            sx={{
-                                // width: "100%",
-                                height: "100%",
-                            }}
-                        >
-                            <CardContent>
-                                <Typography level="title-lg">
-                                    Personas registradas
-                                </Typography>
-                                <Stack
-                                    // flex={0.5}
-                                    justifyContent="center"
-                                >
+            <Grid
+                container
+                spacing={1.25 / 2}
+                sx={{
+                    pb: "10px",
+                }}
+            >
+                {loading ? (
+                    <Stack
+                        justifyContent="center"
+                        alignContent="center"
+                        alignItems="center"
+                        width="100%"
+                        height="100%"
+                    >
+                        <CircularProgress />
+                    </Stack>
+                ) : data?.has_statistics ? (
+                    <Fragment>
+                        <Grid size={12}>
+                            <InscripcionesPorPeriodo courses={curso} />
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 3 }}>
+                            <UserSummary
+                                slotProps={{
+                                    item: { size: 12 },
+                                    root: {
+                                        spacing: 1.25 / 2,
+                                        direction: "column",
+                                    },
+                                }}
+                            />
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 3 }}>
+                            <Card
+                                variant="outlined"
+                                sx={{
+                                    // width: "100%",
+                                    height: "100%",
+                                }}
+                            >
+                                <CardContent>
+                                    <Typography level="title-lg">
+                                        Personas registradas
+                                    </Typography>
                                     <Stack
-                                        direction="row"
-                                        alignItems="center"
-                                        justifyContent="space-between"
-                                        spacing={1.25}
+                                        // flex={0.5}
+                                        justifyContent="center"
                                     >
-                                        <Typography level="body-md">
-                                            Hoy
-                                        </Typography>
-                                        <Typography level="h2">
-                                            {formatNumber(data.today)}
-                                        </Typography>
-                                    </Stack>
-                                    <Stack
-                                        direction="row"
-                                        alignItems="center"
-                                        justifyContent="space-between"
-                                        spacing={1.25}
-                                    >
-                                        <Typography level="body-md">
-                                            Total, desde el inicio
-                                        </Typography>
-                                        <Typography level="h2">
-                                            {formatNumber(data.total)}
-                                        </Typography>
-                                    </Stack>
-                                </Stack>
-                                <Stack justifyContent="center">
-                                    <Stack
-                                        direction="row"
-                                        alignItems="center"
-                                        justifyContent="space-between"
-                                        spacing={1.25}
-                                    >
-                                        <Typography level="body-md">
-                                            Personas validadas
-                                        </Typography>
-                                        <Typography level="h2">
-                                            {formatNumber(data.validated)}
-                                        </Typography>
-                                    </Stack>
-                                </Stack>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid size={{ xs: 12, md: 6 }}>
-                        <Card
-                            variant="outlined"
-                            sx={{
-                                // width: "100%",
-                                height: "100%",
-                            }}
-                        >
-                            <CardContent>
-                                <Typography level="title-lg">
-                                    Personas por etnia
-                                </Typography>
-                                <Grid container columnSpacing={5}>
-                                    {data?.etnia?.map((item, index) => (
-                                        <Grid
-                                            key={index}
-                                            size={{ xs: 12, md: 6 }}
+                                        <Stack
+                                            direction="row"
+                                            alignItems="center"
+                                            justifyContent="space-between"
+                                            spacing={1.25}
                                         >
-                                            <Stack
-                                                direction="row"
-                                                alignItems="center"
-                                                justifyContent="space-between"
-                                                // spacing={1.25}
-                                                // flex={1}
+                                            <Typography level="body-md">
+                                                Hoy
+                                            </Typography>
+                                            <Typography level="h2">
+                                                {formatNumber(data.today)}
+                                            </Typography>
+                                        </Stack>
+                                        <Stack
+                                            direction="row"
+                                            alignItems="center"
+                                            justifyContent="space-between"
+                                            spacing={1.25}
+                                        >
+                                            <Typography level="body-md">
+                                                Total, desde el inicio
+                                            </Typography>
+                                            <Typography level="h2">
+                                                {formatNumber(data.total)}
+                                            </Typography>
+                                        </Stack>
+                                    </Stack>
+                                    <Stack justifyContent="center">
+                                        <Stack
+                                            direction="row"
+                                            alignItems="center"
+                                            justifyContent="space-between"
+                                            spacing={1.25}
+                                        >
+                                            <Typography level="body-md">
+                                                Personas validadas
+                                            </Typography>
+                                            <Typography level="h2">
+                                                {formatNumber(data.validated)}
+                                            </Typography>
+                                        </Stack>
+                                    </Stack>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 6 }}>
+                            <Card
+                                variant="outlined"
+                                sx={{
+                                    // width: "100%",
+                                    height: "100%",
+                                }}
+                            >
+                                <CardContent>
+                                    <Typography level="title-lg">
+                                        Personas por etnia
+                                    </Typography>
+                                    <Grid container columnSpacing={5}>
+                                        {data?.etnia?.map((item, index) => (
+                                            <Grid
+                                                key={index}
+                                                size={{ xs: 12, md: 6 }}
                                             >
-                                                <Typography level="body-md">
-                                                    {item.label}
-                                                </Typography>
-                                                <Typography level="h2">
-                                                    {formatNumber(item.value)}
-                                                </Typography>
-                                            </Stack>
-                                        </Grid>
-                                    ))}
-                                </Grid>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid size={{ md: 12 }}>
-                        <Card
-                            variant="outlined"
-                            sx={{
-                                // width: "100%",
-                                height: "100%",
-                            }}
-                        >
-                            <CardContent>
-                                <Typography level="title-lg">
-                                    Personas por rol
-                                </Typography>
-                                <CustomPie
-                                    data={data?.rol}
-                                    slotProps={{
-                                        item: {
-                                            root: {
-                                                size: { xs: 12, lg: 6 },
+                                                <Stack
+                                                    direction="row"
+                                                    alignItems="center"
+                                                    justifyContent="space-between"
+                                                    // spacing={1.25}
+                                                    // flex={1}
+                                                >
+                                                    <Typography level="body-md">
+                                                        {item.label}
+                                                    </Typography>
+                                                    <Typography level="h2">
+                                                        {formatNumber(
+                                                            item.value
+                                                        )}
+                                                    </Typography>
+                                                </Stack>
+                                            </Grid>
+                                        ))}
+                                    </Grid>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid size={{ md: 12 }}>
+                            <Card
+                                variant="outlined"
+                                sx={{
+                                    // width: "100%",
+                                    height: "100%",
+                                }}
+                            >
+                                <CardContent>
+                                    <Typography level="title-lg">
+                                        Personas por rol
+                                    </Typography>
+                                    <CustomPie
+                                        data={data?.rol}
+                                        slotProps={{
+                                            item: {
+                                                root: {
+                                                    size: { xs: 12, lg: 6 },
+                                                },
                                             },
-                                        },
-                                        pie: {
-                                            root: {
-                                                sx: {
-                                                    width: {
-                                                        xs: "100%",
-                                                        md: "20%",
+                                            pie: {
+                                                root: {
+                                                    sx: {
+                                                        width: {
+                                                            xs: "100%",
+                                                            md: "20%",
+                                                        },
                                                     },
                                                 },
                                             },
-                                        },
-                                    }}
-                                />
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid size={{ xs: 12, md: 6 }}>
-                        <Card
-                            variant="outlined"
-                            sx={{
-                                // width: "100%",
-                                height: "100%",
-                            }}
-                        >
-                            <CardContent>
-                                <Typography level="title-lg">
-                                    Personas por rangos de edad
-                                </Typography>
-                                <CustomPie data={data?.edad} />
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid size={{ xs: 12, md: 6 }}>
-                        <Card
-                            variant="outlined"
-                            sx={{
-                                // width: "100%",
-                                height: "100%",
-                            }}
-                        >
-                            <CardContent>
-                                <Typography level="title-lg">
-                                    Personas por género
-                                </Typography>
-                                <CustomPie
-                                    data={data?.genero}
-                                    slotProps={{
-                                        item: {
-                                            root: {
-                                                size: 12,
+                                        }}
+                                    />
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 6 }}>
+                            <Card
+                                variant="outlined"
+                                sx={{
+                                    // width: "100%",
+                                    height: "100%",
+                                }}
+                            >
+                                <CardContent>
+                                    <Typography level="title-lg">
+                                        Personas por rangos de edad
+                                    </Typography>
+                                    <CustomPie data={data?.edad} />
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 6 }}>
+                            <Card
+                                variant="outlined"
+                                sx={{
+                                    // width: "100%",
+                                    height: "100%",
+                                }}
+                            >
+                                <CardContent>
+                                    <Typography level="title-lg">
+                                        Personas por género
+                                    </Typography>
+                                    <CustomPie
+                                        data={data?.genero}
+                                        slotProps={{
+                                            item: {
+                                                root: {
+                                                    size: 12,
+                                                },
                                             },
-                                        },
-                                    }}
-                                />
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid size={{ xs: 12, md: 6 }}>
-                        <Card
-                            variant="outlined"
-                            sx={{
-                                // width: "100%",
-                                height: "100%",
-                            }}
-                        >
-                            <CardContent>
-                                <Typography level="title-lg">
-                                    Personas por zona
-                                </Typography>
-                                <CustomPie data={data?.zona} />
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid size={12}>
-                        <Card
-                            variant="outlined"
-                            sx={{
-                                // width: "100%",
-                                height: "100%",
-                            }}
-                        >
-                            <CardContent>
-                                <Typography level="title-lg">
-                                    Personas por departamento
-                                </Typography>
+                                        }}
+                                    />
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 6 }}>
+                            <Card
+                                variant="outlined"
+                                sx={{
+                                    // width: "100%",
+                                    height: "100%",
+                                }}
+                            >
+                                <CardContent>
+                                    <Typography level="title-lg">
+                                        Personas por zona
+                                    </Typography>
+                                    <CustomPie data={data?.zona} />
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid size={12}>
+                            <Card
+                                variant="outlined"
+                                sx={{
+                                    // width: "100%",
+                                    height: "100%",
+                                }}
+                            >
+                                <CardContent>
+                                    <Typography level="title-lg">
+                                        Personas por departamento
+                                    </Typography>
 
-                                <BarChart
-                                    dataset={data?.departamento || []}
-                                    xAxis={[
-                                        { scaleType: "band", dataKey: "label" },
-                                    ]}
-                                    series={[
-                                        {
-                                            dataKey: "value",
-                                            // label: "London",
-                                        },
-                                    ]}
-                                    height={300}
-                                />
-                            </CardContent>
-                        </Card>
+                                    <BarChart
+                                        dataset={data?.departamento || []}
+                                        xAxis={[
+                                            {
+                                                scaleType: "band",
+                                                dataKey: "label",
+                                            },
+                                        ]}
+                                        series={[
+                                            {
+                                                dataKey: "value",
+                                                // label: "London",
+                                            },
+                                        ]}
+                                        height={300}
+                                    />
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    </Fragment>
+                ) : (
+                    <Grid size={12}>
+                        <Typography level="body-md">
+                            No hay estadísticas disponibles
+                        </Typography>
                     </Grid>
-                </Grid>
-            ) : (
-                <Typography level="body-md">
-                    No hay estadísticas disponibles
-                </Typography>
-            )}
+                )}
+            </Grid>
         </Layout>
     );
 }

@@ -26,11 +26,13 @@ import { SWRConfig } from "swr";
 
 const customTheme = extendTheme({
     colorSchemeSelector: "media",
+    cssVariables: true,
 });
 
 const materialTheme = materialExtendTheme({
     colorSchemes: { dark: true, light: true },
-    colorSchemeSelector: "data",
+    colorSchemeSelector: "[data-mode-%s]",
+    cssVariables: true,
 });
 
 const cache = createCache({ key: "css", prepend: true });

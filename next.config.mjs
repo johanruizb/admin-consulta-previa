@@ -12,6 +12,9 @@ const nextConfig = {
         "@mui/joy",
         "@mui/icons-material",
     ],
+    images: {
+        domains: ["status.consultaprevia.net"],
+    },
 };
 
 export default nextConfig;
