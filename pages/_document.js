@@ -5,7 +5,13 @@ export default class MyDocument extends Document {
     render() {
         return (
             <Html lang="es">
-                <Head />
+                <Head>
+                    <script
+                        defer
+                        src="https://analytics.consultaprevia.net/script.js"
+                        data-website-id="016e56b0-23da-4331-8937-a9c4d0a50d0f"
+                    ></script>
+                </Head>
                 <body>
                     <InitColorSchemeScript defaultMode="light" />
                     <Main />
