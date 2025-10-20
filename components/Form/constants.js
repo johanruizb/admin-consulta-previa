@@ -238,27 +238,39 @@ const FormularioVerificacion = [
             options: [
                 {
                     value: 1,
-                    label: "Femenino",
+                    label: "Mujer cisg\u00e9nero",
                 },
                 {
                     value: 2,
-                    label: "Masculino",
+                    label: "Hombre cisg\u00e9nero",
                 },
                 {
-                    value: 3,
-                    label: "Transgénero",
+                    value: 6,
+                    label: "Mujer transg\u00e9nero",
+                },
+                {
+                    value: 7,
+                    label: "Hombre transg\u00e9nero",
                 },
                 {
                     value: 4,
-                    label: "No binario",
+                    label: "Persona no binaria",
+                },
+                {
+                    value: 8,
+                    label: "Persona g\u00e9nero fluido",
+                },
+                {
+                    value: 9,
+                    label: "Ninguno",
                 },
                 {
                     value: 5,
-                    label: "Prefiero no decirlo",
+                    label: "Prefiero no responder",
                 },
                 {
                     value: 0,
-                    label: "Otro (especifique)",
+                    label: "Otra",
                 },
             ],
             label: "Género",
