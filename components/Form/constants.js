@@ -536,17 +536,17 @@ const FormularioVerificacion = [
         dependencies: ["estado_res"],
         url: "/api/ubicacion/ciudades/$1",
     },
-    {
-        Component: TextField,
-        controller: {
-            name: "barrio",
-            defaultValue: "",
-        },
-        field: {
-            label: "Barrio de residencia",
-            required: true,
-        },
-    },
+    // {
+    //     Component: TextField,
+    //     controller: {
+    //         name: "barrio",
+    //         defaultValue: "",
+    //     },
+    //     field: {
+    //         label: "Barrio de residencia",
+    //         required: true,
+    //     },
+    // },
     {
         Component: CustomSelect,
         controller: {
