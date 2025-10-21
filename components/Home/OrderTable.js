@@ -32,29 +32,97 @@ export default function OrderTable({ data, onView }) {
     const [page, setPage] = useSessionStorage("OrderTable__page", 1);
     const [filter, setFilter] = useState({});
 
-    const [rows, setRows] = useState();
+    const updateFilter = useCallback(
+        (key, rawValue) => {
+            setFilter((prev) => {
+                const value =
+                    rawValue === undefined || rawValue === null
+                        ? undefined
+                        : rawValue;
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const setFilterDebounced = useCallback(
-        debounce((value) => setFilter(value), 250),
-        []
+                const hasKey = Object.prototype.hasOwnProperty.call(prev, key);
+
+                if (!hasKey && value === undefined) {
+                    return prev;
+                }
+
+                if (hasKey && prev[key] === value) {
+                    return prev;
+                }
+
+                if (value === undefined) {
+                    const { [key]: _removed, ...rest } = prev;
+                    return rest;
+                }
+
+                return {
+                    ...prev,
+                    [key]: value,
+                };
+            });
+        },
+        [setFilter]
     );
 
-    useEffect(() => {
-        filterTable(data, filter, setRows);
-    }, [data, filter]);
+    const setSearchFilter = useMemo(
+        () =>
+            debounce((value) => {
+                setFilter((prev) => {
+                    const nextSearch =
+                        value === undefined || value === null
+                            ? undefined
+                            : value;
+
+                    if (prev.search === nextSearch) {
+                        return prev;
+                    }
+
+                    if (nextSearch === undefined) {
+                        const { search: _removed, ...rest } = prev;
+                        return rest;
+                    }
+
+                    return {
+                        ...prev,
+                        search: nextSearch,
+                    };
+                });
+            }, 250),
+        [setFilter]
+    );
+
+    useEffect(() => () => setSearchFilter.cancel(), [setSearchFilter]);
+
+    const rows = useMemo(() => filterTable(data, filter), [data, filter]);
 
     const ready = useMemo(
-        () => !permissionIsLoading && rows,
-        [permissionIsLoading, rows]
+        () => !permissionIsLoading && Array.isArray(data),
+        [permissionIsLoading, data]
     );
+
+    const totalPages = rows.pages || 0;
 
     // Corregir paginación si esta fuera de rango
     useEffect(() => {
-        if (ready && page > rows.pages) {
-            setPage(rows.pages || 1);
+        if (ready && page > totalPages) {
+            setPage(totalPages || 1);
         }
-    }, [ready, page, rows, setPage]);
+    }, [ready, page, totalPages, setPage]);
+
+    const handleSearchChange = useCallback(
+        (event) => {
+            const value = event.target.value;
+            setSearchFilter(value ? value : undefined);
+        },
+        [setSearchFilter]
+    );
+
+    const handleSelectChange = useCallback(
+        (key) => (_, newValue) => {
+            updateFilter(key, newValue !== "" ? newValue : undefined);
+        },
+        [updateFilter]
+    );
 
     const { selectedCicloId } = useCiclo();
 
@@ -79,13 +147,7 @@ export default function OrderTable({ data, onView }) {
                     <Input
                         size="sm"
                         placeholder="Buscar en la tabla"
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            setFilterDebounced((prev) => ({
-                                ...prev,
-                                search: value || undefined,
-                            }));
-                        }}
+                        onChange={handleSearchChange}
                         startDecorator={<SearchIcon />}
                     />
                 </FormControl>
@@ -95,18 +157,26 @@ export default function OrderTable({ data, onView }) {
                         size="sm"
                         placeholder="Filtrar por estado"
                         slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
-                        onChange={(e, newValue) => {
-                            setFilterDebounced((prev) => ({
-                                ...prev,
-                                info_validada:
-                                    newValue !== "" ? newValue : undefined,
-                            }));
-                        }}
+                        onChange={handleSelectChange("info_validada")}
                         value={filter.info_validada ?? ""}
                     >
                         <Option value={""}>Todos</Option>
                         <Option value={"true"}>Validado</Option>
                         <Option value={"false"}>No validado</Option>
+                    </Select>
+                </FormControl>
+                <FormControl size="sm">
+                    <FormLabel>Origen</FormLabel>
+                    <Select
+                        size="sm"
+                        placeholder="Filtrar por estado"
+                        slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
+                        onChange={handleSelectChange("plataforma_registro")}
+                        value={filter.plataforma_registro ?? ""}
+                    >
+                        <Option value="">Todos</Option>
+                        <Option value="web">Formulario web</Option>
+                        <Option value="whatsapp">WhatsApp</Option>
                     </Select>
                 </FormControl>
                 <CicloSelector />
@@ -342,7 +412,11 @@ export default function OrderTable({ data, onView }) {
                                 ))}
                                 {rows.pages === 0 && (
                                     <tr>
-                                        <td colSpan={7}>
+                                        <td
+                                            colSpan={
+                                                selectedCicloId == 2 ? 10 : 7
+                                            }
+                                        >
                                             <Typography textAlign="center">
                                                 No hay registros.
                                             </Typography>
