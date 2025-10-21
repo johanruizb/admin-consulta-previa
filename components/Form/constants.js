@@ -541,12 +541,6 @@ const FormularioVerificacion = [
         controller: {
             name: "barrio",
             defaultValue: "",
-            rules: {
-                required: {
-                    value: true,
-                    message: "Este campo no puede estar vacio",
-                },
-            },
         },
         field: {
             label: "Barrio de residencia",
