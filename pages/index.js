@@ -206,9 +206,6 @@ export default function Page() {
                     </Stack>
                 ) : data?.has_statistics ? (
                     <Fragment>
-                        <Grid size={12}>
-                            <InscripcionesPorPeriodo courses={curso} />
-                        </Grid>
                         <Grid size={{ xs: 12, md: 3 }}>
                             <UserSummary
                                 slotProps={{
@@ -320,6 +317,9 @@ export default function Page() {
                                     </Grid>
                                 </CardContent>
                             </Card>
+                        </Grid>
+                        <Grid size={12}>
+                            <InscripcionesPorPeriodo courses={curso} />
                         </Grid>
                         <Grid size={{ md: 12 }}>
                             <Card

@@ -1,4 +1,5 @@
 "use client";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
@@ -286,15 +287,6 @@ export default function Sidebar() {
                             <ListItem>
                                 <ListItemButton
                                     component="a"
-                                    // onClick={() =>
-                                    //     handleRouteChange("/estado-sistema")
-                                    // }
-                                    // selected={
-                                    //     mounted
-                                    //         ? location.pathname ==
-                                    //           "/estado-sistema"
-                                    //         : false
-                                    // }
                                     href="https://status.consultaprevia.net"
                                     target="_blank"
                                 >
@@ -322,12 +314,34 @@ export default function Sidebar() {
                                             <Typography level="title-sm">
                                                 Estado del sistema
                                             </Typography>
-                                            <OpenInNewIcon fontSize="small" />
                                         </Stack>
                                     </ListItemContent>
+                                    <OpenInNewIcon fontSize="small" />
                                 </ListItemButton>
                             </ListItem>
                         )}
+
+                        <ListItem>
+                            <ListItemButton
+                                component="a"
+                                href="https://erk-software-bussiness.online"
+                                target="_blank"
+                            >
+                                <WhatsAppIcon />
+                                <ListItemContent>
+                                    <Stack
+                                        direction="row"
+                                        alignItems="center"
+                                        spacing={1}
+                                    >
+                                        <Typography level="title-sm">
+                                            Chatbot
+                                        </Typography>
+                                    </Stack>
+                                </ListItemContent>
+                                <OpenInNewIcon fontSize="small" />
+                            </ListItemButton>
+                        </ListItem>
                     </List>
                 )}
                 <List
