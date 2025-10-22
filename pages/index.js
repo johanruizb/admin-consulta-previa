@@ -223,7 +223,7 @@ export default function Page() {
                                     <Typography level="title-lg">
                                         Personas registradas
                                     </Typography>
-                                    <Divider sx={{ my: 1 }} />
+                                    <Divider sx={{ mt: 1 }} />
                                     <Stack
                                         // flex={0.5}
                                         justifyContent="center"
@@ -241,16 +241,42 @@ export default function Page() {
                                                             {item.shortname}
                                                         </Typography>
                                                         <Typography
-                                                            level="h1"
                                                             fontSize="xxx-large"
                                                             color="warning"
+                                                            fontWeight="bold"
                                                         >
                                                             {formatNumber(
                                                                 item.registrados
                                                             )}
                                                         </Typography>
                                                     </Stack>
-                                                    <Divider sx={{ my: 1 }} />
+                                                    <Divider sx={{ my: 0.25 }} />
+                                                </Fragment>
+                                            )
+                                        )}
+                                        {summaryData?.cursos?.map(
+                                            (item, index) => (
+                                                <Fragment key={index}>
+                                                    <Stack
+                                                        direction="row"
+                                                        alignItems="center"
+                                                        justifyContent="space-between"
+                                                        spacing={1.25}
+                                                    >
+                                                        <Typography level="body-lg">
+                                                            {item.shortname}
+                                                        </Typography>
+                                                        <Typography
+                                                            fontSize="xxx-large"
+                                                            color="warning"
+                                                            fontWeight="bold"
+                                                        >
+                                                            {formatNumber(
+                                                                item.registrados
+                                                            )}
+                                                        </Typography>
+                                                    </Stack>
+                                                    <Divider sx={{ my: 0.25 }} />
                                                 </Fragment>
                                             )
                                         )}
@@ -278,7 +304,7 @@ export default function Page() {
                                             </Typography>
                                         </Stack>
                                     </Stack>
-                                    <Divider sx={{ my: 1 }} />
+                                    <Divider sx={{ my: 0.25 }} />
                                 </CardContent>
                             </Card>
                         </Grid>
