@@ -237,12 +237,12 @@ export default function Page() {
                                                         justifyContent="space-between"
                                                         spacing={1.25}
                                                     >
-                                                        <Typography fontSize="x-large">
+                                                        <Typography level="body-lg">
                                                             {item.shortname}
                                                         </Typography>
                                                         <Typography
                                                             level="h1"
-                                                            // fontSize="xxx-large"
+                                                            fontSize="xxx-large"
                                                             color="warning"
                                                         >
                                                             {formatNumber(
@@ -261,14 +261,16 @@ export default function Page() {
                                             spacing={1.25}
                                         >
                                             <Typography
-                                                level="h1"
+                                                // level="h1"
+                                                fontSize="xxx-large"
                                                 color="primary"
                                                 fontWeight="bold"
                                             >
                                                 Total
                                             </Typography>
                                             <Typography
-                                                level="h1"
+                                                // level="h1"
+                                                fontSize="xxx-large"
                                                 color="primary"
                                                 fontWeight="bold"
                                             >
