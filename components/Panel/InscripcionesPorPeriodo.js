@@ -101,7 +101,12 @@ export default function InscripcionesPorPeriodo({ courses = [] }) {
     }
 
     return (
-        <Card variant="outlined">
+        <Card
+            variant="outlined"
+            sx={{
+                height: "100%",
+            }}
+        >
             <CardContent>
                 <Stack
                     direction={{ xs: "column", md: "row" }}
