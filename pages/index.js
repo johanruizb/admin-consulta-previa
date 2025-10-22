@@ -11,6 +11,7 @@ import getParams from "@/utils/params";
 import { initializePreload } from "@/utils/preloadData";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import { Divider } from "@mui/joy";
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Card from "@mui/joy/Card";
@@ -48,6 +49,10 @@ export default function Page() {
               )
             : null,
         fetcher
+    );
+
+    const { data: summaryData } = useSWR(
+        getURL(`/api/usuarios/summary?ciclo_id=${selectedCicloId}`)
     );
 
     const { data: cursos, isLoading: cursosIsLoading } = useSWR(
@@ -206,18 +211,7 @@ export default function Page() {
                     </Stack>
                 ) : data?.has_statistics ? (
                     <Fragment>
-                        <Grid size={{ xs: 12, md: 3 }}>
-                            <UserSummary
-                                slotProps={{
-                                    item: { size: 12 },
-                                    root: {
-                                        spacing: 1.25 / 2,
-                                        direction: "column",
-                                    },
-                                }}
-                            />
-                        </Grid>
-                        <Grid size={{ xs: 12, md: 3 }}>
+                        <Grid size={{ xs: 12, md: 4 }}>
                             <Card
                                 variant="outlined"
                                 sx={{
@@ -229,52 +223,100 @@ export default function Page() {
                                     <Typography level="title-lg">
                                         Personas registradas
                                     </Typography>
+                                    <Divider sx={{ my: 1 }} />
                                     <Stack
                                         // flex={0.5}
                                         justifyContent="center"
                                     >
+                                        {summaryData?.diplomados?.map(
+                                            (item, index) => (
+                                                <Fragment key={index}>
+                                                    <Stack
+                                                        direction="row"
+                                                        alignItems="center"
+                                                        justifyContent="space-between"
+                                                        spacing={1.25}
+                                                    >
+                                                        <Typography level="body-lg">
+                                                            {item.shortname}
+                                                        </Typography>
+                                                        <Typography
+                                                            level="h1"
+                                                            fontSize="xxx-large"
+                                                            color="warning"
+                                                        >
+                                                            {formatNumber(
+                                                                item.registrados
+                                                            )}
+                                                        </Typography>
+                                                    </Stack>
+                                                    <Divider sx={{ my: 1 }} />
+                                                </Fragment>
+                                            )
+                                        )}
                                         <Stack
                                             direction="row"
                                             alignItems="center"
                                             justifyContent="space-between"
                                             spacing={1.25}
                                         >
-                                            <Typography level="body-md">
-                                                Hoy
+                                            <Typography
+                                                // level="h1"
+                                                fontSize="xxx-large"
+                                                color="primary"
+                                                fontWeight="bold"
+                                            >
+                                                Total
                                             </Typography>
-                                            <Typography level="h2">
-                                                {formatNumber(data.today)}
-                                            </Typography>
-                                        </Stack>
-                                        <Stack
-                                            direction="row"
-                                            alignItems="center"
-                                            justifyContent="space-between"
-                                            spacing={1.25}
-                                        >
-                                            <Typography level="body-md">
-                                                Total, desde el inicio
-                                            </Typography>
-                                            <Typography level="h2">
+                                            <Typography
+                                                // level="h1"
+                                                fontSize="xxx-large"
+                                                color="primary"
+                                                fontWeight="bold"
+                                            >
                                                 {formatNumber(data.total)}
                                             </Typography>
                                         </Stack>
                                     </Stack>
-                                    <Stack justifyContent="center">
-                                        <Stack
-                                            direction="row"
-                                            alignItems="center"
-                                            justifyContent="space-between"
-                                            spacing={1.25}
-                                        >
-                                            <Typography level="body-md">
-                                                Personas validadas
-                                            </Typography>
-                                            <Typography level="h2">
-                                                {formatNumber(data.validated)}
-                                            </Typography>
-                                        </Stack>
-                                    </Stack>
+                                    <Divider sx={{ my: 1 }} />
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid size={8}>
+                            <InscripcionesPorPeriodo courses={curso} />
+                        </Grid>
+                        <Grid size={{ md: 12 }}>
+                            <Card
+                                variant="outlined"
+                                sx={{
+                                    // width: "100%",
+                                    height: "100%",
+                                }}
+                            >
+                                <CardContent>
+                                    <Typography level="title-lg">
+                                        Personas por rol
+                                    </Typography>
+                                    <CustomPie
+                                        data={data?.rol}
+                                        slotProps={{
+                                            item: {
+                                                root: {
+                                                    size: { xs: 12, lg: 6 },
+                                                },
+                                            },
+                                            pie: {
+                                                root: {
+                                                    sx: {
+                                                        width: {
+                                                            xs: "100%",
+                                                            md: "20%",
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        }}
+                                    />
                                 </CardContent>
                             </Card>
                         </Grid>
@@ -315,44 +357,6 @@ export default function Page() {
                                             </Grid>
                                         ))}
                                     </Grid>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                        <Grid size={12}>
-                            <InscripcionesPorPeriodo courses={curso} />
-                        </Grid>
-                        <Grid size={{ md: 12 }}>
-                            <Card
-                                variant="outlined"
-                                sx={{
-                                    // width: "100%",
-                                    height: "100%",
-                                }}
-                            >
-                                <CardContent>
-                                    <Typography level="title-lg">
-                                        Personas por rol
-                                    </Typography>
-                                    <CustomPie
-                                        data={data?.rol}
-                                        slotProps={{
-                                            item: {
-                                                root: {
-                                                    size: { xs: 12, lg: 6 },
-                                                },
-                                            },
-                                            pie: {
-                                                root: {
-                                                    sx: {
-                                                        width: {
-                                                            xs: "100%",
-                                                            md: "20%",
-                                                        },
-                                                    },
-                                                },
-                                            },
-                                        }}
-                                    />
                                 </CardContent>
                             </Card>
                         </Grid>
