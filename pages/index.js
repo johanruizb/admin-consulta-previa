@@ -304,7 +304,6 @@ export default function Page() {
                                             </Typography>
                                         </Stack>
                                     </Stack>
-                                    <Divider sx={{ my: 0.25 }} />
                                 </CardContent>
                             </Card>
                         </Grid>
