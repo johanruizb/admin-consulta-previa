@@ -13,13 +13,13 @@ export default function UserSummary({ slotProps }) {
     const { selectedCicloId } = useCiclo();
 
     const { data } = useSWR(
-        getURL(`/api/usuarios/summary?ciclo_id=${selectedCicloId}`),
+        getURL(`/api/usuarios/summary?ciclo_id=${selectedCicloId}`)
     );
 
     const { root, content, item } = slotProps || {};
 
     // Función para renderizar las tarjetas de cursos
-    const renderCourseCards = (courses, type) => {
+    const renderCourseCards = (courses) => {
         if (!courses || courses.length === 0) return null;
 
         // Calcular el tamaño por defecto si no se proporciona itemSize
@@ -30,7 +30,7 @@ export default function UserSummary({ slotProps }) {
 
         return courses.map((course) => (
             <Grid
-                key={`${type}-${course.id}`}
+                key={course.id}
                 size={defaultSize}
                 direction="row"
                 {...(item || {})}
@@ -71,9 +71,6 @@ export default function UserSummary({ slotProps }) {
         ));
     };
 
-    // Combinar cursos y diplomados para renderizar todo junto
-    const allCourses = [...(data?.cursos || []), ...(data?.diplomados || [])];
-
     return (
         <Grid
             container
@@ -83,8 +80,8 @@ export default function UserSummary({ slotProps }) {
             }}
             {...(root || {})}
         >
-            {allCourses.length > 0 ? (
-                renderCourseCards(allCourses, "all")
+            {data.length > 0 ? (
+                renderCourseCards(data)
             ) : (
                 <Fragment>
                     <Grid

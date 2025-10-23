@@ -73,7 +73,7 @@ export default function Page() {
             }
             return acc;
         },
-        {},
+        {}
     );
 
     const { courses: curso } = filters;
@@ -91,7 +91,7 @@ export default function Page() {
         statsParams
             ? getURL(`api/usuarios/estadisticas?${getParams(statsParams)}`)
             : null,
-        fetcher,
+        fetcher
     );
 
     const summaryParams = {
@@ -110,10 +110,10 @@ export default function Page() {
     const { data: cursos, isLoading: cursosIsLoading } = useSWR(
         selectedCicloId
             ? getURL(
-                  `api/usuarios/cursos/disponibles?ciclo_id=${selectedCicloId}`,
+                  `api/usuarios/cursos/disponibles?ciclo_id=${selectedCicloId}`
               )
             : null,
-        fetcher,
+        fetcher
     );
 
     const [mounted, setMounted] = useState(false);
@@ -160,21 +160,21 @@ export default function Page() {
                 map.set(option.value, option);
             });
             return Array.from(map.values()).sort((a, b) =>
-                a.label.localeCompare(b.label, "es", { sensitivity: "base" }),
+                a.label.localeCompare(b.label, "es", { sensitivity: "base" })
             );
         };
 
         setFilterOptions((prev) => ({
             tipo_cliente: mergeOptions(
                 prev.tipo_cliente,
-                formatOptions(data?.rol),
+                formatOptions(data?.rol)
             ),
             etnia: mergeOptions(prev.etnia, formatOptions(data?.etnia)),
             genero: mergeOptions(prev.genero, formatOptions(data?.genero)),
             zona: mergeOptions(prev.zona, formatOptions(data?.zona)),
             departamento: mergeOptions(
                 prev.departamento,
-                formatOptions(data?.departamento),
+                formatOptions(data?.departamento)
             ),
             plataforma: prev.plataforma,
         }));
@@ -417,62 +417,31 @@ export default function Page() {
                                     </Typography>
                                     <Divider sx={{ mt: 1 }} />
                                     <Stack justifyContent="center">
-                                        {summaryData?.diplomados?.map(
-                                            (item, index) => (
-                                                <Fragment key={index}>
-                                                    <Stack
-                                                        direction="row"
-                                                        alignItems="center"
-                                                        justifyContent="space-between"
-                                                        spacing={1.25}
+                                        {summaryData?.map((item, index) => (
+                                            <Fragment key={index}>
+                                                <Stack
+                                                    direction="row"
+                                                    alignItems="center"
+                                                    justifyContent="space-between"
+                                                    spacing={1.25}
+                                                >
+                                                    <Typography level="body-lg">
+                                                        {item.shortname}
+                                                    </Typography>
+                                                    <Typography
+                                                        fontSize="xxx-large"
+                                                        color="warning"
+                                                        fontWeight="bold"
                                                     >
-                                                        <Typography level="body-lg">
-                                                            {item.shortname}
-                                                        </Typography>
-                                                        <Typography
-                                                            fontSize="xxx-large"
-                                                            color="warning"
-                                                            fontWeight="bold"
-                                                        >
-                                                            {formatNumber(
-                                                                item.registrados,
-                                                            )}
-                                                        </Typography>
-                                                    </Stack>
-                                                    <Divider
-                                                        sx={{ my: 0.25 }}
-                                                    />
-                                                </Fragment>
-                                            ),
-                                        )}
-                                        {summaryData?.cursos?.map(
-                                            (item, index) => (
-                                                <Fragment key={index}>
-                                                    <Stack
-                                                        direction="row"
-                                                        alignItems="center"
-                                                        justifyContent="space-between"
-                                                        spacing={1.25}
-                                                    >
-                                                        <Typography level="body-lg">
-                                                            {item.shortname}
-                                                        </Typography>
-                                                        <Typography
-                                                            fontSize="xxx-large"
-                                                            color="warning"
-                                                            fontWeight="bold"
-                                                        >
-                                                            {formatNumber(
-                                                                item.registrados,
-                                                            )}
-                                                        </Typography>
-                                                    </Stack>
-                                                    <Divider
-                                                        sx={{ my: 0.25 }}
-                                                    />
-                                                </Fragment>
-                                            ),
-                                        )}
+                                                        {formatNumber(
+                                                            item.registrados
+                                                        )}
+                                                    </Typography>
+                                                </Stack>
+                                                <Divider sx={{ my: 0.25 }} />
+                                            </Fragment>
+                                        ))}
+
                                         <Stack
                                             direction="row"
                                             alignItems="center"
@@ -528,7 +497,7 @@ export default function Page() {
                                                     <br />
                                                     <Typography fontSize="xx-large">
                                                         {formatNumber(
-                                                            data?.total_web,
+                                                            data?.total_web
                                                         )}
                                                     </Typography>
                                                 </Typography>
@@ -560,7 +529,7 @@ export default function Page() {
                                                     <br />
                                                     <Typography fontSize="xx-large">
                                                         {formatNumber(
-                                                            data?.total_whatsapp,
+                                                            data?.total_whatsapp
                                                         )}
                                                     </Typography>
                                                 </Typography>
@@ -627,7 +596,7 @@ export default function Page() {
                                                     </Typography>
                                                     <Typography level="h2">
                                                         {formatNumber(
-                                                            item.value,
+                                                            item.value
                                                         )}
                                                     </Typography>
                                                 </Stack>

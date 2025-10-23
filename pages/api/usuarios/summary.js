@@ -15,11 +15,10 @@ export default async function handler(req, res) {
 
     // Construir la URL con query parameters
     const queryParams = new URLSearchParams(req.query).toString();
-    console.log("Query Params:", queryParams);
     const url =
         process.env.NEXT_PUBLIC_BASE_URL +
-        "/api/usuarios/summary" +
-        (queryParams ? `?${queryParams}` : "");
+        "/api/usuarios/summary?" +
+        queryParams;
 
     const response = await fetch(url, {
         method: "GET",
