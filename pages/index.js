@@ -341,11 +341,7 @@ export default function Page() {
                                             >
                                                 Via Web
                                                 <br />
-                                                <Typography
-                                                    fontSize="xxx-large"
-                                                    color="primary"
-                                                    fontWeight="bold"
-                                                >
+                                                <Typography fontSize="xx-large">
                                                     {formatNumber(
                                                         data?.total_web
                                                     )}
@@ -375,11 +371,7 @@ export default function Page() {
                                             >
                                                 Via WhatsApp
                                                 <br />
-                                                <Typography
-                                                    fontSize="xxx-large"
-                                                    color="primary"
-                                                    fontWeight="bold"
-                                                >
+                                                <Typography fontSize="xx-large">
                                                     {formatNumber(
                                                         data?.total_whatsapp
                                                     )}
