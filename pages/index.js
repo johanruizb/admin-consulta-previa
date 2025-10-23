@@ -44,7 +44,6 @@ const PLATFORM_OPTIONS = [
 
 export default function Page() {
     const { selectedCicloId } = useCiclo();
-    const [curso, setCurso] = useState();
     const [filters, setFilters] = useState({
         tipo_cliente: null,
         etnia: null,
@@ -52,6 +51,7 @@ export default function Page() {
         zona: null,
         departamento: null,
         plataforma: null,
+        courses: null,
     });
     const [filterOptions, setFilterOptions] = useState({
         tipo_cliente: [],
@@ -71,6 +71,8 @@ export default function Page() {
         },
         {}
     );
+
+    const { courses: curso } = filters;
 
     const statsParams =
         selectedCicloId && curso
@@ -191,7 +193,11 @@ export default function Page() {
             newCurso = [parseInt(value, 10)];
         }
 
-        setCurso(newCurso);
+        // setCurso(newCurso);
+        setFilters((prev) => ({
+            ...prev,
+            courses: newCurso,
+        }));
     };
 
     const handleFilterChange = (key) => (_event, newValue) => {
@@ -204,7 +210,10 @@ export default function Page() {
     const prevCicloId = usePrevious(selectedCicloId);
 
     const resetSelectedCurso = useEffectEvent(() => {
-        setCurso(cursos?.map((c) => c.id));
+        setFilters((prev) => ({
+            ...prev,
+            courses: cursos?.map((c) => c.id),
+        }));
     });
 
     useEffect(() => {
@@ -216,7 +225,7 @@ export default function Page() {
 
     if (!mounted) return null;
 
-    const loading = isLoading || cursosIsLoading || !curso;
+    const loading = isLoading || cursosIsLoading || !filters.courses;
 
     const filterConfig = [
         { key: "tipo_cliente", label: "Rol" },
