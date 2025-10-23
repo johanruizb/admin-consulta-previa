@@ -21,7 +21,6 @@ export default async function handler(req, res) {
     const { getToken } = getAuth(req);
     const token = await getToken();
 
-
     let response;
 
     if (req.method === "POST") {

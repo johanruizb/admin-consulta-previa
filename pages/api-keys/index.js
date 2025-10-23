@@ -66,7 +66,7 @@ export default function APIKeys() {
                     },
                     body: JSON.stringify(newApiKey),
                     credentials: "include",
-                }
+                },
             );
 
             const result = await response.json();
@@ -100,7 +100,7 @@ export default function APIKeys() {
                 {
                     method: "DELETE",
                     credentials: "include",
-                }
+                },
             );
 
             const result = await response.json();
@@ -111,12 +111,12 @@ export default function APIKeys() {
                 mutate();
                 enqueueSnackbar(
                     result.message || "API Key eliminada exitosamente",
-                    { variant: "success" }
+                    { variant: "success" },
                 );
             } else {
                 enqueueSnackbar(
                     result.error || "Error al eliminar la API Key",
-                    { variant: "error" }
+                    { variant: "error" },
                 );
             }
         } catch (error) {
@@ -133,7 +133,7 @@ export default function APIKeys() {
                 {
                     method: "PATCH",
                     credentials: "include",
-                }
+                },
             );
 
             const result = await response.json();
@@ -142,7 +142,7 @@ export default function APIKeys() {
                 mutate();
                 enqueueSnackbar(
                     result.message || "Estado actualizado exitosamente",
-                    { variant: "success" }
+                    { variant: "success" },
                 );
             } else {
                 enqueueSnackbar(result.error || "Error al cambiar el estado", {
@@ -322,7 +322,8 @@ export default function APIKeys() {
                                                     level="title-md"
                                                     sx={{ mb: 0.5 }}
                                                 >
-                                                    {apiKey.name || "Sin nombre"}
+                                                    {apiKey.name ||
+                                                        "Sin nombre"}
                                                 </Typography>
                                                 <Typography
                                                     level="body-sm"
@@ -366,7 +367,7 @@ export default function APIKeys() {
                                                     }
                                                     onClick={() =>
                                                         handleToggleApiKey(
-                                                            apiKey
+                                                            apiKey,
                                                         )
                                                     }
                                                 >
@@ -381,10 +382,10 @@ export default function APIKeys() {
                                                     color="danger"
                                                     onClick={() => {
                                                         setSelectedApiKey(
-                                                            apiKey
+                                                            apiKey,
                                                         );
                                                         setDeleteModalOpen(
-                                                            true
+                                                            true,
                                                         );
                                                     }}
                                                 >
@@ -406,7 +407,8 @@ export default function APIKeys() {
                                                 }}
                                                 color="neutral"
                                             >
-                                                {apiKey.prefix}••••••••••••••••••
+                                                {apiKey.prefix}
+                                                ••••••••••••••••••
                                             </Typography>
                                         </Box>
                                     </CardContent>

@@ -1,5 +1,5 @@
 ---
-applyTo: '/home/jr0237/Documentos/consulta-previa-registro/consulta-previa-admin/**'
+applyTo: "/home/jr0237/Documentos/consulta-previa-registro/consulta-previa-admin/**"
 ---
 
 # Consulta Previa - AI Coding Guidelines
@@ -30,6 +30,7 @@ This is a multi-component educational platform for managing Moodle course comple
 ### Django Backend (`consulta_previa_django/`)
 
 #### Tech Stack
+
 - Django 5.1.1 + DRF
 - PostgreSQL + Redis
 - JWT Authentication (`djangorestframework_simplejwt`)
@@ -40,6 +41,7 @@ This is a multi-component educational platform for managing Moodle course comple
 
 **Permission System**
 Always use the custom permission decorator:
+
 ```python
 @method_decorator(check_permissions("moodle.view_actividadescompletadas"))
 def post(self, request):
@@ -47,12 +49,14 @@ def post(self, request):
 
 **Database Query Optimization**
 ALWAYS use:
+
 - `select_related()` for FK relationships (ciudad, etnia, tipo_cliente)
 - `prefetch_related()` with `Prefetch()` for reverse FKs
 - `only()` fields when loading large datasets
 - Bulk operations over loops
 
 Example pattern:
+
 ```python
 personas = Persona.objects.filter(...).select_related('ciudad', 'etnia').prefetch_related(
     Prefetch('actividadescompletadas_set', queryset=...)
@@ -61,6 +65,7 @@ personas = Persona.objects.filter(...).select_related('ciudad', 'etnia').prefetc
 
 **Task Management**
 Background processes use Redis-based TaskManager:
+
 ```python
 process_manager.add_task(procesar_informacion, (data, process_manager._process_task))
 ```
@@ -69,12 +74,14 @@ process_manager.add_task(procesar_informacion, (data, process_manager._process_t
 Use `openpyxl` with the custom `ajustar_ancho_columnas()` utility for consistent formatting.
 
 #### Apps Structure
+
 - `autenticacion/`: Auth & permissions
-- `moodle/`: Core course/activity management 
+- `moodle/`: Core course/activity management
 - `inscripcion/`: Registration logic
 - `usuario/`: User profiles & locations
 
 #### Key Models & Relationships
+
 - `Persona` → `ActividadesCompletadas` → `Actividades` → `Modulos`
 - `MiembrosGrupo` for course groups (courses 3,4 only)
 - Custom `get_filtro()` function builds dynamic query filters
@@ -82,6 +89,7 @@ Use `openpyxl` with the custom `ajustar_ancho_columnas()` utility for consistent
 ### React Frontend (`consulta-previa/`)
 
 #### Tech Stack
+
 - Vite build system (port 7153)
 - React 18 + React Router DOM
 - Material-UI Joy + Material UI
@@ -92,20 +100,24 @@ Use `openpyxl` with the custom `ajustar_ancho_columnas()` utility for consistent
 #### Development Patterns
 
 **State Management**
+
 - Use SWR for server state management
 - Custom hooks with SWR for API calls
 - Local state with useState/useReducer for UI state
 
 **Form Handling**
+
 - React Hook Form for all forms
 - Material-UI Joy components for UI
 - Custom validation patterns
 
 **Routing**
+
 - React Router DOM for navigation
 - Protected routes with authentication checks
 
 **Build Process**
+
 ```bash
 npm run build  # Outputs to ../consulta-previa-proxy
 ```
@@ -113,6 +125,7 @@ npm run build  # Outputs to ../consulta-previa-proxy
 ### Next.js Admin (`consulta-previa-admin/`)
 
 #### Tech Stack
+
 - Next.js 15 with Turbopack
 - Material-UI components
 - Iron Session for authentication
@@ -122,16 +135,19 @@ npm run build  # Outputs to ../consulta-previa-proxy
 #### Development Patterns
 
 **Authentication**
+
 - Iron Session for secure session management
 - JWT integration with Django backend
 - Permission-based access control
 
 **Data Management**
+
 - SWR for caching and data fetching
 - Material-UI X Data Grid for tables
 - Material-UI X Charts for analytics
 
 **Component Structure**
+
 - Organized by feature in `/components`
 - Reusable UI components
 - Custom hooks in `/hooks`
@@ -139,18 +155,21 @@ npm run build  # Outputs to ../consulta-previa-proxy
 ## Performance Guidelines
 
 ### Database Optimization
+
 - Use `select_related()` and `prefetch_related()` consistently
 - Implement pagination for large datasets
 - Use database indexes for frequently queried fields
 - Bulk operations for multiple records
 
 ### Frontend Performance
+
 - Code splitting with React.lazy()
 - SWR caching strategies
 - Optimize bundle size with Vite
 - Image optimization
 
 ### API Design
+
 - RESTful endpoints with proper HTTP methods
 - Consistent error handling
 - Pagination for list endpoints
@@ -159,11 +178,12 @@ npm run build  # Outputs to ../consulta-previa-proxy
 ## Development Workflows
 
 ### Start Development Environment
+
 ```bash
 # Backend
 cd consulta_previa_django && bash start.sh
 
-# Frontend  
+# Frontend
 cd consulta-previa && npm run dev
 
 # Admin
@@ -171,12 +191,14 @@ cd consulta-previa-admin && npm run dev
 ```
 
 ### Database Setup
+
 ```bash
 docker-compose up -d  # PostgreSQL + Redis
 python manage.py migrate
 ```
 
 ### Build & Deploy
+
 ```bash
 # Frontend build
 cd consulta-previa && npm run build
@@ -188,14 +210,17 @@ cd consulta_previa_django && python production.py
 ## Integration Points
 
 ### Moodle Data Flow
+
 CSV uploads → `procesar_informacion()` → bulk insert `ActividadesCompletadas`
 
 ### Authentication Flow
+
 - Django JWT tokens
 - Frontend SWR authentication
 - Admin Iron Session management
 
 ### File Handling
+
 - Static files: `/var/www/consulta_previa/static/`
 - Media uploads: Django MEDIA_ROOT
 - Excel exports: OpenPyXL with custom formatting
@@ -203,18 +228,21 @@ CSV uploads → `procesar_informacion()` → bulk insert `ActividadesCompletadas
 ## Code Style & Conventions
 
 ### Python (Django)
+
 - PEP 8 compliance
 - Class-based views for complex logic
 - Function-based views for simple operations
 - Custom managers for complex queries
 
 ### JavaScript/React
+
 - ES6+ syntax
 - Functional components with hooks
 - Custom hooks for reusable logic
 - Consistent naming conventions
 
 ### CSS/Styling
+
 - Material-UI theming system
 - Consistent spacing using theme values
 - Responsive design patterns
@@ -223,11 +251,13 @@ CSV uploads → `procesar_informacion()` → bulk insert `ActividadesCompletadas
 ## Environment Detection & Configuration
 
 ### Django Settings
+
 - Use `socket.gethostname()` for dev/prod detection
 - Environment-specific database configurations
 - Debug settings based on environment
 
 ### Frontend Configuration
+
 - Vite environment variables
 - API endpoint configuration
 - Build optimizations for production
@@ -239,11 +269,13 @@ CSV uploads → `procesar_informacion()` → bulk insert `ActividadesCompletadas
 ## Security Considerations
 
 ### Authentication
+
 - JWT token validation
 - Session security in admin panel
 - CORS configuration for cross-origin requests
 
 ### Data Protection
+
 - Input validation and sanitization
 - SQL injection prevention through ORM
 - XSS protection in frontend components
@@ -251,11 +283,13 @@ CSV uploads → `procesar_informacion()` → bulk insert `ActividadesCompletadas
 ## Testing Guidelines
 
 ### Backend Testing
+
 - Unit tests for models and utilities
 - Integration tests for API endpoints
 - Performance tests for large datasets
 
 ### Frontend Testing
+
 - Component testing with React Testing Library
 - Integration tests for user flows
 - E2E testing for critical paths

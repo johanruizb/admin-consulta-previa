@@ -19,8 +19,8 @@ const Status = memo(function Status({ params, header }) {
             ? dayjs(fecha).format("DD [de] MMMM [de] YYYY, [a las] HH:mm:ss a")
             : "Actividad no completada"
         : completado
-        ? "Completado"
-        : "Módulo no completado";
+          ? "Completado"
+          : "Módulo no completado";
 
     return (
         <Tooltip
@@ -135,7 +135,7 @@ export default function TablaAvancesV2({
                         type: "boolean",
                     };
                 return h;
-            })
+            }),
         );
     }, [headers, getStatus]);
 

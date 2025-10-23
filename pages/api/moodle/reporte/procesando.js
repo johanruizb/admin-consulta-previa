@@ -13,7 +13,6 @@ export default async function handler(req, res) {
     const { getToken } = getAuth(req);
     const token = await getToken();
 
-
     const response = await fetch(
         process.env.NEXT_PUBLIC_BASE_URL + "/api/v1/moodle/reporte/procesando",
         {

@@ -103,7 +103,7 @@ function View({ defaultValues }) {
     // Obtener el ciclo actual desde el backend
     const { data: cicloActualData } = useSWR(
         getURL("/api/usuarios/ciclos/actual"),
-        fetcher
+        fetcher,
     );
 
     // Determinar si el ciclo seleccionado es el actual
@@ -145,7 +145,7 @@ function View({ defaultValues }) {
                         res?.message ??
                             `Se ha producido un error (${response.statusText})`,
 
-                        "danger"
+                        "danger",
                     );
                 }
             })
@@ -153,7 +153,7 @@ function View({ defaultValues }) {
                 openAlert(
                     `Se ha producido un error (${error.toString()})`,
 
-                    "danger"
+                    "danger",
                 );
             })
             .finally(() => {

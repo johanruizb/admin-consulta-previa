@@ -57,9 +57,7 @@ const buildPredicate = (filter) => {
         curso_20horas: normalizeFilterValue(filter.curso_20horas),
         diplomado_120horas: normalizeFilterValue(filter.diplomado_120horas),
         info_validada: normalizeFilterValue(filter.info_validada),
-        plataforma_registro: normalizeFilterValue(
-            filter.plataforma_registro,
-        ),
+        plataforma_registro: normalizeFilterValue(filter.plataforma_registro),
         curso_inscrito: normalizeFilterValue(filter.curso_inscrito),
     };
 

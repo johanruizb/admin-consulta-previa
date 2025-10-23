@@ -11,7 +11,7 @@ import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import LanguageIcon from "@mui/icons-material/Language";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import { Divider } from "@mui/joy";
+import Divider from "@mui/joy/Divider";
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Card from "@mui/joy/Card";
@@ -73,7 +73,7 @@ export default function Page() {
             }
             return acc;
         },
-        {}
+        {},
     );
 
     const { courses: curso } = filters;
@@ -91,7 +91,7 @@ export default function Page() {
         statsParams
             ? getURL(`api/usuarios/estadisticas?${getParams(statsParams)}`)
             : null,
-        fetcher
+        fetcher,
     );
 
     const summaryParams = {
@@ -110,10 +110,10 @@ export default function Page() {
     const { data: cursos, isLoading: cursosIsLoading } = useSWR(
         selectedCicloId
             ? getURL(
-                  `api/usuarios/cursos/disponibles?ciclo_id=${selectedCicloId}`
+                  `api/usuarios/cursos/disponibles?ciclo_id=${selectedCicloId}`,
               )
             : null,
-        fetcher
+        fetcher,
     );
 
     const [mounted, setMounted] = useState(false);
@@ -160,21 +160,21 @@ export default function Page() {
                 map.set(option.value, option);
             });
             return Array.from(map.values()).sort((a, b) =>
-                a.label.localeCompare(b.label, "es", { sensitivity: "base" })
+                a.label.localeCompare(b.label, "es", { sensitivity: "base" }),
             );
         };
 
         setFilterOptions((prev) => ({
             tipo_cliente: mergeOptions(
                 prev.tipo_cliente,
-                formatOptions(data?.rol)
+                formatOptions(data?.rol),
             ),
             etnia: mergeOptions(prev.etnia, formatOptions(data?.etnia)),
             genero: mergeOptions(prev.genero, formatOptions(data?.genero)),
             zona: mergeOptions(prev.zona, formatOptions(data?.zona)),
             departamento: mergeOptions(
                 prev.departamento,
-                formatOptions(data?.departamento)
+                formatOptions(data?.departamento),
             ),
             plataforma: prev.plataforma,
         }));
@@ -435,7 +435,7 @@ export default function Page() {
                                                             fontWeight="bold"
                                                         >
                                                             {formatNumber(
-                                                                item.registrados
+                                                                item.registrados,
                                                             )}
                                                         </Typography>
                                                     </Stack>
@@ -443,7 +443,7 @@ export default function Page() {
                                                         sx={{ my: 0.25 }}
                                                     />
                                                 </Fragment>
-                                            )
+                                            ),
                                         )}
                                         {summaryData?.cursos?.map(
                                             (item, index) => (
@@ -463,7 +463,7 @@ export default function Page() {
                                                             fontWeight="bold"
                                                         >
                                                             {formatNumber(
-                                                                item.registrados
+                                                                item.registrados,
                                                             )}
                                                         </Typography>
                                                     </Stack>
@@ -471,7 +471,7 @@ export default function Page() {
                                                         sx={{ my: 0.25 }}
                                                     />
                                                 </Fragment>
-                                            )
+                                            ),
                                         )}
                                         <Stack
                                             direction="row"
@@ -528,7 +528,7 @@ export default function Page() {
                                                     <br />
                                                     <Typography fontSize="xx-large">
                                                         {formatNumber(
-                                                            data?.total_web
+                                                            data?.total_web,
                                                         )}
                                                     </Typography>
                                                 </Typography>
@@ -560,7 +560,7 @@ export default function Page() {
                                                     <br />
                                                     <Typography fontSize="xx-large">
                                                         {formatNumber(
-                                                            data?.total_whatsapp
+                                                            data?.total_whatsapp,
                                                         )}
                                                     </Typography>
                                                 </Typography>
@@ -627,7 +627,7 @@ export default function Page() {
                                                     </Typography>
                                                     <Typography level="h2">
                                                         {formatNumber(
-                                                            item.value
+                                                            item.value,
                                                         )}
                                                     </Typography>
                                                 </Stack>

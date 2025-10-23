@@ -63,7 +63,7 @@ function HistoryItemWithChanges({ item, index }) {
                         </Typography>
                         <Typography level="body-sm" noWrap>
                             {dayjs(item.history_date).format(
-                                "DD/MM/YYYY HH:mm:ss A"
+                                "DD/MM/YYYY HH:mm:ss A",
                             )}
                         </Typography>
                     </ListItemContent>
@@ -84,7 +84,7 @@ function HistoryItemWithChanges({ item, index }) {
                                     size={
                                         field === "Cursos inscritos" &&
                                         Object.values(changes).every(
-                                            (change) => change
+                                            (change) => change,
                                         )
                                             ? 12
                                             : 6
@@ -111,7 +111,7 @@ function HistoryItemWithChanges({ item, index }) {
                                             >
                                                 <Tooltip
                                                     title={safeRenderValue(
-                                                        changes.old
+                                                        changes.old,
                                                     )}
                                                     arrow
                                                 >
@@ -121,14 +121,14 @@ function HistoryItemWithChanges({ item, index }) {
                                                         noWrap
                                                     >
                                                         {safeRenderValue(
-                                                            changes.old
+                                                            changes.old,
                                                         )}
                                                     </Typography>
                                                 </Tooltip>
                                                 <span>{"»»"}</span>
                                                 <Tooltip
                                                     title={safeRenderValue(
-                                                        changes.new
+                                                        changes.new,
                                                     )}
                                                     arrow
                                                 >
@@ -138,7 +138,7 @@ function HistoryItemWithChanges({ item, index }) {
                                                         noWrap
                                                     >
                                                         {safeRenderValue(
-                                                            changes.new
+                                                            changes.new,
                                                         )}
                                                     </Typography>
                                                 </Tooltip>
@@ -146,7 +146,7 @@ function HistoryItemWithChanges({ item, index }) {
                                         </ListItemContent>
                                     </ListItem>
                                 </Grid>
-                            )
+                            ),
                         )}
                     </Grid>
                     <Divider sx={{ mt: 2, mb: -1 }} />
@@ -221,7 +221,7 @@ export function HistoryList({ historial }) {
                             item={item}
                             index={index}
                         />
-                    )
+                    ),
                 )}
             </List>
         </Box>
@@ -252,7 +252,7 @@ function ActivityItem({ actividad, index }) {
                 <Typography level="body-sm" noWrap>
                     {actividad?.completado
                         ? `Completado — ${dayjs(actividad.date).format(
-                              "DD/MM/YYYY HH:mm:ss A"
+                              "DD/MM/YYYY HH:mm:ss A",
                           )}`
                         : "Incompleto"}
                 </Typography>
@@ -362,8 +362,8 @@ UserTitle.propTypes = {
  */
 export function InstructionMessage({ validado }) {
     return validado
-        ? 'La persona ya ha sido validada. Si hay algún error, edita los campos necesarios y presiona el botón "Guardar".'
-        : 'Si hay algún error, edita los campos necesarios. Cuando la información sea correcta presiona el botón "Validar".';
+        ? "La persona ya ha sido validada. Si hay algún error, edita los campos necesarios y presiona el botón "Guardar"."
+        : "Si hay algún error, edita los campos necesarios. Cuando la información sea correcta presiona el botón "Validar".";
 }
 
 InstructionMessage.propTypes = {

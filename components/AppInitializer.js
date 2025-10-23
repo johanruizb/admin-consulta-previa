@@ -25,7 +25,7 @@ export default function AppInitializer({ children }) {
             {
                 colorScheme: "light",
                 useWideInterface: false,
-            }
+            },
         );
         setSettings(loadedSettings);
         setLoadingStage("preload");

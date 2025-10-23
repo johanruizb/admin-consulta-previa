@@ -13,7 +13,6 @@ export default async function handler(req, res) {
     const { getToken } = getAuth(req);
     const token = await getToken();
 
-
     // Construir la URL con query parameters
     const queryParams = new URLSearchParams(req.query).toString();
     const url =

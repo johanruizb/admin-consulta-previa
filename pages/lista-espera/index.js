@@ -33,7 +33,7 @@ export default function Registros({ children }) {
         selectedCicloId
             ? getURL(`/api/usuarios/espera?ciclo_id=${selectedCicloId}`)
             : null,
-        fetcher
+        fetcher,
     );
 
     const onView = (id) => {

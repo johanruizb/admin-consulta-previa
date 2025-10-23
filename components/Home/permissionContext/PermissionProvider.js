@@ -17,7 +17,7 @@ function PermissionProvider({ children }) {
         error,
     } = useSWR(
         clerkLoaded && isSignedIn ? getURL("/api/permissions") : null,
-        fetcher
+        fetcher,
     );
 
     const hasPermission = useCallback(
@@ -25,7 +25,7 @@ function PermissionProvider({ children }) {
             if (!permissions) return false;
             return permissions.includes(permission);
         },
-        [permissions]
+        [permissions],
     );
 
     const invalid = clerkLoaded && isSignedIn && !isLoading && !permissions;
@@ -37,7 +37,7 @@ function PermissionProvider({ children }) {
                 "Sesión invalida, por favor inicie sesión de nuevo.",
                 {
                     variant: "warning",
-                }
+                },
             );
             signOut();
         }

@@ -34,7 +34,7 @@ const resolveSelectedCicloId = (ciclos) => {
     const storedValue = STORAGE.load?.(
         SELECTED_CICLO_STORAGE_KEY,
         STORAGE.SESSION_STORAGE,
-        null
+        null,
     );
 
     let selectedId = toNumber(storedValue);
@@ -58,7 +58,7 @@ const resolveSelectedCicloId = (ciclos) => {
         STORAGE.save?.(
             SELECTED_CICLO_STORAGE_KEY,
             selectedId,
-            STORAGE.SESSION_STORAGE
+            STORAGE.SESSION_STORAGE,
         );
     }
 
@@ -103,41 +103,47 @@ const runInitializePreload = async () => {
     }
 
     const cursosKey = getURL(
-        `api/usuarios/cursos/disponibles?ciclo_id=${selectedCicloId}`
+        `api/usuarios/cursos/disponibles?ciclo_id=${selectedCicloId}`,
     );
     const cursosResult = await safePreload(cursosKey);
 
     const cursosList = Array.isArray(cursosResult?.data)
         ? cursosResult.data
         : Array.isArray(cursosResult)
-        ? cursosResult
-        : [];
+          ? cursosResult
+          : [];
 
     const courseIds = cursosList
         .map((curso) => toNumber(curso?.id))
         .filter((id) => id !== null);
 
     const followUpTasks = [
-        safePreload(getURL(`/api/usuarios/summary?ciclo_id=${selectedCicloId}`)),
+        safePreload(
+            getURL(`/api/usuarios/summary?ciclo_id=${selectedCicloId}`),
+        ),
     ];
 
     if (courseIds.length > 0) {
         const estadisticasQuery = buildCourseQuery(selectedCicloId, courseIds);
         followUpTasks.push(
             safePreload(
-                getURL(`api/usuarios/estadisticas?${estadisticasQuery}`)
-            )
+                getURL(`api/usuarios/estadisticas?${estadisticasQuery}`),
+            ),
         );
 
-        const inscripcionesQuery = buildCourseQuery(selectedCicloId, courseIds, {
-            periodo: "dias",
-        });
+        const inscripcionesQuery = buildCourseQuery(
+            selectedCicloId,
+            courseIds,
+            {
+                periodo: "dias",
+            },
+        );
         followUpTasks.push(
             safePreload(
                 getURL(
-                    `api/usuarios/inscripciones-por-periodo/?${inscripcionesQuery}`
-                )
-            )
+                    `api/usuarios/inscripciones-por-periodo/?${inscripcionesQuery}`,
+                ),
+            ),
         );
     }
 

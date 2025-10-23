@@ -42,7 +42,7 @@ export function useAvancesData(formValues) {
             revalidateOnReconnect: true,
             dedupingInterval: 5000, // Dedup requests por 5 segundos
             errorRetryCount: 2,
-        }
+        },
     );
 
     // Función para refrescar datos manualmente

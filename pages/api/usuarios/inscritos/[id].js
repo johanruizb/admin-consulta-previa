@@ -23,7 +23,6 @@ export default async function handler(req, res) {
     const { getToken } = getAuth(req);
     const token = await getToken();
 
-
     const id = parseInt(req.query.id);
     if (!id) {
         res.status(200).end();
