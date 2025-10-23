@@ -30,7 +30,7 @@ export default function OrderTable({ data, onView }) {
         usePermissionContext();
 
     const [page, setPage] = useSessionStorage("OrderTable__page", 1);
-    const [filter, setFilter] = useState({});
+    const [filter, setFilter] = useSessionStorage("OrderTable__filter", {});
 
     const updateFilter = useCallback(
         (key, rawValue) => {
