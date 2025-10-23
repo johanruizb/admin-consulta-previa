@@ -1,6 +1,7 @@
 import CicloSelector from "@/components/Ciclos/CicloSelector";
 import fetcher from "@/components/fetcher";
 import Layout from "@/components/Home/Layout";
+import ColombiaHeatMap from "@/components/Panel/ColombiaHeatMap";
 import CustomPie from "@/components/Panel/CustomPie";
 import InscripcionesPorPeriodo from "@/components/Panel/InscripcionesPorPeriodo";
 import { formatNumber, getURL } from "@/components/utils";
@@ -340,11 +341,7 @@ export default function Page() {
                                             >
                                                 Via Web
                                                 <br />
-                                                <Typography
-                                                    fontSize="xxx-large"
-                                                    color="primary"
-                                                    fontWeight="bold"
-                                                >
+                                                <Typography fontSize="xx-large">
                                                     {formatNumber(
                                                         data?.total_web
                                                     )}
@@ -374,11 +371,7 @@ export default function Page() {
                                             >
                                                 Via WhatsApp
                                                 <br />
-                                                <Typography
-                                                    fontSize="xxx-large"
-                                                    color="primary"
-                                                    fontWeight="bold"
-                                                >
+                                                <Typography fontSize="xx-large">
                                                     {formatNumber(
                                                         data?.total_whatsapp
                                                     )}
@@ -553,6 +546,9 @@ export default function Page() {
                                         ]}
                                         height={300}
                                     />
+                                    {/* <Box>
+                                        <ColombiaHeatMap data={data} />
+                                    </Box> */}
                                 </CardContent>
                             </Card>
                         </Grid>

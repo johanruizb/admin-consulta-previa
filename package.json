@@ -21,6 +21,7 @@
         "@mui/x-charts": "^8.13.1",
         "@mui/x-data-grid": "^8.13.1",
         "@uidotdev/usehooks": "^2.4.1",
+        "d3-scale": "^4.0.2",
         "dayjs": "^1.11.18",
         "fuse.js": "^7.1.0",
         "intersection-observer": "^0.12.2",
@@ -37,6 +38,7 @@
         "react-dropzone": "^14.3.8",
         "react-hook-form": "^7.64.0",
         "react-imask": "^7.6.1",
+        "react-simple-maps": "^1.0.0",
         "swr": "^2.3.6",
         "tailwindcss": "^4.1.14",
         "uuid": "^13.0.0"
