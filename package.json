@@ -29,7 +29,6 @@
         "motion": "^12.23.22",
         "next": "^15.5.4",
         "notistack": "^3.0.2",
-        "npm-check-updates": "^19.0.0",
         "pako": "^2.1.0",
         "react": "^19",
         "react-countup": "^6.5.3",
