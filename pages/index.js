@@ -345,7 +345,9 @@ export default function Page() {
                                                     color="primary"
                                                     fontWeight="bold"
                                                 >
-                                                    {data?.total_web ?? 0}
+                                                    {formatNumber(
+                                                        data?.total_web
+                                                    )}
                                                 </Typography>
                                             </Typography>
                                         </Stack>
@@ -377,7 +379,9 @@ export default function Page() {
                                                     color="primary"
                                                     fontWeight="bold"
                                                 >
-                                                    {data?.total_whatsapp ?? 0}
+                                                    {formatNumber(
+                                                        data?.total_whatsapp
+                                                    )}
                                                 </Typography>
                                             </Typography>
                                         </Stack>
