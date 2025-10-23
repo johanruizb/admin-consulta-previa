@@ -3,14 +3,14 @@ import fetcher from "@/components/fetcher";
 import Layout from "@/components/Home/Layout";
 import CustomPie from "@/components/Panel/CustomPie";
 import InscripcionesPorPeriodo from "@/components/Panel/InscripcionesPorPeriodo";
-import UserSummary from "@/components/Registros/UserSummary";
 import { formatNumber, getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
 import useClient from "@/hooks/useClient";
 import getParams from "@/utils/params";
-import { initializePreload } from "@/utils/preloadData";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import LanguageIcon from "@mui/icons-material/Language";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Divider } from "@mui/joy";
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
@@ -250,7 +250,9 @@ export default function Page() {
                                                             )}
                                                         </Typography>
                                                     </Stack>
-                                                    <Divider sx={{ my: 0.25 }} />
+                                                    <Divider
+                                                        sx={{ my: 0.25 }}
+                                                    />
                                                 </Fragment>
                                             )
                                         )}
@@ -276,7 +278,9 @@ export default function Page() {
                                                             )}
                                                         </Typography>
                                                     </Stack>
-                                                    <Divider sx={{ my: 0.25 }} />
+                                                    <Divider
+                                                        sx={{ my: 0.25 }}
+                                                    />
                                                 </Fragment>
                                             )
                                         )}
@@ -301,6 +305,80 @@ export default function Page() {
                                                 fontWeight="bold"
                                             >
                                                 {formatNumber(data.total)}
+                                            </Typography>
+                                        </Stack>
+                                    </Stack>
+                                    <Divider sx={{ mt: 0.25, mb: 1 }} />
+                                    <Stack
+                                        direction="row"
+                                        justifyContent="space-evenly"
+                                        // spacing={1}
+                                        sx={{
+                                            width: "100%",
+                                        }}
+                                    >
+                                        <Stack
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            // flex={1}
+                                            spacing={0.5}
+                                            sx={{
+                                                "& *": {
+                                                    color: "info.main",
+                                                },
+                                            }}
+                                        >
+                                            <LanguageIcon
+                                                sx={{
+                                                    fontSize: "xxx-large",
+                                                }}
+                                            />
+                                            <Typography
+                                                component="span"
+                                                level="body-lg"
+                                                textAlign="center"
+                                            >
+                                                Via Web
+                                                <br />
+                                                <Typography
+                                                    fontSize="xxx-large"
+                                                    color="primary"
+                                                    fontWeight="bold"
+                                                >
+                                                    {data?.total_web ?? 0}
+                                                </Typography>
+                                            </Typography>
+                                        </Stack>
+                                        <Stack
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            // flex={1}
+                                            spacing={0.5}
+                                            sx={{
+                                                "& *": {
+                                                    color: "#25d366",
+                                                },
+                                            }}
+                                        >
+                                            <WhatsAppIcon
+                                                sx={{
+                                                    fontSize: "xxx-large",
+                                                }}
+                                            />
+                                            <Typography
+                                                component="span"
+                                                level="body-lg"
+                                                textAlign="center"
+                                            >
+                                                Via WhatsApp
+                                                <br />
+                                                <Typography
+                                                    fontSize="xxx-large"
+                                                    color="primary"
+                                                    fontWeight="bold"
+                                                >
+                                                    {data?.total_whatsapp ?? 0}
+                                                </Typography>
                                             </Typography>
                                         </Stack>
                                     </Stack>
