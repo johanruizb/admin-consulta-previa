@@ -1,7 +1,6 @@
 import CicloSelector from "@/components/Ciclos/CicloSelector";
 import fetcher from "@/components/fetcher";
 import Layout from "@/components/Home/Layout";
-import ColombiaHeatMap from "@/components/Panel/ColombiaHeatMap";
 import CustomPie from "@/components/Panel/CustomPie";
 import InscripcionesPorPeriodo from "@/components/Panel/InscripcionesPorPeriodo";
 import { formatNumber, getURL } from "@/components/utils";
@@ -20,6 +19,8 @@ import CardContent from "@mui/joy/CardContent";
 import CircularProgress from "@mui/joy/CircularProgress";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
+import Option from "@mui/joy/Option";
+import Select from "@mui/joy/Select";
 import Link from "@mui/joy/Link";
 import Radio from "@mui/joy/Radio";
 import RadioGroup from "@mui/joy/RadioGroup";
@@ -36,25 +37,69 @@ import useSWR from "swr";
 
 dayjs.locale("es");
 
+const PLATFORM_OPTIONS = [
+    { value: "web", label: "Web" },
+    { value: "whatsapp", label: "WhatsApp" },
+];
+
 export default function Page() {
     const { selectedCicloId } = useCiclo();
     const [curso, setCurso] = useState();
+    const [filters, setFilters] = useState({
+        tipo_cliente: null,
+        etnia: null,
+        genero: null,
+        zona: null,
+        departamento: null,
+        plataforma: null,
+    });
+    const [filterOptions, setFilterOptions] = useState({
+        tipo_cliente: [],
+        etnia: [],
+        genero: [],
+        zona: [],
+        departamento: [],
+        plataforma: [...PLATFORM_OPTIONS],
+    });
+
+    const activeFilters = Object.entries(filters).reduce(
+        (acc, [key, value]) => {
+            if (value) {
+                acc[key] = value;
+            }
+            return acc;
+        },
+        {}
+    );
+
+    const statsParams =
+        selectedCicloId && curso
+            ? {
+                  ciclo_id: selectedCicloId,
+                  courses: Array.isArray(curso) ? curso : curso?.split(","),
+                  ...activeFilters,
+              }
+            : null;
 
     const { data, isLoading } = useSWR(
-        selectedCicloId && curso
-            ? getURL(
-                  `api/usuarios/estadisticas?${getParams({
-                      ciclo_id: selectedCicloId,
-                      courses: Array.isArray(curso) ? curso : curso?.split(","),
-                  })}`
-              )
+        statsParams
+            ? getURL(`api/usuarios/estadisticas?${getParams(statsParams)}`)
             : null,
         fetcher
     );
 
-    const { data: summaryData } = useSWR(
-        getURL(`/api/usuarios/summary?ciclo_id=${selectedCicloId}`)
-    );
+    const summaryParams = {
+        ...activeFilters,
+    };
+    if (selectedCicloId) {
+        summaryParams.ciclo_id = selectedCicloId;
+    }
+    const summaryQuery = getParams(summaryParams);
+    const summaryUrl = `api/usuarios/summary${
+        summaryQuery ? `?${summaryQuery}` : ""
+    }`;
+
+    const { data: summaryData } = useSWR(getURL(summaryUrl));
 
     const { data: cursos, isLoading: cursosIsLoading } = useSWR(
         selectedCicloId
@@ -69,24 +114,95 @@ export default function Page() {
 
     useClient(() => setMounted(true));
 
+    useEffect(() => {
+        setFilters({
+            tipo_cliente: null,
+            etnia: null,
+            genero: null,
+            zona: null,
+            departamento: null,
+            plataforma: null,
+        });
+        setFilterOptions({
+            tipo_cliente: [],
+            etnia: [],
+            genero: [],
+            zona: [],
+            departamento: [],
+            plataforma: [...PLATFORM_OPTIONS],
+        });
+    }, [selectedCicloId]);
+
+    useEffect(() => {
+        if (!data) return;
+
+        const formatOptions = (items) =>
+            (items || [])
+                .map((item) => {
+                    if (item?.id === null || item?.id === undefined) {
+                        return null;
+                    }
+                    return {
+                        value: String(item.id),
+                        label: item.label,
+                    };
+                })
+                .filter(Boolean);
+
+        const mergeOptions = (current, incoming) => {
+            if (!incoming || incoming.length === 0) {
+                return current;
+            }
+            const map = new Map();
+            current.forEach((option) => {
+                map.set(option.value, option);
+            });
+            incoming.forEach((option) => {
+                map.set(option.value, option);
+            });
+            return Array.from(map.values()).sort((a, b) =>
+                a.label.localeCompare(b.label, "es", { sensitivity: "base" })
+            );
+        };
+
+        setFilterOptions((prev) => ({
+            tipo_cliente: mergeOptions(
+                prev.tipo_cliente,
+                formatOptions(data?.rol)
+            ),
+            etnia: mergeOptions(prev.etnia, formatOptions(data?.etnia)),
+            genero: mergeOptions(prev.genero, formatOptions(data?.genero)),
+            zona: mergeOptions(prev.zona, formatOptions(data?.zona)),
+            departamento: mergeOptions(
+                prev.departamento,
+                formatOptions(data?.departamento)
+            ),
+            plataforma: prev.plataforma,
+        }));
+    }, [data]);
+
     const handleCursoChange = (event) => {
         const value = event.target.value;
         let newCurso;
 
-        // Si el valor es una cadena con comas, es el array de "Todos los cursos"
         if (typeof value === "string" && value.includes(",")) {
-            newCurso = value.split(",").map((id) => parseInt(id));
+            newCurso = value.split(",").map((id) => parseInt(id, 10));
         } else {
-            // Es un ID individual de curso
-            newCurso = [parseInt(value)];
+            newCurso = [parseInt(value, 10)];
         }
 
         setCurso(newCurso);
     };
 
+    const handleFilterChange = (key) => (_event, newValue) => {
+        setFilters((prev) => ({
+            ...prev,
+            [key]: newValue || null,
+        }));
+    };
+
     const prevCicloId = usePrevious(selectedCicloId);
 
-    // Reiniciar selección de curso si cambia el ciclo
     const resetSelectedCurso = useEffectEvent(() => {
         setCurso(cursos?.map((c) => c.id));
     });
@@ -101,6 +217,15 @@ export default function Page() {
     if (!mounted) return null;
 
     const loading = isLoading || cursosIsLoading || !curso;
+
+    const filterConfig = [
+        { key: "tipo_cliente", label: "Rol" },
+        { key: "etnia", label: "Etnia" },
+        { key: "genero", label: "Género" },
+        { key: "zona", label: "Zona" },
+        { key: "departamento", label: "Departamento" },
+        { key: "plataforma", label: "Plataforma" },
+    ];
 
     return (
         <Layout>
@@ -193,6 +318,43 @@ export default function Page() {
                     </FormControl>
                 </Box>
             </Box>
+            <Box
+                sx={{
+                    mb: 1,
+                }}
+            >
+                <Grid container spacing={1.25 / 2}>
+                    {filterConfig.map(({ key, label }) => (
+                        <Grid
+                            key={key}
+                            size={{ xs: 12, sm: 6, md: 4, lg: 2 }}
+                            sx={{
+                                width: "100%",
+                            }}
+                        >
+                            <FormControl>
+                                <FormLabel>{label}</FormLabel>
+                                <Select
+                                    value={filters[key] ?? ""}
+                                    onChange={handleFilterChange(key)}
+                                    placeholder="Todos"
+                                    size="sm"
+                                >
+                                    <Option value="">Todos</Option>
+                                    {filterOptions[key]?.map((option) => (
+                                        <Option
+                                            key={option.value}
+                                            value={option.value}
+                                        >
+                                            {option.label}
+                                        </Option>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    ))}
+                </Grid>
+            </Box>
             <Grid
                 container
                 spacing={1.25 / 2}
@@ -216,7 +378,6 @@ export default function Page() {
                             <Card
                                 variant="outlined"
                                 sx={{
-                                    // width: "100%",
                                     height: "100%",
                                 }}
                             >
@@ -225,10 +386,7 @@ export default function Page() {
                                         Personas registradas
                                     </Typography>
                                     <Divider sx={{ mt: 1 }} />
-                                    <Stack
-                                        // flex={0.5}
-                                        justifyContent="center"
-                                    >
+                                    <Stack justifyContent="center">
                                         {summaryData?.diplomados?.map(
                                             (item, index) => (
                                                 <Fragment key={index}>
@@ -292,7 +450,6 @@ export default function Page() {
                                             spacing={1.25}
                                         >
                                             <Typography
-                                                // level="h1"
                                                 fontSize="xxx-large"
                                                 color="primary"
                                                 fontWeight="bold"
@@ -300,7 +457,6 @@ export default function Page() {
                                                 Total
                                             </Typography>
                                             <Typography
-                                                // level="h1"
                                                 fontSize="xxx-large"
                                                 color="primary"
                                                 fontWeight="bold"
@@ -313,86 +469,85 @@ export default function Page() {
                                     <Stack
                                         direction="row"
                                         justifyContent="space-evenly"
-                                        // spacing={1}
                                         sx={{
                                             width: "100%",
                                         }}
                                     >
-                                        <Stack
-                                            justifyContent="center"
-                                            alignItems="center"
-                                            // flex={1}
-                                            spacing={0.5}
-                                            sx={{
-                                                "& *": {
-                                                    color: "info.main",
-                                                },
-                                            }}
-                                        >
-                                            <LanguageIcon
+                                        {data?.total_web ? (
+                                            <Stack
+                                                justifyContent="center"
+                                                alignItems="center"
+                                                spacing={0.5}
                                                 sx={{
-                                                    fontSize: "xxx-large",
+                                                    "& *": {
+                                                        color: "info.main",
+                                                    },
                                                 }}
-                                            />
-                                            <Typography
-                                                component="span"
-                                                level="body-lg"
-                                                textAlign="center"
                                             >
-                                                Via Web
-                                                <br />
-                                                <Typography fontSize="xx-large">
-                                                    {formatNumber(
-                                                        data?.total_web
-                                                    )}
+                                                <LanguageIcon
+                                                    sx={{
+                                                        fontSize: "xxx-large",
+                                                    }}
+                                                />
+                                                <Typography
+                                                    component="span"
+                                                    level="body-lg"
+                                                    textAlign="center"
+                                                >
+                                                    Via Web
+                                                    <br />
+                                                    <Typography fontSize="xx-large">
+                                                        {formatNumber(
+                                                            data?.total_web
+                                                        )}
+                                                    </Typography>
                                                 </Typography>
-                                            </Typography>
-                                        </Stack>
-                                        <Stack
-                                            justifyContent="center"
-                                            alignItems="center"
-                                            // flex={1}
-                                            spacing={0.5}
-                                            sx={{
-                                                "& *": {
-                                                    color: "#25d366",
-                                                },
-                                            }}
-                                        >
-                                            <WhatsAppIcon
+                                            </Stack>
+                                        ) : null}
+
+                                        {data?.total_whatsapp ? (
+                                            <Stack
+                                                justifyContent="center"
+                                                alignItems="center"
+                                                spacing={0.5}
                                                 sx={{
-                                                    fontSize: "xxx-large",
+                                                    "& *": {
+                                                        color: "#25d366",
+                                                    },
                                                 }}
-                                            />
-                                            <Typography
-                                                component="span"
-                                                level="body-lg"
-                                                textAlign="center"
                                             >
-                                                Via WhatsApp
-                                                <br />
-                                                <Typography fontSize="xx-large">
-                                                    {formatNumber(
-                                                        data?.total_whatsapp
-                                                    )}
+                                                <WhatsAppIcon
+                                                    sx={{
+                                                        fontSize: "xxx-large",
+                                                    }}
+                                                />
+                                                <Typography
+                                                    component="span"
+                                                    level="body-lg"
+                                                    textAlign="center"
+                                                >
+                                                    Via WhatsApp
+                                                    <br />
+                                                    <Typography fontSize="xx-large">
+                                                        {formatNumber(
+                                                            data?.total_whatsapp
+                                                        )}
+                                                    </Typography>
                                                 </Typography>
-                                            </Typography>
-                                        </Stack>
+                                            </Stack>
+                                        ) : null}
                                     </Stack>
                                 </CardContent>
                             </Card>
                         </Grid>
                         <Grid size={8}>
-                            <InscripcionesPorPeriodo courses={curso} />
+                            <InscripcionesPorPeriodo
+                                courses={curso}
+                                filters={filters}
+                            />
                         </Grid>
                         <Grid size={{ md: 12 }}>
-                            <Card
-                                variant="outlined"
-                                sx={{
-                                    // width: "100%",
-                                    height: "100%",
-                                }}
-                            >
+                            <Card variant="outlined" sx={{ height: "100%" }}>
                                 <CardContent>
                                     <Typography level="title-lg">
                                         Personas por rol
@@ -421,13 +576,7 @@ export default function Page() {
                             </Card>
                         </Grid>
                         <Grid size={{ xs: 12, md: 6 }}>
-                            <Card
-                                variant="outlined"
-                                sx={{
-                                    // width: "100%",
-                                    height: "100%",
-                                }}
-                            >
+                            <Card variant="outlined" sx={{ height: "100%" }}>
                                 <CardContent>
                                     <Typography level="title-lg">
                                         Personas por etnia
@@ -442,8 +591,6 @@ export default function Page() {
                                                     direction="row"
                                                     alignItems="center"
                                                     justifyContent="space-between"
-                                                    // spacing={1.25}
-                                                    // flex={1}
                                                 >
                                                     <Typography level="body-md">
                                                         {item.label}
@@ -461,13 +608,7 @@ export default function Page() {
                             </Card>
                         </Grid>
                         <Grid size={{ xs: 12, md: 6 }}>
-                            <Card
-                                variant="outlined"
-                                sx={{
-                                    // width: "100%",
-                                    height: "100%",
-                                }}
-                            >
+                            <Card variant="outlined" sx={{ height: "100%" }}>
                                 <CardContent>
                                     <Typography level="title-lg">
                                         Personas por rangos de edad
@@ -477,13 +618,7 @@ export default function Page() {
                             </Card>
                         </Grid>
                         <Grid size={{ xs: 12, md: 6 }}>
-                            <Card
-                                variant="outlined"
-                                sx={{
-                                    // width: "100%",
-                                    height: "100%",
-                                }}
-                            >
+                            <Card variant="outlined" sx={{ height: "100%" }}>
                                 <CardContent>
                                     <Typography level="title-lg">
                                         Personas por género
@@ -502,13 +637,7 @@ export default function Page() {
                             </Card>
                         </Grid>
                         <Grid size={{ xs: 12, md: 6 }}>
-                            <Card
-                                variant="outlined"
-                                sx={{
-                                    // width: "100%",
-                                    height: "100%",
-                                }}
-                            >
+                            <Card variant="outlined" sx={{ height: "100%" }}>
                                 <CardContent>
                                     <Typography level="title-lg">
                                         Personas por zona
@@ -518,13 +647,7 @@ export default function Page() {
                             </Card>
                         </Grid>
                         <Grid size={12}>
-                            <Card
-                                variant="outlined"
-                                sx={{
-                                    // width: "100%",
-                                    height: "100%",
-                                }}
-                            >
+                            <Card variant="outlined" sx={{ height: "100%" }}>
                                 <CardContent>
                                     <Typography level="title-lg">
                                         Personas por departamento
@@ -541,14 +664,10 @@ export default function Page() {
                                         series={[
                                             {
                                                 dataKey: "value",
-                                                // label: "London",
                                             },
                                         ]}
                                         height={300}
                                     />
-                                    {/* <Box>
-                                        <ColombiaHeatMap data={data} />
-                                    </Box> */}
                                 </CardContent>
                             </Card>
                         </Grid>

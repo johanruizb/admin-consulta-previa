@@ -28,7 +28,7 @@ import { BarChart } from "@mui/x-charts/BarChart";
 import { useState } from "react";
 import useSWR from "swr";
 
-export default function InscripcionesPorPeriodo({ courses = [] }) {
+export default function InscripcionesPorPeriodo({ courses = [], filters = {} }) {
     const { selectedCicloId } = useCiclo();
     const [periodo, setPeriodo] = useState("dias");
 
@@ -38,6 +38,12 @@ export default function InscripcionesPorPeriodo({ courses = [] }) {
 
     courses.forEach((courseId) => {
         params.append("courses", courseId);
+    });
+
+    Object.entries(filters || {}).forEach(([key, value]) => {
+        if (value) {
+            params.append(key, value);
+        }
     });
 
     const { data, isLoading, error } = useSWR(
