@@ -362,8 +362,8 @@ UserTitle.propTypes = {
  */
 export function InstructionMessage({ validado }) {
     return validado
-        ? "La persona ya ha sido validada. Si hay algún error, edita los campos necesarios y presiona el botón "Guardar"."
-        : "Si hay algún error, edita los campos necesarios. Cuando la información sea correcta presiona el botón "Validar".";
+        ? "La persona ya ha sido validada. Si hay algún error, edita los campos necesarios y presiona el botón 'Guardar'."
+        : "Si hay algún error, edita los campos necesarios. Cuando la información sea correcta presiona el botón 'Validar'.";
 }
 
 InstructionMessage.propTypes = {
