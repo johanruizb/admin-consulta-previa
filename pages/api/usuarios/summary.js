@@ -13,9 +13,9 @@ export default async function handler(req, res) {
     const { getToken } = getAuth(req);
     const token = await getToken();
 
-
     // Construir la URL con query parameters
     const queryParams = new URLSearchParams(req.query).toString();
+    console.log("Query Params:", queryParams);
     const url =
         process.env.NEXT_PUBLIC_BASE_URL +
         "/api/usuarios/summary" +
