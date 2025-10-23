@@ -6,21 +6,24 @@ export function useAvancesForm() {
     const { selectedCicloId } = useCiclo();
 
     // Valores por defecto optimizados
-    const defaultValues = useMemo(() => ({
-        // activity__module__course_id: 1,
-        grupo_usuario: "all",
-        activity__module_id: "all", 
-        user__ciudad_nac__state_id__country_id: "all",
-        user__ciudad__state_id: "all",
-        user__genero_id: "all",
-        user__etnia: "all",
-        user__tipo_cliente: "all",
-        user__zona: "all",
-        user__conectividad: "all",
-        modulo_completado: "all",
-        porcentaje_avance: [0, 100],
-        ciclo_id: selectedCicloId || null,
-    }), [selectedCicloId]);
+    const defaultValues = useMemo(
+        () => ({
+            // activity__module__course_id: 1,
+            grupo_usuario: "all",
+            activity__module_id: "all",
+            user__ciudad_nac__state_id__country_id: "all",
+            user__ciudad__state_id: "all",
+            user__genero_id: "all",
+            user__etnia: "all",
+            user__tipo_cliente: "all",
+            user__zona: "all",
+            user__conectividad: "all",
+            modulo_completado: "all",
+            porcentaje_avance: [0, 100],
+            ciclo_id: selectedCicloId || null,
+        }),
+        [selectedCicloId],
+    );
 
     const methods = useForm({ defaultValues });
     const { control, setValue, reset } = methods;
@@ -28,14 +31,14 @@ export function useAvancesForm() {
     // Watch solo los campos que necesitamos para lógica condicional
     const [
         personas_sin_actividad,
-        modulo_completado, 
-        activity__module__course_id
+        modulo_completado,
+        activity__module__course_id,
     ] = useWatch({
         control,
         name: [
             "personas_sin_actividad",
-            "modulo_completado", 
-            "activity__module__course_id"
+            "modulo_completado",
+            "activity__module__course_id",
         ],
     });
 
@@ -58,8 +61,10 @@ export function useAvancesForm() {
 
     // Lógica condicional para modulo_completado
     useEffect(() => {
-        if (personas_sin_actividad && 
-            (modulo_completado !== "all" || modulo_completado === true)) {
+        if (
+            personas_sin_actividad &&
+            (modulo_completado !== "all" || modulo_completado === true)
+        ) {
             setValue("modulo_completado", "all");
         }
     }, [personas_sin_actividad, modulo_completado, setValue]);
@@ -67,7 +72,7 @@ export function useAvancesForm() {
     // Reset form cuando cambie el ciclo principal
     useEffect(() => {
         if (selectedCicloId) {
-            reset(prev => ({ ...prev, ciclo_id: selectedCicloId }));
+            reset((prev) => ({ ...prev, ciclo_id: selectedCicloId }));
         }
     }, [selectedCicloId, reset]);
 

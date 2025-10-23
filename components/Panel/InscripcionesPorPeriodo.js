@@ -28,7 +28,10 @@ import { BarChart } from "@mui/x-charts/BarChart";
 import { useState } from "react";
 import useSWR from "swr";
 
-export default function InscripcionesPorPeriodo({ courses = [], filters = {} }) {
+export default function InscripcionesPorPeriodo({
+    courses = [],
+    filters = {},
+}) {
     const { selectedCicloId } = useCiclo();
     const [periodo, setPeriodo] = useState("dias");
 
@@ -49,10 +52,10 @@ export default function InscripcionesPorPeriodo({ courses = [], filters = {} }) 
     const { data, isLoading, error } = useSWR(
         selectedCicloId
             ? getURL(
-                  `api/usuarios/inscripciones-por-periodo/?${params.toString()}`
+                  `api/usuarios/inscripciones-por-periodo/?${params.toString()}`,
               )
             : null,
-        fetcher
+        fetcher,
     );
 
     const handlePeriodoChange = (event, newValue) => {
@@ -142,8 +145,8 @@ export default function InscripcionesPorPeriodo({ courses = [], filters = {} }) 
                             {periodo === "dias"
                                 ? "día"
                                 : periodo === "semanas"
-                                ? "semana"
-                                : "mes"}{" "}
+                                  ? "semana"
+                                  : "mes"}{" "}
                             (por plataforma)
                         </Typography>
                         <Typography level="body-sm" color="neutral">

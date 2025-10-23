@@ -15,7 +15,7 @@ const EmbedMonitor = ({
     const [uid] = useState(
         `embed-container-${Date.now()}-${Math.random()
             .toString(36)
-            .substr(2, 5)}`
+            .substr(2, 5)}`,
     );
 
     useEffect(() => {

@@ -20,10 +20,10 @@ export default async function handler(req, res) {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
-        }
+        },
     );
 
     res.status(response.status).json(
-        (await response.json()) || response.statusText
+        (await response.json()) || response.statusText,
     );
 }

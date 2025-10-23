@@ -13,7 +13,7 @@ export default function UserSummary({ slotProps }) {
     const { selectedCicloId } = useCiclo();
 
     const { data } = useSWR(
-        getURL(`/api/usuarios/summary?ciclo_id=${selectedCicloId}`)
+        getURL(`/api/usuarios/summary?ciclo_id=${selectedCicloId}`),
     );
 
     const { root, content, item } = slotProps || {};

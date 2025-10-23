@@ -14,7 +14,7 @@ export default async function handler(req, res) {
                     Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(req.body),
-            }
+            },
         );
 
         const data = await response.json();

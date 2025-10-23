@@ -16,7 +16,7 @@ export default async function handler(req, res) {
                 },
                 body:
                     req.method !== "GET" ? JSON.stringify(req.body) : undefined,
-            }
+            },
         );
 
         const data = await response.json();

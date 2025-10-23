@@ -61,7 +61,7 @@ export default function OrderTable({ data, onView }) {
                 };
             });
         },
-        [setFilter]
+        [setFilter],
     );
 
     const setSearchFilter = useMemo(
@@ -88,7 +88,7 @@ export default function OrderTable({ data, onView }) {
                     };
                 });
             }, 250),
-        [setFilter]
+        [setFilter],
     );
 
     useEffect(() => () => setSearchFilter.cancel(), [setSearchFilter]);
@@ -97,7 +97,7 @@ export default function OrderTable({ data, onView }) {
 
     const ready = useMemo(
         () => !permissionIsLoading && Array.isArray(data),
-        [permissionIsLoading, data]
+        [permissionIsLoading, data],
     );
 
     const totalPages = rows.pages || 0;
@@ -114,14 +114,14 @@ export default function OrderTable({ data, onView }) {
             const value = event.target.value;
             setSearchFilter(value ? value : undefined);
         },
-        [setSearchFilter]
+        [setSearchFilter],
     );
 
     const handleSelectChange = useCallback(
         (key) => (_, newValue) => {
             updateFilter(key, newValue !== "" ? newValue : undefined);
         },
-        [updateFilter]
+        [updateFilter],
     );
 
     const { selectedCicloId } = useCiclo();
@@ -312,7 +312,7 @@ export default function OrderTable({ data, onView }) {
                                         // onClick={() => onView(row.id)}
                                         className="pointer-row"
                                         {...(hasPermission(
-                                            "usuario.change_persona"
+                                            "usuario.change_persona",
                                         )
                                             ? {
                                                   onClick: () => onView(row.id),
@@ -322,7 +322,7 @@ export default function OrderTable({ data, onView }) {
                                         <td>
                                             <Typography level="body-sm">
                                                 {dayjs(
-                                                    row.ultimo_registro
+                                                    row.ultimo_registro,
                                                 ).format("DD/MM/YYYY")}
                                                 {/* HH:mm:ss A */}
                                             </Typography>
@@ -402,9 +402,9 @@ export default function OrderTable({ data, onView }) {
                                                     "web"
                                                         ? "Formulario web"
                                                         : row.plataforma_registro ===
-                                                          "whatsapp"
-                                                        ? "WhatsApp"
-                                                        : "Desconocida"}
+                                                            "whatsapp"
+                                                          ? "WhatsApp"
+                                                          : "Desconocida"}
                                                 </Typography>
                                             </td>
                                         )}

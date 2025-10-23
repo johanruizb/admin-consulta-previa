@@ -35,7 +35,7 @@ function filter(originalData, searchValue, callback) {
 export default function FiltrarCursos({ setFilter, data }) {
     const [expanded, setExpanded] = useSessionStorage(
         "FiltrarCursos__expanded",
-        false
+        false,
     );
     const [search, setSearch] = useState();
 
@@ -44,7 +44,7 @@ export default function FiltrarCursos({ setFilter, data }) {
         debounce((value) => {
             setSearch(value);
         }, 250),
-        []
+        [],
     );
 
     useEffect(() => {

@@ -15,10 +15,10 @@ export default function DynamicCursoSelect({ inputProps }) {
     const { data: cursos, isLoading } = useSWR(
         selectedCicloId
             ? getURL(
-                  `api/usuarios/cursos/disponibles?ciclo_id=${selectedCicloId}`
+                  `api/usuarios/cursos/disponibles?ciclo_id=${selectedCicloId}`,
               )
             : null,
-        fetcher
+        fetcher,
     );
 
     // Establecer valor por defecto cuando se cargan los cursos
@@ -40,7 +40,10 @@ export default function DynamicCursoSelect({ inputProps }) {
                 ...inputProps.field,
                 options: cursos
                     ? cursos
-                          .filter((curso) => curso.id !== undefined && curso.id !== null)
+                          .filter(
+                              (curso) =>
+                                  curso.id !== undefined && curso.id !== null,
+                          )
                           .map((curso) => ({
                               value: curso.id,
                               label: curso.shortname || curso.name,
@@ -50,13 +53,13 @@ export default function DynamicCursoSelect({ inputProps }) {
                 placeholder: isLoading
                     ? "Cargando cursos..."
                     : !selectedCicloId
-                    ? "Seleccione un ciclo primero"
-                    : cursos?.length === 0
-                    ? "No hay cursos disponibles"
-                    : "Seleccione un curso",
+                      ? "Seleccione un ciclo primero"
+                      : cursos?.length === 0
+                        ? "No hay cursos disponibles"
+                        : "Seleccione un curso",
             },
         }),
-        [cursos, inputProps, isLoading, selectedCicloId]
+        [cursos, inputProps, isLoading, selectedCicloId],
     );
 
     return <CustomSelect inputProps={dynamicInputProps} />;

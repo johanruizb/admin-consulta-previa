@@ -13,7 +13,6 @@ export default async function handler(req, res) {
     const { getToken } = getAuth(req);
     const token = await getToken();
 
-
     const queryParams = new URLSearchParams(req.query).toString();
     const response = await fetch(
         process.env.NEXT_PUBLIC_BASE_URL +
@@ -24,7 +23,7 @@ export default async function handler(req, res) {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
-        }
+        },
     );
 
     if (response.ok) {

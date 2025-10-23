@@ -28,7 +28,7 @@ export default function Registros({ children }) {
 
     const { data, isLoading } = useSWR(
         getURL(`/api/usuarios/inscritos?ciclo_id=${selectedCicloId}`),
-        fetcher
+        fetcher,
     );
 
     const onView = (id) => {

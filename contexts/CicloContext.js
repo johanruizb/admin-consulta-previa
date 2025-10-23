@@ -19,13 +19,13 @@ export function CicloProvider({ children }) {
         error,
     } = useSWR(
         clerkLoaded && isSignedIn ? getURL("api/usuarios/ciclos") : null,
-        fetcher
+        fetcher,
     );
 
     // SessionStorage para persistir ciclo seleccionado
     const [selectedCicloId, setSelectedCicloId] = useSessionStorage(
         "selected-ciclo-id",
-        null
+        null,
     );
 
     // Lógica para determinar el ciclo actual
@@ -33,7 +33,7 @@ export function CicloProvider({ children }) {
         if (ciclos?.success && ciclos.data.length > 0) {
             if (selectedCicloId) {
                 const encontrado = ciclos.data.find(
-                    (c) => c.id === selectedCicloId
+                    (c) => c.id === selectedCicloId,
                 );
                 if (encontrado) return encontrado;
             }
@@ -57,7 +57,7 @@ export function CicloProvider({ children }) {
         () => (cicloId) => {
             setSelectedCicloId(cicloId);
         },
-        [setSelectedCicloId]
+        [setSelectedCicloId],
     );
 
     // Valor del contexto optimizado con useMemo
@@ -78,7 +78,7 @@ export function CicloProvider({ children }) {
             // Helpers
             isSuccess: ciclos?.success || false,
         }),
-        [ciclos, cicloActual, selectedCicloId, isLoading, error, setCiclo]
+        [ciclos, cicloActual, selectedCicloId, isLoading, error, setCiclo],
     );
 
     return (

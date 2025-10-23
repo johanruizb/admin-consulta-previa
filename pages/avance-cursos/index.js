@@ -55,7 +55,7 @@ export default function Avances({ children }) {
         (id) => {
             router.push(`/avance-cursos/${id}`, undefined, { shallow: true });
         },
-        [router]
+        [router],
     );
 
     if (!mounted) {
@@ -100,10 +100,10 @@ export default function Avances({ children }) {
                     isLoading
                         ? "Cargando información..."
                         : isValidating
-                        ? "Validando información..."
-                        : // : filtering
-                          // ? "Filtrando información..."
-                          "Recargar información"
+                          ? "Validando información..."
+                          : // : filtering
+                            // ? "Filtrando información..."
+                            "Recargar información"
                 }
                 arrow
             >
@@ -176,7 +176,7 @@ export default function Avances({ children }) {
                     >
                         <Stack spacing={1} direction="row">
                             {hasPermission(
-                                "moodle.add_actividadescompletadas"
+                                "moodle.add_actividadescompletadas",
                             ) && <UploadAvances />}
                             <ExportAvances />
                         </Stack>

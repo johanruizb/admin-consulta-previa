@@ -19,7 +19,7 @@ export default function SelectWrapper({ inputProps }) {
     const fullURL = useVersion ? `${url}?ciclo_id=${selectedCicloId}` : url;
     const { data, error, isLoading } = useSWRImmutable(
         getURL(fullURL),
-        fetcher
+        fetcher,
     );
 
     const {
@@ -85,8 +85,8 @@ function AsyncSelect({ inputProps }) {
                                 multiple
                                     ? field.value || []
                                     : isNaN(parseInt(field.value))
-                                    ? field.value
-                                    : parseInt(field.value)
+                                      ? field.value
+                                      : parseInt(field.value)
                             }
                             onChange={(e, value) => field.onChange(value)}
                             // {...fieldProps}
