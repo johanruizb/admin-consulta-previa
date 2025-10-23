@@ -1,6 +1,7 @@
 import CicloSelector from "@/components/Ciclos/CicloSelector";
 import fetcher from "@/components/fetcher";
 import Layout from "@/components/Home/Layout";
+import ColombiaHeatMap from "@/components/Panel/ColombiaHeatMap";
 import CustomPie from "@/components/Panel/CustomPie";
 import InscripcionesPorPeriodo from "@/components/Panel/InscripcionesPorPeriodo";
 import { formatNumber, getURL } from "@/components/utils";
@@ -553,6 +554,9 @@ export default function Page() {
                                         ]}
                                         height={300}
                                     />
+                                    {/* <Box>
+                                        <ColombiaHeatMap data={data} />
+                                    </Box> */}
                                 </CardContent>
                             </Card>
                         </Grid>

@@ -106,7 +106,7 @@ function AsyncSelect({ inputProps }) {
                                             : parseInt(option.value)
                                     }
                                 >
-                                    {option.label}
+                                    {option?.shortname ?? option?.label}
                                 </Option>
                             ))}
                         </JoySelect>
