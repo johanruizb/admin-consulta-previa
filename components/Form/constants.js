@@ -238,11 +238,11 @@ const FormularioVerificacion = [
             options: [
                 {
                     value: 1,
-                    label: "Mujer cisg\u00e9nero",
+                    label: "Mujer",
                 },
                 {
                     value: 2,
-                    label: "Hombre cisg\u00e9nero",
+                    label: "Hombre",
                 },
                 {
                     value: 6,
