@@ -17,6 +17,7 @@ import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import CircularProgress from "@mui/joy/CircularProgress";
+import Button from "@mui/joy/Button";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Option from "@mui/joy/Option";
@@ -34,6 +35,7 @@ import "dayjs/locale/es";
 import Head from "next/head";
 import { Fragment, useEffect, useEffectEvent, useState } from "react";
 import useSWR from "swr";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 
 dayjs.locale("es");
 
@@ -42,17 +44,19 @@ const PLATFORM_OPTIONS = [
     { value: "whatsapp", label: "WhatsApp" },
 ];
 
+const getDefaultFilters = () => ({
+    tipo_cliente: null,
+    etnia: null,
+    genero: null,
+    zona: null,
+    departamento: null,
+    plataforma: null,
+    courses: null,
+});
+
 export default function Page() {
     const { selectedCicloId } = useCiclo();
-    const [filters, setFilters] = useState({
-        tipo_cliente: null,
-        etnia: null,
-        genero: null,
-        zona: null,
-        departamento: null,
-        plataforma: null,
-        courses: null,
-    });
+    const [filters, setFilters] = useState(getDefaultFilters);
     const [filterOptions, setFilterOptions] = useState({
         tipo_cliente: [],
         etnia: [],
@@ -117,14 +121,7 @@ export default function Page() {
     useClient(() => setMounted(true));
 
     useEffect(() => {
-        setFilters({
-            tipo_cliente: null,
-            etnia: null,
-            genero: null,
-            zona: null,
-            departamento: null,
-            plataforma: null,
-        });
+        setFilters(getDefaultFilters());
         setFilterOptions({
             tipo_cliente: [],
             etnia: [],
@@ -214,6 +211,16 @@ export default function Page() {
             ...prev,
             courses: cursos?.map((c) => c.id),
         }));
+    });
+
+    const resetFilters = useEffectEvent(() => {
+        setFilters((prev) => {
+            const base = getDefaultFilters();
+            base.courses = Array.isArray(cursos)
+                ? cursos.map((c) => c.id)
+                : prev.courses;
+            return base;
+        });
     });
 
     useEffect(() => {
@@ -330,8 +337,22 @@ export default function Page() {
             <Box
                 sx={{
                     mb: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 0.5,
                 }}
             >
+                <Button
+                    variant="outlined"
+                    size="sm"
+                    onClick={resetFilters}
+                    sx={{
+                        alignSelf: { xs: "stretch", sm: "flex-end" },
+                    }}
+                    startDecorator={<RestartAltIcon />}
+                >
+                    Restablecer filtros
+                </Button>
                 <Grid container spacing={1.25 / 2}>
                     {filterConfig.map(({ key, label }) => (
                         <Grid
