@@ -55,7 +55,12 @@ export default function InscripcionesPorPeriodo({ courses = [] }) {
 
     if (isLoading) {
         return (
-            <Card variant="outlined">
+            <Card
+                variant="outlined"
+                sx={{
+                    height: "100%",
+                }}
+            >
                 <CardContent>
                     <Stack
                         justifyContent="center"
@@ -71,7 +76,12 @@ export default function InscripcionesPorPeriodo({ courses = [] }) {
 
     if (error) {
         return (
-            <Card variant="outlined">
+            <Card
+                variant="outlined"
+                sx={{
+                    height: "100%",
+                }}
+            >
                 <CardContent>
                     <Typography level="title-lg" color="danger">
                         Error al cargar inscripciones
@@ -86,7 +96,12 @@ export default function InscripcionesPorPeriodo({ courses = [] }) {
 
     if (!data?.data || data.data.length === 0) {
         return (
-            <Card variant="outlined">
+            <Card
+                variant="outlined"
+                sx={{
+                    height: "100%",
+                }}
+            >
                 <CardContent>
                     <Typography level="title-lg">
                         Inscripciones por período
