@@ -33,7 +33,7 @@ import Profile from "./Profile";
 import Settings from "./Settings";
 import useSettingsContext from "./settingsContext/useSettings";
 import fetcher from "../fetcher";
-import { Stack } from "@mui/joy";
+import Stack from "@mui/joy/Stack";
 import Image from "next/image";
 
 export default function Sidebar() {

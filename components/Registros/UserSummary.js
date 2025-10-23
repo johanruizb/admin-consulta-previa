@@ -6,8 +6,8 @@ import useSWR from "swr";
 import { useCiclo } from "@/contexts/CicloContext";
 import { formatNumber, getURL } from "../utils";
 import { Fragment } from "react";
-import { Stack } from "@mui/material";
-import { Tooltip } from "@mui/joy";
+import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/joy/Tooltip";
 
 export default function UserSummary({ slotProps }) {
     const { selectedCicloId } = useCiclo();

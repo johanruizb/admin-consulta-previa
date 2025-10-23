@@ -1,6 +1,6 @@
 import { SignedIn, SignOutButton, UserButton, useUser } from "@clerk/nextjs";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
-import { Stack } from "@mui/joy";
+import Stack from "@mui/joy/Stack";
 import Box from "@mui/joy/Box";
 import IconButton from "@mui/joy/IconButton";
 import Skeleton from "@mui/joy/Skeleton";

@@ -1,4 +1,4 @@
-import { Box } from "@mui/joy";
+import Box from "@mui/joy/Box";
 import { useEffect, useRef, useState } from "react";
 import { useSchema } from "../Home/ColorSchemeToggle";
 
