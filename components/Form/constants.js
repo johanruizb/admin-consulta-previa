@@ -706,6 +706,17 @@ const FormularioVerificacion = [
         url: "/api/usuarios/cursos/disponibles",
         useVersion: true,
     },
+    {
+        Component: AsyncSelect,
+        controller: {
+            name: "etiquetas",
+        },
+        field: {
+            label: "Etiquetas",
+            multiple: true,
+        },
+        url: "/api/usuarios/etiquetas",
+    },
     // {
     //     Component: TextField,
     //     controller: {

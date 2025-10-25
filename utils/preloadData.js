@@ -95,7 +95,7 @@ const runInitializePreload = async () => {
 
     const [, , ciclosResponse] = await Promise.allSettled(baseTasks);
     const ciclosValue =
-        ciclosResponse.status === "fulfilled" ? ciclosResponse.value : null;
+        ciclosResponse?.status === "fulfilled" ? ciclosResponse.value : null;
 
     const selectedCicloId = resolveSelectedCicloId(ciclosValue);
     if (!selectedCicloId) {

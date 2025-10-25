@@ -1,8 +1,10 @@
+import { useCiclo } from "@/contexts/CicloContext";
+import { getContrastColor } from "@/utils/colors";
 import BlockIcon from "@mui/icons-material/Block";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import SearchIcon from "@mui/icons-material/Search";
+import { Chip, Tooltip } from "@mui/joy";
 import Box from "@mui/joy/Box";
-import Chip from "@mui/joy/Chip";
 import CircularProgress from "@mui/joy/CircularProgress";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
@@ -14,16 +16,19 @@ import Sheet from "@mui/joy/Sheet";
 import Stack from "@mui/joy/Stack";
 import Table from "@mui/joy/Table";
 import Typography from "@mui/joy/Typography";
+import { green, orange } from "@mui/material/colors";
 import Pagination from "@mui/material/Pagination";
 import { useSessionStorage } from "@uidotdev/usehooks";
 import dayjs from "dayjs";
 import { debounce } from "lodash";
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo } from "react";
+import useSWR from "swr";
 import { v4 as uuidv4 } from "uuid";
+import CicloSelector from "../Ciclos/CicloSelector";
+import fetcher from "../fetcher";
+import { getURL } from "../utils";
 import { filterTable } from "./functions";
 import usePermissionContext from "./permissionContext/usePermission";
-import CicloSelector from "../Ciclos/CicloSelector";
-import { useCiclo } from "@/contexts/CicloContext";
 
 export default function OrderTable({ data, onView }) {
     const { isLoading: permissionIsLoading, hasPermission } =
@@ -31,6 +36,11 @@ export default function OrderTable({ data, onView }) {
 
     const [page, setPage] = useSessionStorage("OrderTable__page", 1);
     const [filter, setFilter] = useSessionStorage("OrderTable__filter", {});
+
+    const { data: etiquetasData } = useSWR(
+        getURL("/api/usuarios/etiquetas"),
+        fetcher
+    );
 
     const updateFilter = useCallback(
         (key, rawValue) => {
@@ -41,6 +51,8 @@ export default function OrderTable({ data, onView }) {
                         : rawValue;
 
                 const hasKey = Object.prototype.hasOwnProperty.call(prev, key);
+
+                console.log({ prev, key, value, hasKey });
 
                 if (!hasKey && value === undefined) {
                     return prev;
@@ -61,7 +73,7 @@ export default function OrderTable({ data, onView }) {
                 };
             });
         },
-        [setFilter],
+        [setFilter]
     );
 
     const setSearchFilter = useMemo(
@@ -88,7 +100,7 @@ export default function OrderTable({ data, onView }) {
                     };
                 });
             }, 250),
-        [setFilter],
+        [setFilter]
     );
 
     useEffect(() => () => setSearchFilter.cancel(), [setSearchFilter]);
@@ -97,7 +109,7 @@ export default function OrderTable({ data, onView }) {
 
     const ready = useMemo(
         () => !permissionIsLoading && Array.isArray(data),
-        [permissionIsLoading, data],
+        [permissionIsLoading, data]
     );
 
     const totalPages = rows.pages || 0;
@@ -114,17 +126,19 @@ export default function OrderTable({ data, onView }) {
             const value = event.target.value;
             setSearchFilter(value ? value : undefined);
         },
-        [setSearchFilter],
+        [setSearchFilter]
     );
 
     const handleSelectChange = useCallback(
         (key) => (_, newValue) => {
             updateFilter(key, newValue !== "" ? newValue : undefined);
         },
-        [updateFilter],
+        [updateFilter]
     );
 
     const { selectedCicloId } = useCiclo();
+
+    console.log(etiquetasData);
 
     return (
         <Fragment>
@@ -147,6 +161,7 @@ export default function OrderTable({ data, onView }) {
                     <Input
                         size="sm"
                         placeholder="Buscar en la tabla"
+                        defaultValue={filter?.search ?? ""}
                         onChange={handleSearchChange}
                         startDecorator={<SearchIcon />}
                     />
@@ -179,6 +194,30 @@ export default function OrderTable({ data, onView }) {
                         <Option value="whatsapp">WhatsApp</Option>
                     </Select>
                 </FormControl>
+                {etiquetasData && (
+                    <FormControl size="sm">
+                        <FormLabel>Etiquetas</FormLabel>
+                        <Select
+                            size="sm"
+                            placeholder="Filtrar por etiquetas"
+                            slotProps={{
+                                button: { sx: { whiteSpace: "nowrap" } },
+                            }}
+                            onChange={handleSelectChange("etiquetas")}
+                            value={filter.etiquetas ?? ""}
+                        >
+                            <Option value="">Todos</Option>
+                            {etiquetasData.map((etiqueta) => (
+                                <Option
+                                    key={etiqueta.value}
+                                    value={etiqueta.value}
+                                >
+                                    {etiqueta.label}
+                                </Option>
+                            ))}
+                        </Select>
+                    </FormControl>
+                )}
                 <CicloSelector />
             </Box>
             {ready ? (
@@ -213,7 +252,7 @@ export default function OrderTable({ data, onView }) {
                                 <tr>
                                     <th
                                         style={{
-                                            width: 80,
+                                            width: 70,
                                             padding: "12px 6px",
                                         }}
                                     >
@@ -229,7 +268,7 @@ export default function OrderTable({ data, onView }) {
                                     </th>
                                     <th
                                         style={{
-                                            width: 80,
+                                            width: 70,
                                             padding: "12px 6px",
                                         }}
                                     >
@@ -245,7 +284,7 @@ export default function OrderTable({ data, onView }) {
                                     </th>
                                     <th
                                         style={{
-                                            width: 80,
+                                            width: 70,
                                             padding: "12px 6px",
                                         }}
                                     >
@@ -261,11 +300,11 @@ export default function OrderTable({ data, onView }) {
                                     </th>
                                     <th
                                         style={{
-                                            width: 80,
+                                            width: 50,
                                             padding: "12px 6px",
                                         }}
                                     >
-                                        Estado
+                                        Validado
                                     </th>
                                     {selectedCicloId === 1 && (
                                         <th
@@ -287,21 +326,31 @@ export default function OrderTable({ data, onView }) {
                                     </th>
                                     <th
                                         style={{
-                                            width: 80,
+                                            width: 50,
                                             padding: "12px 6px",
                                         }}
                                     >
                                         Grupo
                                     </th>
                                     {selectedCicloId === 2 && (
-                                        <th
-                                            style={{
-                                                width: 80,
-                                                padding: "12px 6px",
-                                            }}
-                                        >
-                                            Plataforma de registro
-                                        </th>
+                                        <Fragment>
+                                            <th
+                                                style={{
+                                                    width: 80,
+                                                    padding: "12px 6px",
+                                                }}
+                                            >
+                                                Plataforma de registro
+                                            </th>
+                                            <th
+                                                style={{
+                                                    width: 100,
+                                                    padding: "12px 6px",
+                                                }}
+                                            >
+                                                Etiquetas
+                                            </th>
+                                        </Fragment>
                                     )}
                                 </tr>
                             </thead>
@@ -312,7 +361,7 @@ export default function OrderTable({ data, onView }) {
                                         // onClick={() => onView(row.id)}
                                         className="pointer-row"
                                         {...(hasPermission(
-                                            "usuario.change_persona",
+                                            "usuario.change_persona"
                                         )
                                             ? {
                                                   onClick: () => onView(row.id),
@@ -322,7 +371,7 @@ export default function OrderTable({ data, onView }) {
                                         <td>
                                             <Typography level="body-sm">
                                                 {dayjs(
-                                                    row.ultimo_registro,
+                                                    row.ultimo_registro
                                                 ).format("DD/MM/YYYY")}
                                                 {/* HH:mm:ss A */}
                                             </Typography>
@@ -353,30 +402,51 @@ export default function OrderTable({ data, onView }) {
                                             </Typography>
                                         </td>
                                         <td>
-                                            <Chip
-                                                variant="soft"
-                                                size="sm"
-                                                startDecorator={
-                                                    {
-                                                        true: (
-                                                            <CheckRoundedIcon fontSize="small" />
-                                                        ),
-                                                        false: (
-                                                            <BlockIcon fontSize="small" />
-                                                        ),
-                                                    }[row.info_validada]
-                                                }
-                                                color={
-                                                    {
-                                                        true: "success",
-                                                        false: "danger",
-                                                    }[row.info_validada]
-                                                }
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    // justifyContent: "center",
+                                                    // gap: 1,
+                                                }}
                                             >
-                                                {row.info_validada
-                                                    ? "Validado"
-                                                    : "Sin validar"}
-                                            </Chip>
+                                                <Box
+                                                    sx={{
+                                                        bgcolor:
+                                                            row.info_validada
+                                                                ? green[50]
+                                                                : orange[50],
+                                                        width: "40px !important",
+                                                        height: "40px !important",
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        justifyContent:
+                                                            "center",
+                                                        borderRadius: "50%",
+                                                    }}
+                                                >
+                                                    <Tooltip
+                                                        title={
+                                                            row.info_validada
+                                                                ? "Validado"
+                                                                : "No validado"
+                                                        }
+                                                        arrow
+                                                    >
+                                                        {row.info_validada ? (
+                                                            <CheckRoundedIcon
+                                                                fontSize="medium"
+                                                                color="success"
+                                                            />
+                                                        ) : (
+                                                            <BlockIcon
+                                                                fontSize="medium"
+                                                                color="warning"
+                                                            />
+                                                        )}
+                                                    </Tooltip>
+                                                </Box>
+                                            </Box>
                                         </td>
                                         {selectedCicloId === 1 && (
                                             <td>
@@ -396,17 +466,88 @@ export default function OrderTable({ data, onView }) {
                                             </Typography>
                                         </td>
                                         {selectedCicloId === 2 && (
-                                            <td>
-                                                <Typography level="body-sm">
-                                                    {row.plataforma_registro ===
-                                                    "web"
-                                                        ? "Formulario web"
-                                                        : row.plataforma_registro ===
-                                                            "whatsapp"
-                                                          ? "WhatsApp"
-                                                          : "Desconocida"}
-                                                </Typography>
-                                            </td>
+                                            <Fragment>
+                                                <td>
+                                                    <Typography level="body-sm">
+                                                        {row.plataforma_registro ===
+                                                        "web"
+                                                            ? "Formulario web"
+                                                            : row.plataforma_registro ===
+                                                              "whatsapp"
+                                                            ? "WhatsApp"
+                                                            : "Desconocida"}
+                                                    </Typography>
+                                                </td>
+                                                <td>
+                                                    {row.etiquetas_name
+                                                        ?.length > 0 ? (
+                                                        <Tooltip
+                                                            title={
+                                                                "Etiquetas: " +
+                                                                row.etiquetas_name.join(
+                                                                    ", "
+                                                                )
+                                                            }
+                                                            arrow
+                                                        >
+                                                            <Stack
+                                                                direction="row"
+                                                                spacing={0.5}
+                                                            >
+                                                                {row.etiquetas_name?.map(
+                                                                    (
+                                                                        etiquetaName,
+                                                                        index
+                                                                    ) =>
+                                                                        etiquetaName && (
+                                                                            <Chip
+                                                                                key={
+                                                                                    index
+                                                                                }
+                                                                                sx={{
+                                                                                    width: "100%",
+                                                                                    bgcolor:
+                                                                                        etiquetasData?.find(
+                                                                                            (
+                                                                                                etq
+                                                                                            ) =>
+                                                                                                etq.value ===
+                                                                                                row
+                                                                                                    ?.etiquetas?.[
+                                                                                                    index
+                                                                                                ]
+                                                                                        )
+                                                                                            ?.color,
+                                                                                    color: getContrastColor(
+                                                                                        etiquetasData?.find(
+                                                                                            (
+                                                                                                etq
+                                                                                            ) =>
+                                                                                                etq.value ===
+                                                                                                row
+                                                                                                    ?.etiquetas?.[
+                                                                                                    index
+                                                                                                ]
+                                                                                        )
+                                                                                            ?.color
+                                                                                    ),
+                                                                                }}
+                                                                            >
+                                                                                <span>
+                                                                                    {
+                                                                                        etiquetaName
+                                                                                    }
+                                                                                </span>
+                                                                            </Chip>
+                                                                        )
+                                                                )}
+                                                            </Stack>
+                                                        </Tooltip>
+                                                    ) : (
+                                                        <span> </span>
+                                                    )}
+                                                </td>
+                                            </Fragment>
                                         )}
                                     </tr>
                                 ))}
