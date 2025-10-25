@@ -50,7 +50,7 @@ export default function Profile() {
                     </Skeleton>
                 </Typography>
             </Box>
-            <SignOutButton>
+            <SignOutButton key="logout-button">
                 <IconButton size="sm" variant="plain" color="neutral">
                     <LogoutRoundedIcon />
                 </IconButton>

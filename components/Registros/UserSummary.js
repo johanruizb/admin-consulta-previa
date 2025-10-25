@@ -80,7 +80,7 @@ export default function UserSummary({ slotProps }) {
             }}
             {...(root || {})}
         >
-            {data.length > 0 ? (
+            {data?.length > 0 ? (
                 renderCourseCards(data)
             ) : (
                 <Fragment>

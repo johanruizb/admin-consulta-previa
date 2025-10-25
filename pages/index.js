@@ -477,15 +477,11 @@ export default function Page() {
                                                 justifyContent="center"
                                                 alignItems="center"
                                                 spacing={0.5}
-                                                sx={{
-                                                    "& *": {
-                                                        color: "info.main",
-                                                    },
-                                                }}
                                             >
                                                 <LanguageIcon
                                                     sx={{
                                                         fontSize: "xxx-large",
+                                                        color: "info.main",
                                                     }}
                                                 />
                                                 <Typography
@@ -495,7 +491,12 @@ export default function Page() {
                                                 >
                                                     Via Web
                                                     <br />
-                                                    <Typography fontSize="xx-large">
+                                                    <Typography
+                                                        fontSize="xx-large"
+                                                        sx={{
+                                                            color: "info.main",
+                                                        }}
+                                                    >
                                                         {formatNumber(
                                                             data?.total_web
                                                         )}
@@ -509,15 +510,11 @@ export default function Page() {
                                                 justifyContent="center"
                                                 alignItems="center"
                                                 spacing={0.5}
-                                                sx={{
-                                                    "& *": {
-                                                        color: "#25d366",
-                                                    },
-                                                }}
                                             >
                                                 <WhatsAppIcon
                                                     sx={{
                                                         fontSize: "xxx-large",
+                                                        color: "#25d366",
                                                     }}
                                                 />
                                                 <Typography
@@ -527,7 +524,12 @@ export default function Page() {
                                                 >
                                                     Via WhatsApp
                                                     <br />
-                                                    <Typography fontSize="xx-large">
+                                                    <Typography
+                                                        fontSize="xx-large"
+                                                        sx={{
+                                                            color: "#25d366",
+                                                        }}
+                                                    >
                                                         {formatNumber(
                                                             data?.total_whatsapp
                                                         )}

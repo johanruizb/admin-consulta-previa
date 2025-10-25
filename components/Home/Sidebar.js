@@ -214,7 +214,7 @@ export default function Sidebar() {
                             </ListItem>
                         )}
                         {hasPermission(
-                            "moodle.view_actividadescompletadas",
+                            "moodle.view_actividadescompletadas"
                         ) && (
                             <ListItem>
                                 <ListItemButton
@@ -293,16 +293,18 @@ export default function Sidebar() {
                                     <div
                                         style={{
                                             position: "relative",
-                                            width: "24px",
-                                            height: "24px",
                                         }}
                                     >
                                         <Image
-                                            layout="fill"
-                                            objectFit="contain"
+                                            // layout="fill"
+                                            style={{
+                                                objectFit: "contain",
+                                            }}
                                             src="https://status.consultaprevia.net/badge/_/dot?animate=ping"
                                             alt="Estado del sistema"
                                             unoptimized
+                                            width={26}
+                                            height={26}
                                         />
                                     </div>
                                     <ListItemContent>

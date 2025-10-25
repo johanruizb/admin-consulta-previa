@@ -59,6 +59,7 @@ const buildPredicate = (filter) => {
         info_validada: normalizeFilterValue(filter.info_validada),
         plataforma_registro: normalizeFilterValue(filter.plataforma_registro),
         curso_inscrito: normalizeFilterValue(filter.curso_inscrito),
+        etiquetas: normalizeFilterValue(filter.etiquetas),
     };
 
     return (row) => {
