@@ -494,7 +494,7 @@ export default function Page() {
                                                     <Typography
                                                         fontSize="xx-large"
                                                         sx={{
-                                                            color: "info.main",
+                                                            color: "rgb(2, 136, 209)",
                                                         }}
                                                     >
                                                         {formatNumber(

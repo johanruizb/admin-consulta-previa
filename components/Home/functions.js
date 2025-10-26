@@ -35,6 +35,16 @@ const matchesValue = (rowValue, expected) => {
         return true;
     }
 
+    // Caso especial: filtrar por "sin etiquetas"
+    if (expected === "__EMPTY__") {
+        return (
+            rowValue === undefined ||
+            rowValue === null ||
+            rowValue === "" ||
+            (Array.isArray(rowValue) && rowValue.length === 0)
+        );
+    }
+
     if (rowValue === undefined || rowValue === null) {
         return false;
     }
