@@ -52,8 +52,6 @@ export default function OrderTable({ data, onView }) {
 
                 const hasKey = Object.prototype.hasOwnProperty.call(prev, key);
 
-                console.log({ prev, key, value, hasKey });
-
                 if (!hasKey && value === undefined) {
                     return prev;
                 }
@@ -138,7 +136,7 @@ export default function OrderTable({ data, onView }) {
 
     const { selectedCicloId } = useCiclo();
 
-    console.log(etiquetasData);
+    console.log(filter);
 
     return (
         <Fragment>
@@ -207,6 +205,7 @@ export default function OrderTable({ data, onView }) {
                             value={filter.etiquetas ?? ""}
                         >
                             <Option value="">Todos</Option>
+                            <Option value="__EMPTY__">Sin etiquetas</Option>
                             {etiquetasData.map((etiqueta) => (
                                 <Option
                                     key={etiqueta.value}
