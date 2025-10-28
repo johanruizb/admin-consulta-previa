@@ -189,19 +189,19 @@ function View({ defaultValues }) {
                             />
                         </DialogTitle>
                         <DialogContent>
-                            {!isCurrentCycle && (
+                            {isCurrentCycle ? (
+                                <InstructionMessage validado={validado} />
+                            ) : (
                                 <Alert
                                     color="warning"
                                     startDecorator={<InfoIcon />}
-                                    sx={{ mb: 2 }}
+                                    sx={{ my: 2 }}
                                 >
                                     La información de versiones anteriores solo
                                     se puede ver, mas no modificar. Para editar,
                                     seleccione el ciclo actual.
                                 </Alert>
                             )}
-
-                            <InstructionMessage validado={validado} />
 
                             <Stack spacing={2}>
                                 <FormProvider {...methods}>
@@ -237,38 +237,40 @@ function View({ defaultValues }) {
                             >
                                 {validado ? "Guardar" : "Validar"}
                             </Button> */}
-                            <ButtonGroup
-                                variant="solid"
-                                spacing="0.5rem"
-                                size="lg"
-                            >
-                                {validado ? null : (
-                                    <Button
-                                        endDecorator={
-                                            <AssignmentTurnedInIcon />
-                                        }
-                                        onClick={handleSubmit((data) =>
-                                            onSubmit(data, true)
-                                        )}
-                                        color="success"
-                                        disabled={loading}
-                                    >
-                                        Guardar y validar
-                                    </Button>
-                                )}
-                                <Button
-                                    startDecorator={<SaveIcon />}
-                                    onClick={handleSubmit((data) =>
-                                        onSubmit(data, false)
-                                    )}
-                                    disabled={loading}
-                                    color="primary"
+                            {isCurrentCycle && (
+                                <ButtonGroup
+                                    variant="solid"
+                                    spacing="0.5rem"
+                                    size="lg"
                                 >
-                                    {validado
-                                        ? "Guardar"
-                                        : "Guardar sin validar"}
-                                </Button>
-                            </ButtonGroup>
+                                    {validado ? null : (
+                                        <Button
+                                            endDecorator={
+                                                <AssignmentTurnedInIcon />
+                                            }
+                                            onClick={handleSubmit((data) =>
+                                                onSubmit(data, true)
+                                            )}
+                                            color="success"
+                                            disabled={loading}
+                                        >
+                                            Guardar y validar
+                                        </Button>
+                                    )}
+                                    <Button
+                                        startDecorator={<SaveIcon />}
+                                        onClick={handleSubmit((data) =>
+                                            onSubmit(data, false)
+                                        )}
+                                        disabled={loading}
+                                        color="primary"
+                                    >
+                                        {validado
+                                            ? "Guardar"
+                                            : "Guardar sin validar"}
+                                    </Button>
+                                </ButtonGroup>
+                            )}
                             <Button
                                 onClick={onClose}
                                 variant="plain"
