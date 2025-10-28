@@ -2,12 +2,10 @@
 
 import fetcher from "@/components/fetcher";
 import Layout from "@/components/Home/Layout";
-import OrderList from "@/components/Home/OrderList";
-import EsperaSummary from "@/components/Pages/Espera/Summary";
 import ExportEspera from "@/components/Pages/Espera/ExportEspera";
+import EsperaSummary from "@/components/Pages/Espera/Summary";
 import { getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
-import CicloSelector from "@/components/Ciclos/CicloSelector";
 import usePermission from "@/hooks/usePermission";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
@@ -19,7 +17,6 @@ import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
-import { Fragment } from "react";
 import useSWR from "swr";
 import TablaEspera from "../../components/Pages/Espera/TablaEspera";
 
@@ -33,7 +30,7 @@ export default function Registros({ children }) {
         selectedCicloId
             ? getURL(`/api/usuarios/espera?ciclo_id=${selectedCicloId}`)
             : null,
-        fetcher,
+        fetcher
     );
 
     const onView = (id) => {
@@ -110,10 +107,7 @@ export default function Registros({ children }) {
                     <CircularProgress />
                 </Stack>
             ) : (
-                <Fragment>
-                    <TablaEspera data={data} onView={onView} />
-                    <OrderList data={data} onView={onView} />
-                </Fragment>
+                <TablaEspera data={data} onView={onView} />
             )}
             {children}
         </Layout>
