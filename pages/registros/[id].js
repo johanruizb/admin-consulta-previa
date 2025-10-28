@@ -253,6 +253,7 @@ function View({ defaultValues }) {
                                             )}
                                             color="success"
                                             disabled={loading}
+                                            loading={loading}
                                         >
                                             Guardar y validar
                                         </Button>
@@ -262,8 +263,9 @@ function View({ defaultValues }) {
                                         onClick={handleSubmit((data) =>
                                             onSubmit(data, false)
                                         )}
-                                        disabled={loading}
                                         color="primary"
+                                        disabled={loading}
+                                        loading={loading}
                                     >
                                         {validado
                                             ? "Guardar"
@@ -277,6 +279,7 @@ function View({ defaultValues }) {
                                 startDecorator={<CloseIcon />}
                                 size="lg"
                                 disabled={loading}
+                                // loading={loading}
                             >
                                 Cerrar
                             </Button>
