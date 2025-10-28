@@ -1,6 +1,8 @@
 import { getIconHistory } from "@/components/Registros/functions";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import InfoIcon from "@mui/icons-material/Info";
+import { Alert } from "@mui/joy";
 import Accordion from "@mui/joy/Accordion";
 import AccordionDetails from "@mui/joy/AccordionDetails";
 import AccordionSummary from "@mui/joy/AccordionSummary";
@@ -18,6 +20,7 @@ import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import dayjs from "dayjs";
 import PropTypes from "prop-types";
+import { memo, useMemo } from "react";
 
 /**
  * Helper function to safely render values that might be objects
@@ -40,14 +43,26 @@ function safeRenderValue(value) {
 /**
  * Componente para renderizar un item del historial con cambios
  */
-function HistoryItemWithChanges({ item, index }) {
+const HistoryItemWithChanges = memo(function HistoryItemWithChanges({ item }) {
+    // Pre-formatear fecha
+    const formattedDate = useMemo(
+        () => dayjs(item.history_date).format("DD/MM/YYYY HH:mm:ss A"),
+        [item.history_date]
+    );
+
+    // Pre-calcular entries de cambios
+    const changesEntries = useMemo(
+        () => Object.entries(item.changes),
+        [item.changes]
+    );
+
     return (
-        <Accordion key={index}>
+        <Accordion>
             <AccordionSummary>
                 <ListItem>
                     <ListItemDecorator>
                         {getIconHistory(item.history_type, {
-                            color: item.changes ? "info" : undefined,
+                            color: "info",
                         })}
                     </ListItemDecorator>
                     <ListItemContent>
@@ -62,9 +77,7 @@ function HistoryItemWithChanges({ item, index }) {
                                 : ""}
                         </Typography>
                         <Typography level="body-sm" noWrap>
-                            {dayjs(item.history_date).format(
-                                "DD/MM/YYYY HH:mm:ss A",
-                            )}
+                            {formattedDate}
                         </Typography>
                     </ListItemContent>
                 </ListItem>
@@ -77,96 +90,97 @@ function HistoryItemWithChanges({ item, index }) {
             >
                 <List>
                     <Grid container spacing={1}>
-                        {Object.entries(item.changes).map(
-                            ([field, changes], idx) => (
-                                <Grid
-                                    key={idx}
-                                    size={
-                                        field === "Cursos inscritos" &&
-                                        Object.values(changes).every(
-                                            (change) => change,
-                                        )
-                                            ? 12
-                                            : 6
-                                    }
+                        {changesEntries.map(([field, changes]) => (
+                            <Grid
+                                key={field}
+                                size={
+                                    field === "Cursos inscritos" &&
+                                    Object.values(changes).every(
+                                        (change) => change
+                                    )
+                                        ? 12
+                                        : 6
+                                }
+                            >
+                                <ListItem
+                                    sx={{
+                                        border: 1,
+                                        borderColor: "divider",
+                                        width: "100%",
+                                    }}
                                 >
-                                    <ListItem
-                                        sx={{
-                                            border: 1,
-                                            borderColor: "divider",
-                                            // mr: (idx + 1) % 2 ? 0.5 : 0,
-                                            // ml: (idx + 1) % 2 ? 0 : 0.5,
-                                            width: "100%",
-                                        }}
-                                    >
-                                        <ListItemContent>
-                                            <Typography level="title-sm">
-                                                {field}
-                                            </Typography>
-                                            <Stack
-                                                direction="row"
-                                                alignItems="center"
-                                                spacing={0.5}
-                                                sx={{ cursor: "pointer" }}
+                                    <ListItemContent>
+                                        <Typography level="title-sm">
+                                            {field}
+                                        </Typography>
+                                        <Stack
+                                            direction="row"
+                                            alignItems="center"
+                                            spacing={0.5}
+                                            sx={{ cursor: "pointer" }}
+                                        >
+                                            <Tooltip
+                                                title={safeRenderValue(
+                                                    changes.old
+                                                )}
+                                                arrow
                                             >
-                                                <Tooltip
-                                                    title={safeRenderValue(
-                                                        changes.old,
-                                                    )}
-                                                    arrow
+                                                <Typography
+                                                    level="body-sm"
+                                                    color="danger"
+                                                    noWrap
                                                 >
-                                                    <Typography
-                                                        level="body-sm"
-                                                        color="danger"
-                                                        noWrap
-                                                    >
-                                                        {safeRenderValue(
-                                                            changes.old,
-                                                        )}
-                                                    </Typography>
-                                                </Tooltip>
-                                                <span>{"»»"}</span>
-                                                <Tooltip
-                                                    title={safeRenderValue(
-                                                        changes.new,
+                                                    {safeRenderValue(
+                                                        changes.old
                                                     )}
-                                                    arrow
+                                                </Typography>
+                                            </Tooltip>
+                                            <span>{"»»"}</span>
+                                            <Tooltip
+                                                title={safeRenderValue(
+                                                    changes.new
+                                                )}
+                                                arrow
+                                            >
+                                                <Typography
+                                                    level="body-sm"
+                                                    color="success"
+                                                    noWrap
                                                 >
-                                                    <Typography
-                                                        level="body-sm"
-                                                        color="success"
-                                                        noWrap
-                                                    >
-                                                        {safeRenderValue(
-                                                            changes.new,
-                                                        )}
-                                                    </Typography>
-                                                </Tooltip>
-                                            </Stack>
-                                        </ListItemContent>
-                                    </ListItem>
-                                </Grid>
-                            ),
-                        )}
+                                                    {safeRenderValue(
+                                                        changes.new
+                                                    )}
+                                                </Typography>
+                                            </Tooltip>
+                                        </Stack>
+                                    </ListItemContent>
+                                </ListItem>
+                            </Grid>
+                        ))}
                     </Grid>
                     <Divider sx={{ mt: 2, mb: -1 }} />
                 </List>
             </AccordionDetails>
         </Accordion>
     );
-}
+});
 
 HistoryItemWithChanges.propTypes = {
     item: PropTypes.object.isRequired,
-    index: PropTypes.number.isRequired,
 };
 
 /**
  * Componente para renderizar un item del historial sin cambios
  */
-function HistoryItemSimple({ item, index }) {
+const HistoryItemSimple = memo(function HistoryItemSimple({ item }) {
+    // Pre-formatear fecha
+    const formattedDate = useMemo(
+        () => dayjs(item.history_date).format("DD/MM/YYYY HH:mm:ss A"),
+        [item.history_date]
+    );
+
     return (
-        <ListItem key={index}>
+        <ListItem>
             <ListItemDecorator>
                 {getIconHistory(item.history_type)}
             </ListItemDecorator>
@@ -182,16 +196,15 @@ function HistoryItemSimple({ item, index }) {
                         : ""}
                 </Typography>
                 <Typography level="body-sm" noWrap>
-                    {dayjs(item.history_date).format("DD/MM/YYYY HH:mm:ss A")}
+                    {formattedDate}
                 </Typography>
             </ListItemContent>
         </ListItem>
     );
-}
+});
 
 HistoryItemSimple.propTypes = {
     item: PropTypes.object.isRequired,
-    index: PropTypes.number.isRequired,
 };
 
 /**
@@ -210,18 +223,10 @@ export function HistoryList({ historial }) {
             >
                 {historial.map((item, index) =>
                     item.changes ? (
-                        <HistoryItemWithChanges
-                            key={index}
-                            item={item}
-                            index={index}
-                        />
+                        <HistoryItemWithChanges key={index} item={item} />
                     ) : (
-                        <HistoryItemSimple
-                            key={index}
-                            item={item}
-                            index={index}
-                        />
-                    ),
+                        <HistoryItemSimple key={index} item={item} />
+                    )
                 )}
             </List>
         </Box>
@@ -235,9 +240,19 @@ HistoryList.propTypes = {
 /**
  * Componente para renderizar una actividad
  */
-function ActivityItem({ actividad, index }) {
+const ActivityItem = memo(function ActivityItem({ actividad }) {
+    // Pre-formatear fecha solo si está completado
+    const statusText = useMemo(() => {
+        if (!actividad?.completado) {
+            return "Incompleto";
+        }
+        return `Completado — ${dayjs(actividad.date).format(
+            "DD/MM/YYYY HH:mm:ss A"
+        )}`;
+    }, [actividad?.completado, actividad?.date]);
+
     return (
-        <ListItem key={index} sx={{ ml: "24px" }}>
+        <ListItem sx={{ ml: "24px" }}>
             <ListItemDecorator>
                 {actividad?.completado ? (
                     <CheckBoxIcon fontSize="medium" color="primary" />
@@ -250,28 +265,23 @@ function ActivityItem({ actividad, index }) {
                     {actividad?.name}
                 </Typography>
                 <Typography level="body-sm" noWrap>
-                    {actividad?.completado
-                        ? `Completado — ${dayjs(actividad.date).format(
-                              "DD/MM/YYYY HH:mm:ss A",
-                          )}`
-                        : "Incompleto"}
+                    {statusText}
                 </Typography>
             </ListItemContent>
         </ListItem>
     );
-}
+});
 
 ActivityItem.propTypes = {
     actividad: PropTypes.object.isRequired,
-    index: PropTypes.number.isRequired,
 };
 
 /**
  * Componente para renderizar un módulo con sus actividades
  */
-function ModuleItem({ modulo, index, isLast }) {
+const ModuleItem = memo(function ModuleItem({ modulo, isLast }) {
     return (
-        <Accordion key={index}>
+        <Accordion>
             <AccordionSummary>
                 <ListItem>
                     <ListItemDecorator>
@@ -294,17 +304,16 @@ function ModuleItem({ modulo, index, isLast }) {
             {!isLast && <ListDivider inset="gutter" />}
             <AccordionDetails>
                 {modulo.actividades.map((actividad, idx) => (
-                    <ActivityItem key={idx} actividad={actividad} index={idx} />
+                    <ActivityItem key={idx} actividad={actividad} />
                 ))}
                 {!isLast && <ListDivider inset="gutter" />}
             </AccordionDetails>
         </Accordion>
     );
-}
+});
 
 ModuleItem.propTypes = {
     modulo: PropTypes.object.isRequired,
-    index: PropTypes.number.isRequired,
     isLast: PropTypes.bool.isRequired,
 };
 
@@ -326,7 +335,6 @@ export function CourseProgressList({ modulos }) {
                     <ModuleItem
                         key={index}
                         modulo={modulo}
-                        index={index}
                         isLast={index === modulos.length - 1}
                     />
                 ))}
@@ -361,9 +369,18 @@ UserTitle.propTypes = {
  * Componente para el mensaje de instrucciones según el estado de validación
  */
 export function InstructionMessage({ validado }) {
-    return validado
-        ? "La persona ya ha sido validada. Si hay algún error, edita los campos necesarios y presiona el botón 'Guardar'."
-        : "Si hay algún error, edita los campos necesarios. Cuando la información sea correcta presiona el botón 'Validar'.";
+    return (
+        <Alert
+            color="primary"
+            variant="soft"
+            startDecorator={<InfoIcon />}
+            sx={{ my: 2 }}
+        >
+            {validado
+                ? "La persona ya ha sido validada. Si hay algún error, edita los campos necesarios y presiona el botón 'Guardar'."
+                : "Si hay algún error, edita los campos necesarios. Cuando la información sea correcta y completa, presiona el botón 'Guardar y validar' para validar la persona. De lo contrario, puedes presionar 'Guardar sin validar' para guardar los cambios sin validar."}
+        </Alert>
+    );
 }
 
 InstructionMessage.propTypes = {
