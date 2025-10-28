@@ -21,14 +21,178 @@ import Pagination from "@mui/material/Pagination";
 import { useSessionStorage } from "@uidotdev/usehooks";
 import dayjs from "dayjs";
 import { debounce } from "lodash";
-import { Fragment, useCallback, useEffect, useMemo } from "react";
+import { Fragment, memo, useCallback, useEffect, useMemo } from "react";
 import useSWR from "swr";
-import { v4 as uuidv4 } from "uuid";
 import CicloSelector from "../Ciclos/CicloSelector";
 import fetcher from "../fetcher";
 import { getURL } from "../utils";
 import { filterTable } from "./functions";
 import usePermissionContext from "./permissionContext/usePermission";
+
+const EMPTY_ROWS = { filtered: [], chunked: [], pages: 0 };
+
+// Componente memoizado para cada fila de la tabla
+const TableRow = memo(function TableRow({
+    row,
+    selectedCicloId,
+    etiquetaLookup,
+    hasChangePermission,
+    onRowClick,
+}) {
+    const handleClick = useCallback(() => {
+        if (hasChangePermission) {
+            onRowClick(row.id);
+        }
+    }, [hasChangePermission, onRowClick, row.id]);
+
+    // Pre-procesar etiquetas
+    const processedEtiquetas = useMemo(() => {
+        if (!row.etiquetas_name || selectedCicloId !== 2) return null;
+
+        return row.etiquetas_name
+            .map((etiquetaName, index) => {
+                if (!etiquetaName) return null;
+
+                const etiquetaId = row?.etiquetas?.[index];
+                const etiqueta = etiquetaId
+                    ? etiquetaLookup[etiquetaId]
+                    : undefined;
+                const backgroundColor = etiqueta?.color;
+
+                return {
+                    key: `${row.id}-${etiquetaId}-${index}`,
+                    name: etiquetaName,
+                    backgroundColor,
+                    textColor: getContrastColor(backgroundColor),
+                };
+            })
+            .filter(Boolean);
+    }, [row.etiquetas_name, row.etiquetas, row.id, selectedCicloId, etiquetaLookup]);
+
+    return (
+        <tr
+            className={hasChangePermission ? "pointer-row" : ""}
+            onClick={handleClick}
+        >
+            <td>
+                <Typography level="body-sm">{row.formatted_date}</Typography>
+            </td>
+            <td>
+                <Typography level="body-sm">
+                    {row.tipo_doc_abbreviation}
+                </Typography>
+            </td>
+            <td>
+                <Typography level="body-sm">{row.num_doc}</Typography>
+            </td>
+            <td>
+                <Typography level="body-sm">
+                    {row.nombres} {row.apellidos}
+                </Typography>
+            </td>
+            <td>
+                <Typography level="body-sm">{row.telefono1}</Typography>
+            </td>
+            <td>
+                <Typography level="body-sm">{row.estado_name}</Typography>
+            </td>
+            <td>
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                    }}
+                >
+                    <Box
+                        sx={{
+                            bgcolor: row.info_validada ? green[50] : orange[50],
+                            width: "40px !important",
+                            height: "40px !important",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            borderRadius: "50%",
+                        }}
+                    >
+                        <Tooltip
+                            title={
+                                row.info_validada ? "Validado" : "No validado"
+                            }
+                            arrow
+                        >
+                            {row.info_validada ? (
+                                <CheckRoundedIcon
+                                    fontSize="medium"
+                                    color="success"
+                                />
+                            ) : (
+                                <BlockIcon fontSize="medium" color="warning" />
+                            )}
+                        </Tooltip>
+                    </Box>
+                </Box>
+            </td>
+            {selectedCicloId === 1 && (
+                <td>
+                    <Typography level="body-sm">
+                        {row.curso_20horas}
+                    </Typography>
+                </td>
+            )}
+            <td>
+                <Typography level="body-sm">
+                    {row.diplomado_120horas}
+                </Typography>
+            </td>
+            <td>
+                <Typography level="body-sm">{row.grupos}</Typography>
+            </td>
+            {selectedCicloId === 2 && (
+                <Fragment>
+                    <td>
+                        <Typography level="body-sm">
+                            {row.plataforma_registro === "web"
+                                ? "Formulario web"
+                                : row.plataforma_registro === "whatsapp"
+                                ? "WhatsApp"
+                                : "Desconocida"}
+                        </Typography>
+                    </td>
+                    <td>
+                        {processedEtiquetas && processedEtiquetas.length > 0 ? (
+                            <Tooltip
+                                title={
+                                    "Etiquetas: " +
+                                    processedEtiquetas
+                                        .map((e) => e.name)
+                                        .join(", ")
+                                }
+                                arrow
+                            >
+                                <Stack direction="row" spacing={0.5}>
+                                    {processedEtiquetas.map((etiqueta) => (
+                                        <Chip
+                                            key={etiqueta.key}
+                                            sx={{
+                                                width: "100%",
+                                                bgcolor: etiqueta.backgroundColor,
+                                                color: etiqueta.textColor,
+                                            }}
+                                        >
+                                            <span>{etiqueta.name}</span>
+                                        </Chip>
+                                    ))}
+                                </Stack>
+                            </Tooltip>
+                        ) : (
+                            <span> </span>
+                        )}
+                    </td>
+                </Fragment>
+            )}
+        </tr>
+    );
+});
 
 export default function OrderTable({ data, onView }) {
     const { isLoading: permissionIsLoading, hasPermission } =
@@ -41,6 +205,17 @@ export default function OrderTable({ data, onView }) {
         getURL("/api/usuarios/etiquetas"),
         fetcher
     );
+
+    const etiquetaLookup = useMemo(() => {
+        if (!Array.isArray(etiquetasData)) {
+            return {};
+        }
+
+        return etiquetasData.reduce((acc, etiqueta) => {
+            acc[etiqueta.value] = etiqueta;
+            return acc;
+        }, {});
+    }, [etiquetasData]);
 
     const updateFilter = useCallback(
         (key, rawValue) => {
@@ -103,11 +278,28 @@ export default function OrderTable({ data, onView }) {
 
     useEffect(() => () => setSearchFilter.cancel(), [setSearchFilter]);
 
-    const rows = useMemo(() => filterTable(data, filter), [data, filter]);
+    const ready = !permissionIsLoading && Array.isArray(data);
 
-    const ready = useMemo(
-        () => !permissionIsLoading && Array.isArray(data),
-        [permissionIsLoading, data]
+    // Pre-procesar datos: formatear fechas una sola vez
+    const processedData = useMemo(() => {
+        if (!ready || !data) return [];
+
+        return data.map((row) => ({
+            ...row,
+            formatted_date: dayjs(row.ultimo_registro).format("DD/MM/YYYY"),
+        }));
+    }, [ready, data]);
+
+    const rows = useMemo(() => {
+        if (!ready) {
+            return EMPTY_ROWS;
+        }
+        return filterTable(processedData, filter);
+    }, [ready, processedData, filter]);
+
+    const currentRows = useMemo(
+        () => rows.chunked?.[page - 1] ?? [],
+        [rows, page]
     );
 
     const totalPages = rows.pages || 0;
@@ -136,7 +328,19 @@ export default function OrderTable({ data, onView }) {
 
     const { selectedCicloId } = useCiclo();
 
-    console.log(filter);
+    // Memoizar el handler de click
+    const handleRowClick = useCallback(
+        (id) => {
+            onView(id);
+        },
+        [onView]
+    );
+
+    // Verificar permiso una sola vez
+    const hasChangePermission = useMemo(
+        () => hasPermission("usuario.change_persona"),
+        [hasPermission]
+    );
 
     return (
         <Fragment>
@@ -354,201 +558,15 @@ export default function OrderTable({ data, onView }) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {rows?.chunked?.[page - 1]?.map((row) => (
-                                    <tr
-                                        key={uuidv4()}
-                                        // onClick={() => onView(row.id)}
-                                        className="pointer-row"
-                                        {...(hasPermission(
-                                            "usuario.change_persona"
-                                        )
-                                            ? {
-                                                  onClick: () => onView(row.id),
-                                              }
-                                            : {})}
-                                    >
-                                        <td>
-                                            <Typography level="body-sm">
-                                                {dayjs(
-                                                    row.ultimo_registro
-                                                ).format("DD/MM/YYYY")}
-                                                {/* HH:mm:ss A */}
-                                            </Typography>
-                                        </td>
-                                        <td>
-                                            <Typography level="body-sm">
-                                                {row.tipo_doc_abbreviation}
-                                            </Typography>
-                                        </td>
-                                        <td>
-                                            <Typography level="body-sm">
-                                                {row.num_doc}
-                                            </Typography>
-                                        </td>
-                                        <td>
-                                            <Typography level="body-sm">
-                                                {row.nombres} {row.apellidos}
-                                            </Typography>
-                                        </td>
-                                        <td>
-                                            <Typography level="body-sm">
-                                                {row.telefono1}
-                                            </Typography>
-                                        </td>
-                                        <td>
-                                            <Typography level="body-sm">
-                                                {row.estado_name}
-                                            </Typography>
-                                        </td>
-                                        <td>
-                                            <Box
-                                                sx={{
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    // justifyContent: "center",
-                                                    // gap: 1,
-                                                }}
-                                            >
-                                                <Box
-                                                    sx={{
-                                                        bgcolor:
-                                                            row.info_validada
-                                                                ? green[50]
-                                                                : orange[50],
-                                                        width: "40px !important",
-                                                        height: "40px !important",
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        justifyContent:
-                                                            "center",
-                                                        borderRadius: "50%",
-                                                    }}
-                                                >
-                                                    <Tooltip
-                                                        title={
-                                                            row.info_validada
-                                                                ? "Validado"
-                                                                : "No validado"
-                                                        }
-                                                        arrow
-                                                    >
-                                                        {row.info_validada ? (
-                                                            <CheckRoundedIcon
-                                                                fontSize="medium"
-                                                                color="success"
-                                                            />
-                                                        ) : (
-                                                            <BlockIcon
-                                                                fontSize="medium"
-                                                                color="warning"
-                                                            />
-                                                        )}
-                                                    </Tooltip>
-                                                </Box>
-                                            </Box>
-                                        </td>
-                                        {selectedCicloId === 1 && (
-                                            <td>
-                                                <Typography level="body-sm">
-                                                    {row.curso_20horas}
-                                                </Typography>
-                                            </td>
-                                        )}
-                                        <td>
-                                            <Typography level="body-sm">
-                                                {row.diplomado_120horas}
-                                            </Typography>
-                                        </td>
-                                        <td>
-                                            <Typography level="body-sm">
-                                                {row.grupos}
-                                            </Typography>
-                                        </td>
-                                        {selectedCicloId === 2 && (
-                                            <Fragment>
-                                                <td>
-                                                    <Typography level="body-sm">
-                                                        {row.plataforma_registro ===
-                                                        "web"
-                                                            ? "Formulario web"
-                                                            : row.plataforma_registro ===
-                                                              "whatsapp"
-                                                            ? "WhatsApp"
-                                                            : "Desconocida"}
-                                                    </Typography>
-                                                </td>
-                                                <td>
-                                                    {row.etiquetas_name
-                                                        ?.length > 0 ? (
-                                                        <Tooltip
-                                                            title={
-                                                                "Etiquetas: " +
-                                                                row.etiquetas_name.join(
-                                                                    ", "
-                                                                )
-                                                            }
-                                                            arrow
-                                                        >
-                                                            <Stack
-                                                                direction="row"
-                                                                spacing={0.5}
-                                                            >
-                                                                {row.etiquetas_name?.map(
-                                                                    (
-                                                                        etiquetaName,
-                                                                        index
-                                                                    ) =>
-                                                                        etiquetaName && (
-                                                                            <Chip
-                                                                                key={
-                                                                                    index
-                                                                                }
-                                                                                sx={{
-                                                                                    width: "100%",
-                                                                                    bgcolor:
-                                                                                        etiquetasData?.find(
-                                                                                            (
-                                                                                                etq
-                                                                                            ) =>
-                                                                                                etq.value ===
-                                                                                                row
-                                                                                                    ?.etiquetas?.[
-                                                                                                    index
-                                                                                                ]
-                                                                                        )
-                                                                                            ?.color,
-                                                                                    color: getContrastColor(
-                                                                                        etiquetasData?.find(
-                                                                                            (
-                                                                                                etq
-                                                                                            ) =>
-                                                                                                etq.value ===
-                                                                                                row
-                                                                                                    ?.etiquetas?.[
-                                                                                                    index
-                                                                                                ]
-                                                                                        )
-                                                                                            ?.color
-                                                                                    ),
-                                                                                }}
-                                                                            >
-                                                                                <span>
-                                                                                    {
-                                                                                        etiquetaName
-                                                                                    }
-                                                                                </span>
-                                                                            </Chip>
-                                                                        )
-                                                                )}
-                                                            </Stack>
-                                                        </Tooltip>
-                                                    ) : (
-                                                        <span> </span>
-                                                    )}
-                                                </td>
-                                            </Fragment>
-                                        )}
-                                    </tr>
+                                {currentRows.map((row) => (
+                                    <TableRow
+                                        key={row.id}
+                                        row={row}
+                                        selectedCicloId={selectedCicloId}
+                                        etiquetaLookup={etiquetaLookup}
+                                        hasChangePermission={hasChangePermission}
+                                        onRowClick={handleRowClick}
+                                    />
                                 ))}
                                 {rows.pages === 0 && (
                                     <tr>
