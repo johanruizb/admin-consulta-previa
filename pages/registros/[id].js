@@ -15,6 +15,7 @@ import { convertToFormData, getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
 import useAlert from "@/hooks/useAlert";
 import usePermission from "@/hooks/usePermission";
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import CloseIcon from "@mui/icons-material/Close";
 import InfoIcon from "@mui/icons-material/Info";
 import SaveIcon from "@mui/icons-material/Save";
@@ -36,6 +37,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import useSWR from "swr";
 import useSWRImmutable from "swr/immutable";
 import Registros from ".";
+import { ButtonGroup } from "@mui/joy";
 
 export default function Wrapper() {
     const { isLoading: permissionIsLoading, hasPermission } =
@@ -103,7 +105,7 @@ function View({ defaultValues }) {
     // Obtener el ciclo actual desde el backend
     const { data: cicloActualData } = useSWR(
         getURL("/api/usuarios/ciclos/actual"),
-        fetcher,
+        fetcher
     );
 
     // Determinar si el ciclo seleccionado es el actual
@@ -121,16 +123,13 @@ function View({ defaultValues }) {
     const methods = useForm({ defaultValues });
     const { handleSubmit } = methods;
 
-    const onSubmit = (data) => {
+    const onSubmit = (data, validate = false) => {
         delete data.historial;
-        const formData = convertToFormData(data);
+        const formData = convertToFormData({ ...data, validate });
 
         setLoading(true);
 
         fetch(getURL("/api/usuarios/inscritos/" + id), {
-            // headers: {
-            //     "Content-Type": "multipart/form-data; boundary=----",
-            // },
             method: "POST",
             body: formData,
         })
@@ -145,7 +144,7 @@ function View({ defaultValues }) {
                         res?.message ??
                             `Se ha producido un error (${response.statusText})`,
 
-                        "danger",
+                        "danger"
                     );
                 }
             })
@@ -153,10 +152,8 @@ function View({ defaultValues }) {
                 openAlert(
                     `Se ha producido un error (${error.toString()})`,
 
-                    "danger",
+                    "danger"
                 );
-            })
-            .finally(() => {
                 setLoading(false);
             });
     };
@@ -229,7 +226,7 @@ function View({ defaultValues }) {
                                 justifyContent: "space-between",
                             }}
                         >
-                            <Button
+                            {/* <Button
                                 onClick={handleSubmit(onSubmit)}
                                 variant="solid"
                                 endDecorator={<SaveIcon />}
@@ -239,7 +236,39 @@ function View({ defaultValues }) {
                                 disabled={!isCurrentCycle}
                             >
                                 {validado ? "Guardar" : "Validar"}
-                            </Button>
+                            </Button> */}
+                            <ButtonGroup
+                                variant="solid"
+                                spacing="0.5rem"
+                                size="lg"
+                            >
+                                {validado ? null : (
+                                    <Button
+                                        endDecorator={
+                                            <AssignmentTurnedInIcon />
+                                        }
+                                        onClick={handleSubmit((data) =>
+                                            onSubmit(data, true)
+                                        )}
+                                        color="success"
+                                        disabled={loading}
+                                    >
+                                        Guardar y validar
+                                    </Button>
+                                )}
+                                <Button
+                                    startDecorator={<SaveIcon />}
+                                    onClick={handleSubmit((data) =>
+                                        onSubmit(data, false)
+                                    )}
+                                    disabled={loading}
+                                    color="primary"
+                                >
+                                    {validado
+                                        ? "Guardar"
+                                        : "Guardar sin validar"}
+                                </Button>
+                            </ButtonGroup>
                             <Button
                                 onClick={onClose}
                                 variant="plain"

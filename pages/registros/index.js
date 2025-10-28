@@ -17,18 +17,22 @@ import CircularProgress from "@mui/joy/CircularProgress";
 import Link from "@mui/joy/Link";
 import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
+import { useMediaQuery } from "@mui/material";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
-import { Fragment } from "react";
 import useSWR from "swr";
 
 export default function Registros({ children }) {
+    const smallViewport = useMediaQuery((theme) =>
+        theme.breakpoints.down("sm")
+    );
+
     const router = useRouter();
     const { selectedCicloId } = useCiclo();
 
     const { data, isLoading } = useSWR(
         getURL(`/api/usuarios/inscritos?ciclo_id=${selectedCicloId}`),
-        fetcher,
+        fetcher
     );
 
     const onView = (id) => {
@@ -109,11 +113,10 @@ export default function Registros({ children }) {
                 >
                     <CircularProgress />
                 </Stack>
+            ) : smallViewport ? (
+                <OrderList data={data} onView={onView} />
             ) : (
-                <Fragment>
-                    <OrderTable data={data} onView={onView} />
-                    <OrderList data={data} onView={onView} />
-                </Fragment>
+                <OrderTable data={data} onView={onView} />
             )}
             {children}
         </Layout>
