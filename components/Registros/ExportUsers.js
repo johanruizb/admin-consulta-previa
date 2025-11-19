@@ -60,13 +60,20 @@ function Export() {
 
     const onClick = () => {
         setLoading(true);
+        
+        // Construir la URL base
+        let url = "/api/usuarios/exportar/inscritos";
+        
+        // Si selectedIndex > 0, es un curso específico
+        if (selectedIndex > 0 && cursos && cursos.length > 0) {
+            const cursoIndex = selectedIndex - 1;
+            if (cursos[cursoIndex]) {
+                url += `/${cursos[cursoIndex].id}`;
+            }
+        }
+        
         fetch(
-            getURL(
-                "/api/usuarios/exportar/inscritos" +
-                    (options[selectedIndex].value
-                        ? "/" + options[selectedIndex].value
-                        : "")
-            ),
+            getURL(url),
             {
                 method: "GET",
                 headers: {
