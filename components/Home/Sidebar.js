@@ -300,7 +300,7 @@ export default function Sidebar() {
                                             style={{
                                                 objectFit: "contain",
                                             }}
-                                            src="https://status.consultaprevia.net/badge/_/dot?animate=ping"
+                                            src="https://status.consultaprevia.net/api/badge/3/status?label=&style=for-the-badge"
                                             alt="Estado del sistema"
                                             unoptimized
                                             width={26}
