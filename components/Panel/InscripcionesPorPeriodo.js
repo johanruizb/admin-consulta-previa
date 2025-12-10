@@ -10,21 +10,27 @@
  * - Se actualiza automáticamente al cambiar el ciclo
  * - Muestra total de inscripciones en el período
  * - Precarga inteligente de datos usando SWR preload
+ * - Exportación a Excel con los mismos datos visualizados
  */
 
 import fetcher from "@/components/fetcher";
 import { formatNumber, getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
+import useAlert from "@/hooks/useAlert";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import CircularProgress from "@mui/joy/CircularProgress";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
+import IconButton from "@mui/joy/IconButton";
 import Option from "@mui/joy/Option";
 import Select from "@mui/joy/Select";
+import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
 import Stack from "@mui/material/Stack";
 import { BarChart } from "@mui/x-charts/BarChart";
+import dayjs from "dayjs";
 import { useState } from "react";
 import useSWR from "swr";
 
@@ -34,6 +40,8 @@ export default function InscripcionesPorPeriodo({
 }) {
     const { selectedCicloId } = useCiclo();
     const [periodo, setPeriodo] = useState("dias");
+    const [exporting, setExporting] = useState(false);
+    const { onOpen } = useAlert();
 
     const params = new URLSearchParams();
     params.append("ciclo_id", selectedCicloId);
@@ -60,6 +68,64 @@ export default function InscripcionesPorPeriodo({
 
     const handlePeriodoChange = (event, newValue) => {
         setPeriodo(newValue);
+    };
+
+    const handleExport = () => {
+        setExporting(true);
+        fetch(
+            getURL(
+                `api/usuarios/inscripciones-por-periodo/exportar?${params.toString()}`,
+            ),
+            {
+                method: "GET",
+            },
+        )
+            .then(async (response) => {
+                if (!response.ok) {
+                    onOpen(
+                        `No se pudo exportar el archivo. (${String(
+                            response?.statusText ?? response,
+                        )})`,
+                        "danger",
+                    );
+                } else {
+                    const blob = await response.blob();
+                    const contentDisposition =
+                        response.headers.get("Content-Disposition");
+                    let filename = `inscripciones_por_${periodo}_${dayjs().format(
+                        "YYYY-MM-DD",
+                    )}.xlsx`;
+
+                    if (contentDisposition) {
+                        const match =
+                            contentDisposition.match(/filename="?(.+)"?/);
+                        if (match && match.length >= 2) {
+                            filename = match[1].replace(/"/g, "");
+                        }
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const link = document.createElement("a");
+                        link.href = reader.result;
+                        link.download = filename;
+                        link.click();
+                    };
+                    reader.readAsDataURL(blob);
+                    onOpen("Archivo exportado correctamente.", "success");
+                }
+            })
+            .catch((error) => {
+                onOpen(
+                    `No se pudo exportar el archivo. (${String(
+                        error?.statusText ?? error ?? "UNKNOWN_ERROR",
+                    )})`,
+                    "danger",
+                );
+            })
+            .finally(() => {
+                setExporting(false);
+            });
     };
 
     if (isLoading) {
@@ -154,18 +220,36 @@ export default function InscripcionesPorPeriodo({
                             inscripciones
                         </Typography>
                     </Stack>
-                    <FormControl size="sm" sx={{ minWidth: 150 }}>
-                        <FormLabel>Agrupar por</FormLabel>
-                        <Select
-                            value={periodo}
-                            onChange={handlePeriodoChange}
-                            size="sm"
-                        >
-                            <Option value="dias">Días</Option>
-                            <Option value="semanas">Semanas</Option>
-                            <Option value="meses">Meses</Option>
-                        </Select>
-                    </FormControl>
+                    <Stack direction="row" spacing={1} alignItems="flex-end">
+                        <FormControl size="sm" sx={{ minWidth: 150 }}>
+                            <FormLabel>Agrupar por</FormLabel>
+                            <Select
+                                value={periodo}
+                                onChange={handlePeriodoChange}
+                                size="sm"
+                            >
+                                <Option value="dias">Días</Option>
+                                <Option value="semanas">Semanas</Option>
+                                <Option value="meses">Meses</Option>
+                            </Select>
+                        </FormControl>
+                        <Tooltip title="Exportar a Excel">
+                            <IconButton
+                                variant="outlined"
+                                color="neutral"
+                                size="sm"
+                                onClick={handleExport}
+                                disabled={
+                                    exporting ||
+                                    !data?.data ||
+                                    data.data.length === 0
+                                }
+                                loading={exporting}
+                            >
+                                <FileDownloadIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </Stack>
                 </Stack>
 
                 <BarChart
