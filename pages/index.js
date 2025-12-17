@@ -6,8 +6,10 @@ import InscripcionesPorPeriodo from "@/components/Panel/InscripcionesPorPeriodo"
 import { formatNumber, getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
 import useClient from "@/hooks/useClient";
+import useAlert from "@/hooks/useAlert";
 import getParams from "@/utils/params";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import LanguageIcon from "@mui/icons-material/Language";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
@@ -20,11 +22,13 @@ import CircularProgress from "@mui/joy/CircularProgress";
 import Button from "@mui/joy/Button";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
+import IconButton from "@mui/joy/IconButton";
 import Option from "@mui/joy/Option";
 import Select from "@mui/joy/Select";
 import Link from "@mui/joy/Link";
 import Radio from "@mui/joy/Radio";
 import RadioGroup from "@mui/joy/RadioGroup";
+import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
@@ -57,6 +61,8 @@ const getDefaultFilters = () => ({
 export default function Page() {
     const { selectedCicloId } = useCiclo();
     const [filters, setFilters] = useState(getDefaultFilters);
+    const [exporting, setExporting] = useState(false);
+    const { onOpen } = useAlert();
     const [filterOptions, setFilterOptions] = useState({
         tipo_cliente: [],
         etnia: [],
@@ -223,6 +229,64 @@ export default function Page() {
         });
     });
 
+    const handleExportEstadisticas = () => {
+        const exportParams = new URLSearchParams();
+        exportParams.append("ciclo_id", selectedCicloId);
+        
+        if (Array.isArray(curso)) {
+            exportParams.append("courses", curso.join(","));
+        }
+        
+        Object.entries(activeFilters).forEach(([key, value]) => {
+            if (value && key !== "courses") {
+                exportParams.append(key, value);
+            }
+        });
+
+        setExporting(true);
+        fetch(getURL(`api/usuarios/estadisticas/exportar?${exportParams.toString()}`), {
+            method: "GET",
+        })
+            .then(async (response) => {
+                if (!response.ok) {
+                    onOpen(
+                        `No se pudo exportar el archivo. (${String(response?.statusText ?? response)})`,
+                        "danger"
+                    );
+                } else {
+                    const blob = await response.blob();
+                    const contentDisposition = response.headers.get("Content-Disposition");
+                    let filename = `estadisticas_${dayjs().format("YYYY-MM-DD")}.xlsx`;
+
+                    if (contentDisposition) {
+                        const match = contentDisposition.match(/filename="?(.+)"?/);
+                        if (match && match.length >= 2) {
+                            filename = match[1].replace(/"/g, "");
+                        }
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const link = document.createElement("a");
+                        link.href = reader.result;
+                        link.download = filename;
+                        link.click();
+                    };
+                    reader.readAsDataURL(blob);
+                    onOpen("Archivo exportado correctamente.", "success");
+                }
+            })
+            .catch((error) => {
+                onOpen(
+                    `No se pudo exportar el archivo. (${String(error?.statusText ?? error ?? "UNKNOWN_ERROR")})`,
+                    "danger"
+                );
+            })
+            .finally(() => {
+                setExporting(false);
+            });
+    };
+
     useEffect(() => {
         if (selectedCicloId && selectedCicloId !== prevCicloId) {
             resetSelectedCurso();
@@ -342,17 +406,34 @@ export default function Page() {
                     gap: 0.5,
                 }}
             >
-                <Button
-                    variant="outlined"
-                    size="sm"
-                    onClick={resetFilters}
+                <Stack
+                    direction="row"
+                    spacing={1}
                     sx={{
                         alignSelf: { xs: "stretch", sm: "flex-end" },
                     }}
-                    startDecorator={<RestartAltIcon />}
                 >
-                    Restablecer filtros
-                </Button>
+                    <Tooltip title="Exportar estadísticas a Excel">
+                        <IconButton
+                            variant="outlined"
+                            color="neutral"
+                            size="sm"
+                            onClick={handleExportEstadisticas}
+                            disabled={exporting || loading || !data?.has_statistics}
+                            loading={exporting}
+                        >
+                            <FileDownloadIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Button
+                        variant="outlined"
+                        size="sm"
+                        onClick={resetFilters}
+                        startDecorator={<RestartAltIcon />}
+                    >
+                        Restablecer filtros
+                    </Button>
+                </Stack>
                 <Grid container spacing={1.25 / 2}>
                     {filterConfig.map(({ key, label }) => (
                         <Grid
