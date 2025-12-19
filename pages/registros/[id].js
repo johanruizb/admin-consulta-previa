@@ -163,6 +163,9 @@ function View({ defaultValues }) {
 
                     "danger"
                 );
+                // setLoading(false);
+            })
+            .finally(() => {
                 setLoading(false);
             });
     };
@@ -329,7 +332,11 @@ function ViewSkeleton() {
             </DialogTitle>
             <DialogContent>
                 <Stack spacing={1} sx={{ my: 2 }}>
-                    <Skeleton variant="rectangular" height={60} sx={{ borderRadius: "sm" }} />
+                    <Skeleton
+                        variant="rectangular"
+                        height={60}
+                        sx={{ borderRadius: "sm" }}
+                    />
                 </Stack>
 
                 <Stack spacing={2}>
@@ -345,7 +352,12 @@ function ViewSkeleton() {
                     justifyContent: "space-between",
                 }}
             >
-                <Skeleton variant="rectangular" width={150} height={40} sx={{ borderRadius: "sm" }} />
+                <Skeleton
+                    variant="rectangular"
+                    width={150}
+                    height={40}
+                    sx={{ borderRadius: "sm" }}
+                />
                 <Button
                     onClick={onClose}
                     variant="plain"
