@@ -22,7 +22,7 @@ import { useSessionStorage } from "@uidotdev/usehooks";
 import dayjs from "dayjs";
 import { debounce } from "lodash";
 import { Fragment, memo, useCallback, useEffect, useMemo } from "react";
-import useSWR from "swr";
+import useSWR, { preload } from "swr";
 import CicloSelector from "../Ciclos/CicloSelector";
 import fetcher from "../fetcher";
 import { getURL } from "../utils";
@@ -44,6 +44,13 @@ const TableRow = memo(function TableRow({
             onRowClick(row.id);
         }
     }, [hasChangePermission, onRowClick, row.id]);
+
+    // Prefetch al hover para anticipar navegación
+    const handleMouseEnter = useCallback(() => {
+        if (hasChangePermission) {
+            preload(getURL(`/api/usuarios/inscritos/${row.id}`), fetcher);
+        }
+    }, [hasChangePermission, row.id]);
 
     // Pre-procesar etiquetas
     const processedEtiquetas = useMemo(() => {
@@ -79,6 +86,7 @@ const TableRow = memo(function TableRow({
         <tr
             className={hasChangePermission ? "pointer-row" : ""}
             onClick={handleClick}
+            onMouseEnter={handleMouseEnter}
         >
             <td>
                 <Typography level="body-sm">{row.formatted_date}</Typography>

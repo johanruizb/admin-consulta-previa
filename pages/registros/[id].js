@@ -6,10 +6,14 @@ import usePermissionContext from "@/components/Home/permissionContext/usePermiss
 import Navigate from "@/components/Navigate";
 import {
     CourseProgressList,
+    CourseProgressListSkeleton,
     FormSection,
+    FormSectionSkeleton,
     HistoryList,
+    HistoryListSkeleton,
     InstructionMessage,
     UserTitle,
+    UserTitleSkeleton,
 } from "@/components/Registros/DetailComponents";
 import { convertToFormData, getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
@@ -21,14 +25,14 @@ import InfoIcon from "@mui/icons-material/Info";
 import SaveIcon from "@mui/icons-material/Save";
 import Alert from "@mui/joy/Alert";
 import Button from "@mui/joy/Button";
-import CircularProgress from "@mui/joy/CircularProgress";
+import { ButtonGroup } from "@mui/joy";
 import DialogActions from "@mui/joy/DialogActions";
 import DialogContent from "@mui/joy/DialogContent";
 import DialogTitle from "@mui/joy/DialogTitle";
 import Modal from "@mui/joy/Modal";
 import ModalDialog from "@mui/joy/ModalDialog";
+import Skeleton from "@mui/joy/Skeleton";
 import Stack from "@mui/joy/Stack";
-import Backdrop from "@mui/material/Backdrop";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRouter as useNavigate } from "next/navigation";
 import { useRouter } from "next/router";
@@ -37,11 +41,9 @@ import { FormProvider, useForm } from "react-hook-form";
 import useSWR from "swr";
 import useSWRImmutable from "swr/immutable";
 import Registros from ".";
-import { ButtonGroup } from "@mui/joy";
 
 export default function Wrapper() {
-    const { isLoading: permissionIsLoading, hasPermission } =
-        usePermissionContext();
+    const { hasPermission } = usePermissionContext();
 
     const [mounted, setMounted] = useState(false);
     const router = useRouter();
@@ -61,29 +63,36 @@ export default function Wrapper() {
         setMounted(true);
     }, []);
 
-    const ready =
-        mounted && !permissionIsLoading && !isValidating && !isLoading;
+    // Solo bloqueamos el render por datos del usuario, no por permisos
+    const dataReady = mounted && !isValidating && !isLoading;
+    const hasEditPermission = hasPermission("usuario.change_persona");
 
     usePermission("usuario.view_persona");
 
-    return ready ? (
-        hasPermission("usuario.change_persona") ? (
-            <View defaultValues={values} />
-        ) : (
-            <Navigate to="/registros" replace />
-        )
-    ) : (
-        <Stack
-            open
-            component={Backdrop}
-            justifyContent="center"
-            alignContent="center"
-            alignItems="center"
-            width="100%"
-            height="100%"
-        >
-            <CircularProgress />
-        </Stack>
+    // Si no tiene permiso de edición, redirigir
+    if (dataReady && !hasEditPermission) {
+        return <Navigate to="/registros" replace />;
+    }
+
+    // Mostrar el modal inmediatamente, con skeleton si los datos no están listos
+    return (
+        <Registros>
+            <Fragment>
+                <Modal
+                    open
+                    onClose={() => {}}
+                    sx={{
+                        zIndex: 1001,
+                    }}
+                >
+                    {dataReady ? (
+                        <View defaultValues={values} />
+                    ) : (
+                        <ViewSkeleton />
+                    )}
+                </Modal>
+            </Fragment>
+        </Registros>
     );
 }
 
@@ -288,5 +297,64 @@ function View({ defaultValues }) {
                 </Modal>
             </Fragment>
         </Registros>
+    );
+}
+
+/**
+ * Componente Skeleton que se muestra mientras se cargan los datos
+ */
+function ViewSkeleton() {
+    const navigate = useNavigate();
+    const sm = useMediaQuery((theme) => theme.breakpoints.down("md"));
+
+    const onClose = () => {
+        navigate.push("/registros", undefined, { shallow: true });
+    };
+
+    return (
+        <ModalDialog
+            layout={sm ? "fullscreen" : "center"}
+            slotProps={{
+                root: {
+                    sx: sm
+                        ? {}
+                        : {
+                              width: "70%",
+                          },
+                },
+            }}
+        >
+            <DialogTitle>
+                <UserTitleSkeleton />
+            </DialogTitle>
+            <DialogContent>
+                <Stack spacing={1} sx={{ my: 2 }}>
+                    <Skeleton variant="rectangular" height={60} sx={{ borderRadius: "sm" }} />
+                </Stack>
+
+                <Stack spacing={2}>
+                    <FormSectionSkeleton />
+                </Stack>
+
+                <HistoryListSkeleton />
+
+                <CourseProgressListSkeleton />
+            </DialogContent>
+            <DialogActions
+                sx={{
+                    justifyContent: "space-between",
+                }}
+            >
+                <Skeleton variant="rectangular" width={150} height={40} sx={{ borderRadius: "sm" }} />
+                <Button
+                    onClick={onClose}
+                    variant="plain"
+                    startDecorator={<CloseIcon />}
+                    size="lg"
+                >
+                    Cerrar
+                </Button>
+            </DialogActions>
+        </ModalDialog>
     );
 }
