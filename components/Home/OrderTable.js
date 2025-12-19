@@ -572,7 +572,7 @@ export default function OrderTable({ data, onView }) {
                                     <tr>
                                         <td
                                             colSpan={
-                                                selectedCicloId == 2 ? 10 : 7
+                                                selectedCicloId == 2 ? 11 : 7
                                             }
                                         >
                                             <Typography textAlign="center">
