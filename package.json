@@ -21,7 +21,7 @@
     "@mui/material": "^7.3.4",
     "@mui/x-charts": "^8.13.1",
     "@mui/x-data-grid": "^8.13.1",
-    "@sentry/nextjs": "^10.29.0",
+    "@sentry/nextjs": "^10.32.1",
     "@uidotdev/usehooks": "^2.4.1",
     "dayjs": "^1.11.18",
     "fuse.js": "^7.1.0",
