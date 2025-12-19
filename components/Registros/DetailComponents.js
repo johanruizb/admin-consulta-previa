@@ -13,6 +13,7 @@ import ListDivider from "@mui/joy/ListDivider";
 import ListItem from "@mui/joy/ListItem";
 import ListItemContent from "@mui/joy/ListItemContent";
 import ListItemDecorator from "@mui/joy/ListItemDecorator";
+import Skeleton from "@mui/joy/Skeleton";
 import Stack from "@mui/joy/Stack";
 import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
@@ -438,3 +439,132 @@ FormSection.propTypes = {
     methods: PropTypes.object.isRequired,
     disabled: PropTypes.bool,
 };
+
+// ============================================================
+// SKELETON LOADING COMPONENTS
+// ============================================================
+
+/**
+ * Skeleton para el título del usuario
+ */
+export function UserTitleSkeleton() {
+    return (
+        <Stack direction="row" spacing={1} alignItems="center">
+            <Skeleton variant="text" width={150} height={24} />
+            <Skeleton variant="text" width={120} height={24} />
+            <Skeleton variant="text" width={80} height={24} />
+        </Stack>
+    );
+}
+
+/**
+ * Skeleton para el formulario de verificación
+ */
+export function FormSectionSkeleton() {
+    return (
+        <Grid container spacing={1.25}>
+            {Array(12)
+                .fill(0)
+                .map((_, i) => (
+                    <Grid key={i} size={{ xs: 12, md: 6 }}>
+                        <Stack spacing={0.5}>
+                            <Skeleton variant="text" width={100} height={16} />
+                            <Skeleton
+                                variant="rectangular"
+                                height={56}
+                                sx={{ borderRadius: "sm" }}
+                            />
+                        </Stack>
+                    </Grid>
+                ))}
+        </Grid>
+    );
+}
+
+/**
+ * Skeleton para el historial de cambios
+ */
+export function HistoryListSkeleton() {
+    return (
+        <Box sx={{ mt: "10px" }}>
+            <DialogTitle>
+                <Skeleton variant="text" width={180} height={28} />
+            </DialogTitle>
+            <List
+                size="lg"
+                variant="outlined"
+                sx={{ borderRadius: "sm", mt: "10px" }}
+            >
+                {Array(3)
+                    .fill(0)
+                    .map((_, i) => (
+                        <ListItem key={i}>
+                            <ListItemDecorator>
+                                <Skeleton
+                                    variant="circular"
+                                    width={24}
+                                    height={24}
+                                />
+                            </ListItemDecorator>
+                            <ListItemContent>
+                                <Skeleton
+                                    variant="text"
+                                    width="60%"
+                                    height={20}
+                                />
+                                <Skeleton
+                                    variant="text"
+                                    width="40%"
+                                    height={16}
+                                />
+                            </ListItemContent>
+                        </ListItem>
+                    ))}
+            </List>
+        </Box>
+    );
+}
+
+/**
+ * Skeleton para el avance de cursos
+ */
+export function CourseProgressListSkeleton() {
+    return (
+        <Box sx={{ mt: "10px" }}>
+            <DialogTitle>
+                <Skeleton variant="text" width={250} height={28} />
+            </DialogTitle>
+            <List
+                size="lg"
+                variant="outlined"
+                sx={{ borderRadius: "sm", mt: "10px" }}
+            >
+                {Array(4)
+                    .fill(0)
+                    .map((_, i) => (
+                        <ListItem key={i}>
+                            <ListItemDecorator>
+                                <Skeleton
+                                    variant="circular"
+                                    width={24}
+                                    height={24}
+                                />
+                            </ListItemDecorator>
+                            <ListItemContent>
+                                <Skeleton
+                                    variant="text"
+                                    width="50%"
+                                    height={20}
+                                />
+                                <Skeleton
+                                    variant="text"
+                                    width="30%"
+                                    height={16}
+                                />
+                            </ListItemContent>
+                        </ListItem>
+                    ))}
+            </List>
+        </Box>
+    );
+}
