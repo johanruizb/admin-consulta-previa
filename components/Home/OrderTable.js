@@ -67,7 +67,13 @@ const TableRow = memo(function TableRow({
                 };
             })
             .filter(Boolean);
-    }, [row.etiquetas_name, row.etiquetas, row.id, selectedCicloId, etiquetaLookup]);
+    }, [
+        row.etiquetas_name,
+        row.etiquetas,
+        row.id,
+        selectedCicloId,
+        etiquetaLookup,
+    ]);
 
     return (
         <tr
@@ -134,9 +140,7 @@ const TableRow = memo(function TableRow({
             </td>
             {selectedCicloId === 1 && (
                 <td>
-                    <Typography level="body-sm">
-                        {row.curso_20horas}
-                    </Typography>
+                    <Typography level="body-sm">{row.curso_20horas}</Typography>
                 </td>
             )}
             <td>
@@ -175,7 +179,8 @@ const TableRow = memo(function TableRow({
                                             key={etiqueta.key}
                                             sx={{
                                                 width: "100%",
-                                                bgcolor: etiqueta.backgroundColor,
+                                                bgcolor:
+                                                    etiqueta.backgroundColor,
                                                 color: etiqueta.textColor,
                                             }}
                                         >
@@ -564,7 +569,9 @@ export default function OrderTable({ data, onView }) {
                                         row={row}
                                         selectedCicloId={selectedCicloId}
                                         etiquetaLookup={etiquetaLookup}
-                                        hasChangePermission={hasChangePermission}
+                                        hasChangePermission={
+                                            hasChangePermission
+                                        }
                                         onRowClick={handleRowClick}
                                     />
                                 ))}
@@ -576,7 +583,7 @@ export default function OrderTable({ data, onView }) {
                                             }
                                         >
                                             <Typography textAlign="center">
-                                                No hay registros.
+                                                No se encontraron registros
                                             </Typography>
                                         </td>
                                     </tr>
