@@ -1,4 +1,6 @@
-import { withSentryConfig } from "@sentry/nextjs";
+// Sentry disabled - uncomment the import below to re-enable
+// import { withSentryConfig } from "@sentry/nextjs";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
@@ -18,6 +20,10 @@ const nextConfig = {
     },
 };
 
+// Sentry configuration disabled
+export default nextConfig;
+
+/* To re-enable Sentry, uncomment this section and comment the export above:
 export default withSentryConfig(nextConfig, {
   // For all available options, see:
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
@@ -25,7 +31,7 @@ export default withSentryConfig(nextConfig, {
   org: "consulta-previa",
 
   project: "plataforma-seguimiento",
-  sentryUrl: "https://glitchtip-o00w44cssko8s8sgos84os0k.johanruizb.xyz/",
+  sentryUrl: "https://glitchtip-o00w44cssko8s8sgos84os0k.johanruizb.xyz",
 
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
@@ -56,3 +62,4 @@ export default withSentryConfig(nextConfig, {
     },
   },
 });
+*/
