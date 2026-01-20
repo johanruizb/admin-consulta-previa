@@ -57,7 +57,11 @@ export default function CustomSelect({ inputProps }) {
                                 </Option>
                             )}
                         </Select>
-                        <FormHelperText>{error?.message ?? " "}</FormHelperText>
+                        {error?.message && (
+                            <FormHelperText>
+                                {error?.message ?? " "}
+                            </FormHelperText>
+                        )}
                     </FormControl>
                 );
             }}

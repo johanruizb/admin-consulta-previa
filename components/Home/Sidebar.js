@@ -32,6 +32,7 @@ import ColorSchemeToggle from "./ColorSchemeToggle";
 import usePermissionContext from "./permissionContext/usePermission";
 import Profile from "./Profile";
 import useSettingsContext from "./settingsContext/useSettings";
+import CicloSelector from "../Ciclos/CicloSelector";
 
 const Settings = dynamic(() => import("./Settings"), { ssr: false });
 
@@ -315,6 +316,7 @@ export default function Sidebar() {
                     </ListItem>
                 </List>
             </Box>
+            <CicloSelector size="sm" />
             <Divider />
             <Profile />
             {open && <Settings open={open} onClose={handleCloseSettings} />}
