@@ -8,7 +8,6 @@ import { default as JoySelect } from "@mui/joy/Select";
 import { useEffect, useMemo } from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import useSWR from "swr";
-import { v4 } from "uuid";
 import fetcher from "../fetcher";
 import { format, getURL } from "../utils";
 
@@ -41,6 +40,17 @@ export default function CustomAsyncSelect({ inputProps }) {
         fetcher,
     );
 
+    // Mostrar select deshabilitado cuando las dependencias no están completas
+    if (!validURL) {
+        return (
+            <FormControl required={controllerProps.rules?.required?.value}>
+                <FormLabel>{fieldProps.label}</FormLabel>
+                <JoySelect disabled placeholder="Seleccione primero el curso" />
+                <FormHelperText> </FormHelperText>
+            </FormControl>
+        );
+    }
+
     return isLoading || error ? (
         <FormControl
             error={error}
@@ -64,7 +74,7 @@ export default function CustomAsyncSelect({ inputProps }) {
         <AsyncSelect
             inputProps={{
                 ...inputProps,
-                field: { ...inputProps.field, options: data },
+                field: { ...inputProps.field, options: data ?? [] },
             }}
         />
     );
@@ -116,7 +126,7 @@ function AsyncSelect({ inputProps }) {
                         >
                             {options?.map((option) => (
                                 <Option
-                                    key={v4()}
+                                    key={option.value}
                                     value={
                                         isNaN(parseInt(option.value))
                                             ? option.value
