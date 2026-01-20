@@ -49,6 +49,15 @@ const matchesValue = (rowValue, expected) => {
         return false;
     }
 
+    // Caso especial: rowValue es un array (como cursos_ids)
+    if (Array.isArray(rowValue)) {
+        const expectedNum = Number(expected);
+        if (!isNaN(expectedNum)) {
+            return rowValue.includes(expectedNum);
+        }
+        return rowValue.includes(expected);
+    }
+
     if (typeof expected === "boolean") {
         if (typeof rowValue === "string") {
             if (rowValue === "true" || rowValue === "false") {
@@ -68,7 +77,8 @@ const buildPredicate = (filter) => {
         diplomado_120horas: normalizeFilterValue(filter.diplomado_120horas),
         info_validada: normalizeFilterValue(filter.info_validada),
         plataforma_registro: normalizeFilterValue(filter.plataforma_registro),
-        curso_inscrito: normalizeFilterValue(filter.curso_inscrito),
+        cursos_ids: normalizeFilterValue(filter.cursos_ids),
+        grupo_id: normalizeFilterValue(filter.grupo_id),
         etiquetas: normalizeFilterValue(filter.etiquetas),
     };
 
