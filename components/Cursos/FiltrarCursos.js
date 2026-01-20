@@ -17,6 +17,8 @@ import FormularioCursos from "./constants";
 import GruposSelect from "./GruposSelect";
 import RangeSlider from "../Field/RangeSlider";
 import CicloSelector from "../Ciclos/CicloSelector";
+import DynamicCursoSelect from "./DynamicCursoSelect";
+import CustomAsyncSelect from "../Form/CustomAsyncSelect";
 
 function filter(originalData, searchValue, callback) {
     if (searchValue !== undefined && searchValue !== "") {
@@ -66,13 +68,15 @@ export default function FiltrarCursos({ setFilter, data }) {
                 <Stack
                     direction="row"
                     justifyContent="space-between"
-                    alignItems="center"
+                    alignItems="flex-end"
                     spacing={1}
+                    flexWrap="wrap"
+                    useFlexGap
                 >
-                    <FormControl sx={{ flex: 1 }} size="sm">
+                    <FormControl sx={{ minWidth: 150, flex: 1 }} size="md">
                         <FormLabel>Buscar</FormLabel>
                         <Input
-                            size="sm"
+                            size="md"
                             placeholder="Buscar en la tabla"
                             onChange={(e) => {
                                 const value = e.target.value;
@@ -81,7 +85,30 @@ export default function FiltrarCursos({ setFilter, data }) {
                             startDecorator={<SearchIcon />}
                         />
                     </FormControl>
-                    <CicloSelector />
+                    <Box sx={{ minWidth: 160 }}>
+                        <DynamicCursoSelect
+                            inputProps={{
+                                ...FormularioCursos[0],
+                                field: {
+                                    ...FormularioCursos[0].field,
+                                    size: "md",
+                                },
+                            }}
+                        />
+                    </Box>
+                    <GruposSelect compact />
+                    <Box sx={{ minWidth: 160 }}>
+                        <CustomAsyncSelect
+                            inputProps={{
+                                ...FormularioCursos[1],
+                                field: {
+                                    ...FormularioCursos[1].field,
+                                    size: "md",
+                                },
+                            }}
+                        />
+                    </Box>
+                    <CicloSelector size="md" />
                     <AccordionSummary
                         sx={{
                             pt: "24px",
@@ -99,7 +126,7 @@ export default function FiltrarCursos({ setFilter, data }) {
                     }}
                 >
                     <Grid container spacing={1.25}>
-                        {FormularioCursos.map((slotProps, index) => {
+                        {FormularioCursos.slice(2).map((slotProps, index) => {
                             const {
                                 Component,
                                 size = {
@@ -112,7 +139,6 @@ export default function FiltrarCursos({ setFilter, data }) {
 
                             return Component ? (
                                 <Fragment key={index}>
-                                    {index == 1 && <GruposSelect />}
                                     {gridless ? (
                                         <Component
                                             key={index}
@@ -128,6 +154,7 @@ export default function FiltrarCursos({ setFilter, data }) {
                                 </Fragment>
                             ) : null;
                         })}
+                        {/* <GruposSelect /> */}
                         <RangeSlider
                             inputProps={{
                                 controller: {

@@ -16,8 +16,10 @@ import { useCiclo } from "@/contexts/CicloContext";
  * Componente de selección de grupos dinámico.
  * Solo se muestra si el curso seleccionado tiene grupos en el ciclo actual.
  * Los grupos se cargan desde el endpoint /api/moodle/curso/{curso_id}/grupos
+ * @param {Object} props
+ * @param {boolean} props.compact - Si es true, no renderiza el wrapper Grid
  */
-export default function GruposSelect() {
+export default function GruposSelect({ compact = false, size = "md" }) {
     const { control, setValue } = useFormContext();
     const { selectedCicloId } = useCiclo();
 
@@ -61,41 +63,48 @@ export default function GruposSelect() {
         return null;
     }
 
-    return (
-        <Grid size={{ xs: 12, md: 3 }}>
-            <Controller
-                control={control}
-                name="grupo_usuario"
-                defaultValue="all"
-                render={({ field, fieldState: { error: fieldError } }) => (
-                    <FormControl error={Boolean(fieldError)}>
-                        <FormLabel>Grupo</FormLabel>
-                        {isLoading ? (
-                            <Skeleton variant="rectangular" height={36} />
-                        ) : (
-                            <Select
-                                {...field}
-                                onChange={(e, newValue) => {
-                                    field.onChange(newValue);
-                                }}
-                                placeholder="Seleccione un grupo"
-                            >
-                                {options.map((option) => (
-                                    <Option
-                                        key={option.value}
-                                        value={option.value}
-                                    >
-                                        {option.label}
-                                    </Option>
-                                ))}
-                            </Select>
-                        )}
+    const selectContent = (
+        <Controller
+            control={control}
+            name="grupo_usuario"
+            defaultValue="all"
+            render={({ field, fieldState: { error: fieldError } }) => (
+                <FormControl error={Boolean(fieldError)} size={size}>
+                    <FormLabel>Grupo</FormLabel>
+                    {isLoading ? (
+                        <Skeleton
+                            variant="rectangular"
+                            height={compact ? 32 : 36}
+                        />
+                    ) : (
+                        <Select
+                            {...field}
+                            size={size}
+                            onChange={(e, newValue) => {
+                                field.onChange(newValue);
+                            }}
+                            placeholder="Seleccione un grupo"
+                        >
+                            {options.map((option) => (
+                                <Option key={option.value} value={option.value}>
+                                    {option.label}
+                                </Option>
+                            ))}
+                        </Select>
+                    )}
+                    {!compact && (
                         <FormHelperText>
                             {fieldError?.message ?? " "}
                         </FormHelperText>
-                    </FormControl>
-                )}
-            />
-        </Grid>
+                    )}
+                </FormControl>
+            )}
+        />
     );
+
+    if (compact) {
+        return selectContent;
+    }
+
+    return <Grid size={{ xs: 12, md: 3 }}>{selectContent}</Grid>;
 }

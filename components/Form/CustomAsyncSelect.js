@@ -143,7 +143,11 @@ function AsyncSelect({ inputProps }) {
                             )}
                         </JoySelect>
 
-                        <FormHelperText>{error?.message ?? " "}</FormHelperText>
+                        {error?.message && (
+                            <FormHelperText>
+                                {error?.message ?? " "}
+                            </FormHelperText>
+                        )}
                     </FormControl>
                 );
             }}
