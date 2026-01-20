@@ -11,9 +11,10 @@ import Grid from "@mui/material/Grid";
 import { useSessionStorage } from "@uidotdev/usehooks";
 import Fuse from "fuse.js";
 import { cloneDeep, debounce } from "lodash";
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
-import { useFormContext, useWatch } from "react-hook-form";
-import FormularioCursos, { FormularioGrupos } from "./constants";
+import { Fragment, useCallback, useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
+import FormularioCursos from "./constants";
+import GruposSelect from "./GruposSelect";
 import RangeSlider from "../Field/RangeSlider";
 import CicloSelector from "../Ciclos/CicloSelector";
 
@@ -51,17 +52,6 @@ export default function FiltrarCursos({ setFilter, data }) {
         filter(data?.resultados ?? [], search, setFilter);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search, data]);
-
-    // FormularioGrupos
-    const { control } = useFormContext();
-    const course_id = useWatch({
-        control,
-        name: "activity__module__course_id",
-    });
-
-    const FormGroups = useMemo(() => {
-        return FormularioGrupos[course_id];
-    }, [course_id]);
 
     return (
         <Box
@@ -122,25 +112,7 @@ export default function FiltrarCursos({ setFilter, data }) {
 
                             return Component ? (
                                 <Fragment key={index}>
-                                    {index == 1 &&
-                                        FormGroups?.map((slotProps, index) => {
-                                            const {
-                                                Component,
-                                                size = {
-                                                    xs: 12,
-                                                    md: 3,
-                                                },
-                                                ...inputProps
-                                            } = slotProps;
-
-                                            return Component ? (
-                                                <Grid key={index} size={size}>
-                                                    <Component
-                                                        inputProps={inputProps}
-                                                    />
-                                                </Grid>
-                                            ) : null;
-                                        })}
+                                    {index == 1 && <GruposSelect />}
                                     {gridless ? (
                                         <Component
                                             key={index}

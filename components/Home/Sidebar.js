@@ -1,12 +1,13 @@
 "use client";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import STORAGE from "@/hooks/storage";
+import useClient from "@/hooks/useClient";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import SchoolIcon from "@mui/icons-material/School";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
-import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import Box from "@mui/joy/Box";
 import Divider from "@mui/joy/Divider";
 import GlobalStyles from "@mui/joy/GlobalStyles";
@@ -16,70 +17,114 @@ import ListItem from "@mui/joy/ListItem";
 import ListItemButton, { listItemButtonClasses } from "@mui/joy/ListItemButton";
 import ListItemContent from "@mui/joy/ListItemContent";
 import Sheet from "@mui/joy/Sheet";
+import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
-
+import CircularProgress from "@mui/material/CircularProgress";
+import Image from "next/image";
+import dynamic from "next/dynamic";
+import { useRouter, usePathname } from "next/navigation";
+import { useState, useCallback, useMemo, memo } from "react";
+import useSWR from "swr";
+import fetcher from "../fetcher";
 import UnivalleIcon from "../Icons/Univalle";
 import { closeSidebar, getURL } from "../utils";
 import ColorSchemeToggle from "./ColorSchemeToggle";
-
-import STORAGE from "@/hooks/storage";
-import useClient from "@/hooks/useClient";
-import CircularProgress from "@mui/material/CircularProgress";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import useSWR from "swr";
 import usePermissionContext from "./permissionContext/usePermission";
 import Profile from "./Profile";
-import Settings from "./Settings";
 import useSettingsContext from "./settingsContext/useSettings";
-import fetcher from "../fetcher";
-import Stack from "@mui/joy/Stack";
-import Image from "next/image";
+
+const Settings = dynamic(() => import("./Settings"), { ssr: false });
+
+const NavItem = memo(function NavItem({ onClick, selected, icon, children }) {
+    return (
+        <ListItem>
+            <ListItemButton component="a" onClick={onClick} selected={selected}>
+                {icon}
+                <ListItemContent>
+                    <Typography level="title-sm">{children}</Typography>
+                </ListItemContent>
+            </ListItemButton>
+        </ListItem>
+    );
+});
+
+const ExternalNavItem = memo(function ExternalNavItem({
+    href,
+    icon,
+    children,
+    customIcon,
+}) {
+    return (
+        <ListItem>
+            <ListItemButton component="a" href={href} target="_blank">
+                {customIcon || icon}
+                <ListItemContent>
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                        <Typography level="title-sm">{children}</Typography>
+                    </Stack>
+                </ListItemContent>
+                <OpenInNewIcon fontSize="small" />
+            </ListItemButton>
+        </ListItem>
+    );
+});
 
 export default function Sidebar() {
     const { data: user } = useSWR(getURL("api/user"), fetcher);
     const { isLoading, hasPermission } = usePermissionContext();
-
+    const { settings } = useSettingsContext();
     const router = useRouter();
+    const pathname = usePathname();
 
-    const [mounted, setMounted] = useState(false);
-    const [open, setOpen] = useState();
+    const [open, setOpen] = useState(false);
 
     useClient(() => {
-        setMounted(true);
         setOpen(STORAGE.load("open_settings_app", sessionStorage, false));
     });
 
-    const handleRouteChange = (url, replace = false) => {
-        if (replace) router.replace(url, undefined, { shallow: true });
-        else router.push(url, undefined, { shallow: true });
-    };
+    const handleRouteChange = useCallback(
+        (url, replace = false) => {
+            if (replace) router.replace(url, undefined, { shallow: true });
+            else router.push(url, undefined, { shallow: true });
+        },
+        [router],
+    );
 
-    const { settings } = useSettingsContext();
+    const handleOpenSettings = useCallback(() => setOpen(true), []);
+    const handleCloseSettings = useCallback(() => setOpen(false), []);
+    const handleCloseSidebar = useCallback(() => closeSidebar(), []);
 
-    const sheetSx = settings.useWideInterface
-        ? {
-              transform:
-                  "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)))",
-          }
-        : {
-              transform: {
-                  xs: "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)))",
-                  md: "none",
-              },
-          };
+    const sheetSx = useMemo(
+        () =>
+            settings.useWideInterface
+                ? {
+                      transform:
+                          "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)))",
+                  }
+                : {
+                      transform: {
+                          xs: "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)))",
+                          md: "none",
+                      },
+                  },
+        [settings.useWideInterface],
+    );
 
-    const Sidebaroverlay = settings.useWideInterface
-        ? {
-              transform:
-                  "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1) + var(--SideNavigation-slideIn, 0) * var(--Sidebar-width, 0px)))",
-          }
-        : {
-              transform: {
-                  xs: "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1) + var(--SideNavigation-slideIn, 0) * var(--Sidebar-width, 0px)))",
-                  lg: "translateX(-100%)",
-              },
-          };
+    const sidebarOverlaySx = useMemo(
+        () =>
+            settings.useWideInterface
+                ? {
+                      transform:
+                          "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1) + var(--SideNavigation-slideIn, 0) * var(--Sidebar-width, 0px)))",
+                  }
+                : {
+                      transform: {
+                          xs: "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1) + var(--SideNavigation-slideIn, 0) * var(--Sidebar-width, 0px)))",
+                          lg: "translateX(-100%)",
+                      },
+                  },
+        [settings.useWideInterface],
+    );
 
     return (
         <Sheet
@@ -123,9 +168,9 @@ export default function Sidebar() {
                     opacity: "var(--SideNavigation-slideIn)",
                     backgroundColor: "var(--joy-palette-background-backdrop)",
                     transition: "opacity 0.4s",
-                    ...Sidebaroverlay,
+                    ...sidebarOverlaySx,
                 }}
-                onClick={() => closeSidebar()}
+                onClick={handleCloseSidebar}
             />
             {!settings.useWideInterface && (
                 <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
@@ -172,134 +217,63 @@ export default function Sidebar() {
                                 theme.vars.radius.sm,
                         }}
                     >
-                        <ListItem>
-                            <ListItemButton
-                                component="a"
-                                // href="/"
-                                onClick={() => handleRouteChange("/")}
-                                selected={
-                                    mounted ? location.pathname == "/" : false
-                                }
-                            >
-                                <HomeRoundedIcon />
-                                <ListItemContent>
-                                    <Typography level="title-sm">
-                                        Inicio
-                                    </Typography>
-                                </ListItemContent>
-                            </ListItemButton>
-                        </ListItem>
+                        <NavItem
+                            onClick={() => handleRouteChange("/")}
+                            selected={pathname === "/"}
+                            icon={<HomeRoundedIcon />}
+                        >
+                            Inicio
+                        </NavItem>
 
                         {hasPermission("usuario.view_persona") && (
-                            <ListItem>
-                                <ListItemButton
-                                    component="a"
-                                    // href="/registros"
-                                    onClick={() =>
-                                        handleRouteChange("/registros")
-                                    }
-                                    selected={
-                                        mounted
-                                            ? location.pathname == "/registros"
-                                            : false
-                                    }
-                                >
-                                    <GroupAddIcon />
-                                    <ListItemContent>
-                                        <Typography level="title-sm">
-                                            Registros
-                                        </Typography>
-                                    </ListItemContent>
-                                </ListItemButton>
-                            </ListItem>
+                            <NavItem
+                                onClick={() => handleRouteChange("/registros")}
+                                selected={pathname === "/registros"}
+                                icon={<GroupAddIcon />}
+                            >
+                                Registros
+                            </NavItem>
                         )}
                         {hasPermission(
-                            "moodle.view_actividadescompletadas"
+                            "moodle.view_actividadescompletadas",
                         ) && (
-                            <ListItem>
-                                <ListItemButton
-                                    component="a"
-                                    onClick={() =>
-                                        handleRouteChange("/avance-cursos")
-                                    }
-                                    selected={
-                                        mounted
-                                            ? location.pathname ==
-                                              "/avance-cursos"
-                                            : false
-                                    }
-                                >
-                                    <SchoolIcon />
-                                    <ListItemContent>
-                                        <Typography level="title-sm">
-                                            Avance de cursos
-                                        </Typography>
-                                    </ListItemContent>
-                                </ListItemButton>
-                            </ListItem>
+                            <NavItem
+                                onClick={() =>
+                                    handleRouteChange("/avance-cursos")
+                                }
+                                selected={pathname === "/avance-cursos"}
+                                icon={<SchoolIcon />}
+                            >
+                                Avance de cursos
+                            </NavItem>
                         )}
                         {hasPermission("usuario.view_listaespera") && (
-                            <ListItem>
-                                <ListItemButton
-                                    component="a"
-                                    onClick={() =>
-                                        handleRouteChange("/lista-espera")
-                                    }
-                                    selected={
-                                        mounted
-                                            ? location.pathname ==
-                                              "/lista-espera"
-                                            : false
-                                    }
-                                >
-                                    <SchoolIcon />
-                                    <ListItemContent>
-                                        <Typography level="title-sm">
-                                            Lista de espera
-                                        </Typography>
-                                    </ListItemContent>
-                                </ListItemButton>
-                            </ListItem>
+                            <NavItem
+                                onClick={() =>
+                                    handleRouteChange("/lista-espera")
+                                }
+                                selected={pathname === "/lista-espera"}
+                                icon={<SchoolIcon />}
+                            >
+                                Lista de espera
+                            </NavItem>
                         )}
                         {hasPermission("is_superuser") && (
-                            <ListItem>
-                                <ListItemButton
-                                    component="a"
-                                    onClick={() =>
-                                        handleRouteChange("/api-keys")
-                                    }
-                                    selected={
-                                        mounted
-                                            ? location.pathname == "/api-keys"
-                                            : false
-                                    }
-                                >
-                                    <VpnKeyIcon />
-                                    <ListItemContent>
-                                        <Typography level="title-sm">
-                                            API Keys
-                                        </Typography>
-                                    </ListItemContent>
-                                </ListItemButton>
-                            </ListItem>
+                            <NavItem
+                                onClick={() => handleRouteChange("/api-keys")}
+                                selected={pathname === "/api-keys"}
+                                icon={<VpnKeyIcon />}
+                            >
+                                API Keys
+                            </NavItem>
                         )}
                         {hasPermission("is_superuser") && (
-                            <ListItem>
-                                <ListItemButton
-                                    component="a"
-                                    href="https://status.consultaprevia.net"
-                                    target="_blank"
-                                >
-                                    <div
-                                        style={{
-                                            position: "relative",
-                                        }}
-                                    >
+                            <ExternalNavItem
+                                href="https://status.consultaprevia.net"
+                                customIcon={
+                                    <div style={{ position: "relative" }}>
                                         <Image
-                                            // layout="fill"
-                                            style={{
-                                                objectFit: "contain",
-                                            }}
+                                            style={{ objectFit: "contain" }}
                                             src="https://status.consultaprevia.net/api/badge/3/status?label=&style=for-the-badge"
                                             alt="Estado del sistema"
                                             unoptimized
@@ -307,43 +281,18 @@ export default function Sidebar() {
                                             height={26}
                                         />
                                     </div>
-                                    <ListItemContent>
-                                        <Stack
-                                            direction="row"
-                                            alignItems="center"
-                                            spacing={1}
-                                        >
-                                            <Typography level="title-sm">
-                                                Estado del sistema
-                                            </Typography>
-                                        </Stack>
-                                    </ListItemContent>
-                                    <OpenInNewIcon fontSize="small" />
-                                </ListItemButton>
-                            </ListItem>
+                                }
+                            >
+                                Estado del sistema
+                            </ExternalNavItem>
                         )}
 
-                        <ListItem>
-                            <ListItemButton
-                                component="a"
-                                href="https://erk-software-bussiness.online"
-                                target="_blank"
-                            >
-                                <WhatsAppIcon />
-                                <ListItemContent>
-                                    <Stack
-                                        direction="row"
-                                        alignItems="center"
-                                        spacing={1}
-                                    >
-                                        <Typography level="title-sm">
-                                            Chatbot
-                                        </Typography>
-                                    </Stack>
-                                </ListItemContent>
-                                <OpenInNewIcon fontSize="small" />
-                            </ListItemButton>
-                        </ListItem>
+                        <ExternalNavItem
+                            href="https://erk-software-bussiness.online"
+                            icon={<WhatsAppIcon />}
+                        >
+                            Chatbot
+                        </ExternalNavItem>
                     </List>
                 )}
                 <List
@@ -353,12 +302,11 @@ export default function Sidebar() {
                         flexGrow: 0,
                         "--ListItem-radius": (theme) => theme.vars.radius.sm,
                         "--List-gap": "8px",
-                        // mb: 2,
                     }}
                 >
                     <ListItem>
                         <ListItemButton
-                            onClick={() => setOpen(true)}
+                            onClick={handleOpenSettings}
                             selected={open}
                         >
                             <SettingsRoundedIcon />
@@ -369,7 +317,7 @@ export default function Sidebar() {
             </Box>
             <Divider />
             <Profile />
-            {open && <Settings open={open} onClose={() => setOpen(false)} />}
+            {open && <Settings open={open} onClose={handleCloseSettings} />}
         </Sheet>
     );
 }

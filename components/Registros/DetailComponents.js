@@ -1,12 +1,15 @@
 import { getIconHistory } from "@/components/Registros/functions";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoIcon from "@mui/icons-material/Info";
 import { Alert } from "@mui/joy";
 import Accordion from "@mui/joy/Accordion";
 import AccordionDetails from "@mui/joy/AccordionDetails";
+import AccordionGroup from "@mui/joy/AccordionGroup";
 import AccordionSummary from "@mui/joy/AccordionSummary";
 import Box from "@mui/joy/Box";
+import Chip from "@mui/joy/Chip";
 import DialogTitle from "@mui/joy/DialogTitle";
 import List from "@mui/joy/List";
 import ListDivider from "@mui/joy/ListDivider";
@@ -21,7 +24,34 @@ import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import dayjs from "dayjs";
 import PropTypes from "prop-types";
-import { memo, useMemo } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
+
+// Estilos constantes extraídos para evitar recreación en cada render
+const ACCORDION_DETAILS_SX = { m: 0, p: 0 };
+const BOX_MT_SX = { mt: "10px" };
+const LIST_SX = { borderRadius: "sm", mt: "10px" };
+const ACCORDION_SUMMARY_SX = { py: 1 };
+const CYCLE_ACCORDION_GROUP_SX = {
+    borderRadius: "sm",
+    mt: "10px",
+    [`& .MuiAccordion-root`]: {
+        marginTop: "0",
+        transition: "0.2s ease",
+        '& button:not([aria-expanded="true"])': {
+            transition: "0.2s ease",
+            paddingBottom: "0.625rem",
+        },
+        "& button:hover": {
+            background: "transparent",
+        },
+    },
+    [`& .MuiAccordion-root.Mui-expanded`]: {
+        bgcolor: "background.level1",
+        borderRadius: "md",
+        borderBottom: "1px solid",
+        borderColor: "background.level2",
+    },
+};
 
 /**
  * Helper function to safely render values that might be objects
@@ -48,13 +78,13 @@ const HistoryItemWithChanges = memo(function HistoryItemWithChanges({ item }) {
     // Pre-formatear fecha
     const formattedDate = useMemo(
         () => dayjs(item.history_date).format("DD/MM/YYYY HH:mm:ss A"),
-        [item.history_date]
+        [item.history_date],
     );
 
     // Pre-calcular entries de cambios
     const changesEntries = useMemo(
         () => Object.entries(item.changes),
-        [item.changes]
+        [item.changes],
     );
 
     return (
@@ -83,12 +113,7 @@ const HistoryItemWithChanges = memo(function HistoryItemWithChanges({ item }) {
                     </ListItemContent>
                 </ListItem>
             </AccordionSummary>
-            <AccordionDetails
-                sx={{
-                    m: 0,
-                    p: 0,
-                }}
-            >
+            <AccordionDetails sx={ACCORDION_DETAILS_SX}>
                 <List>
                     <Grid container spacing={1}>
                         {changesEntries.map(([field, changes]) => (
@@ -97,7 +122,7 @@ const HistoryItemWithChanges = memo(function HistoryItemWithChanges({ item }) {
                                 size={
                                     field === "Cursos inscritos" &&
                                     Object.values(changes).every(
-                                        (change) => change
+                                        (change) => change,
                                     )
                                         ? 12
                                         : 6
@@ -122,7 +147,7 @@ const HistoryItemWithChanges = memo(function HistoryItemWithChanges({ item }) {
                                         >
                                             <Tooltip
                                                 title={safeRenderValue(
-                                                    changes.old
+                                                    changes.old,
                                                 )}
                                                 arrow
                                             >
@@ -132,14 +157,14 @@ const HistoryItemWithChanges = memo(function HistoryItemWithChanges({ item }) {
                                                     noWrap
                                                 >
                                                     {safeRenderValue(
-                                                        changes.old
+                                                        changes.old,
                                                     )}
                                                 </Typography>
                                             </Tooltip>
                                             <span>{"»»"}</span>
                                             <Tooltip
                                                 title={safeRenderValue(
-                                                    changes.new
+                                                    changes.new,
                                                 )}
                                                 arrow
                                             >
@@ -149,7 +174,7 @@ const HistoryItemWithChanges = memo(function HistoryItemWithChanges({ item }) {
                                                     noWrap
                                                 >
                                                     {safeRenderValue(
-                                                        changes.new
+                                                        changes.new,
                                                     )}
                                                 </Typography>
                                             </Tooltip>
@@ -177,7 +202,7 @@ const HistoryItemSimple = memo(function HistoryItemSimple({ item }) {
     // Pre-formatear fecha
     const formattedDate = useMemo(
         () => dayjs(item.history_date).format("DD/MM/YYYY HH:mm:ss A"),
-        [item.history_date]
+        [item.history_date],
     );
 
     return (
@@ -211,28 +236,24 @@ HistoryItemSimple.propTypes = {
 /**
  * Componente para mostrar el historial de cambios
  */
-export function HistoryList({ historial }) {
+export const HistoryList = memo(function HistoryList({ historial }) {
     if (!historial || historial.length === 0) return null;
 
     return (
-        <Box sx={{ mt: "10px" }}>
+        <Box sx={BOX_MT_SX}>
             <DialogTitle>Historial de cambios</DialogTitle>
-            <List
-                size="lg"
-                variant="outlined"
-                sx={{ borderRadius: "sm", mt: "10px" }}
-            >
+            <List size="lg" variant="outlined" sx={LIST_SX}>
                 {historial.map((item, index) =>
                     item.changes ? (
                         <HistoryItemWithChanges key={index} item={item} />
                     ) : (
                         <HistoryItemSimple key={index} item={item} />
-                    )
+                    ),
                 )}
             </List>
         </Box>
     );
-}
+});
 
 HistoryList.propTypes = {
     historial: PropTypes.array.isRequired,
@@ -248,7 +269,7 @@ const ActivityItem = memo(function ActivityItem({ actividad }) {
             return "Incompleto";
         }
         return `Completado — ${dayjs(actividad.date).format(
-            "DD/MM/YYYY HH:mm:ss A"
+            "DD/MM/YYYY HH:mm:ss A",
         )}`;
     }, [actividad?.completado, actividad?.date]);
 
@@ -302,12 +323,10 @@ const ModuleItem = memo(function ModuleItem({ modulo, isLast }) {
                     </ListItemContent>
                 </ListItem>
             </AccordionSummary>
-            {!isLast && <ListDivider inset="gutter" />}
             <AccordionDetails>
                 {modulo.actividades.map((actividad, idx) => (
                     <ActivityItem key={idx} actividad={actividad} />
                 ))}
-                {!isLast && <ListDivider inset="gutter" />}
             </AccordionDetails>
         </Accordion>
     );
@@ -319,30 +338,126 @@ ModuleItem.propTypes = {
 };
 
 /**
- * Componente para mostrar el avance de cursos y actividades
+ * Componente para mostrar los módulos de un ciclo específico
  */
-export function CourseProgressList({ modulos }) {
+const CycleModulesList = memo(function CycleModulesList({ modulos }) {
+    return (
+        <AccordionGroup>
+            {modulos.map((modulo, index) => (
+                <ModuleItem
+                    key={modulo.name || index}
+                    modulo={modulo}
+                    isLast={index === modulos.length - 1}
+                />
+            ))}
+        </AccordionGroup>
+    );
+});
+
+CycleModulesList.propTypes = {
+    modulos: PropTypes.array.isRequired,
+};
+
+/**
+ * Componente para mostrar el avance de cursos y actividades agrupados por ciclo
+ */
+export const CourseProgressList = memo(function CourseProgressList({
+    modulos,
+}) {
+    // Detectar estructura y calcular índice expandido en un solo useMemo
+    // Los hooks deben ejecutarse antes de cualquier return condicional
+    const { isNewStructure, initialExpandedIndex } = useMemo(() => {
+        if (!modulos || modulos.length === 0) {
+            return { isNewStructure: false, initialExpandedIndex: null };
+        }
+        const isNew = modulos[0]?.ciclo_id !== undefined;
+        if (!isNew)
+            return { isNewStructure: false, initialExpandedIndex: null };
+
+        const currentIndex = modulos.findIndex((ciclo) => ciclo.es_actual);
+        return {
+            isNewStructure: true,
+            initialExpandedIndex: currentIndex >= 0 ? currentIndex : 0,
+        };
+    }, [modulos]);
+
+    // Lazy initialization para useState
+    const [expandedIndex, setExpandedIndex] = useState(
+        () => initialExpandedIndex,
+    );
+
+    // Callback memoizado para manejar cambios de accordion
+    const handleAccordionChange = useCallback(
+        (index) => (_, expanded) => {
+            setExpandedIndex(expanded ? index : null);
+        },
+        [],
+    );
+
+    // Guard clause después de los hooks
     if (!modulos || modulos.length === 0) return null;
 
+    // Estructura antigua: renderizar directamente los módulos
+    if (!isNewStructure) {
+        return (
+            <Box sx={BOX_MT_SX}>
+                <DialogTitle>Avance de cursos y actividades</DialogTitle>
+                <AccordionGroup>
+                    {modulos.map((modulo, index) => (
+                        <ModuleItem
+                            key={modulo.name || index}
+                            modulo={modulo}
+                            isLast={index === modulos.length - 1}
+                        />
+                    ))}
+                </AccordionGroup>
+            </Box>
+        );
+    }
+
+    // Nueva estructura: renderizar por ciclo con accordions
     return (
-        <Box sx={{ mt: "10px" }}>
+        <Box sx={BOX_MT_SX}>
             <DialogTitle>Avance de cursos y actividades</DialogTitle>
-            <List
-                size="lg"
+            <AccordionGroup
                 variant="outlined"
-                sx={{ borderRadius: "sm", mt: "10px" }}
+                sx={CYCLE_ACCORDION_GROUP_SX}
+                size="lg"
             >
-                {modulos.map((modulo, index) => (
-                    <ModuleItem
-                        key={index}
-                        modulo={modulo}
-                        isLast={index === modulos.length - 1}
-                    />
+                {modulos.map((ciclo, index) => (
+                    <Accordion
+                        key={ciclo.ciclo_id}
+                        expanded={expandedIndex === index}
+                        onChange={handleAccordionChange(index)}
+                    >
+                        <AccordionSummary
+                            indicator={<ExpandMoreIcon />}
+                            sx={ACCORDION_SUMMARY_SX}
+                        >
+                            <Stack
+                                direction="row"
+                                spacing={1}
+                                alignItems="center"
+                            >
+                                <Typography level="title-md">
+                                    {ciclo.ciclo_nombre}
+                                </Typography>
+                                {ciclo.es_actual && (
+                                    <Chip size="sm" color="primary">
+                                        Actual
+                                    </Chip>
+                                )}
+                            </Stack>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <CycleModulesList modulos={ciclo.modulos} />
+                        </AccordionDetails>
+                    </Accordion>
                 ))}
-            </List>
+            </AccordionGroup>
         </Box>
     );
-}
+});
 
 CourseProgressList.propTypes = {
     modulos: PropTypes.array,
@@ -351,7 +466,10 @@ CourseProgressList.propTypes = {
 /**
  * Componente para renderizar el título del usuario
  */
-export function UserTitle({ defaultValues, DOCUMENTOS }) {
+export const UserTitle = memo(function UserTitle({
+    defaultValues,
+    DOCUMENTOS,
+}) {
     if (!defaultValues) return null;
 
     const { nombres, apellidos, tipo_doc, num_doc, grupos } = defaultValues;
@@ -359,7 +477,7 @@ export function UserTitle({ defaultValues, DOCUMENTOS }) {
     const gruposText = grupos ? ` — ${grupos}` : "";
 
     return `${nombres} ${apellidos} ${documentType} ${num_doc}${gruposText}`;
-}
+});
 
 UserTitle.propTypes = {
     defaultValues: PropTypes.object,
@@ -369,20 +487,24 @@ UserTitle.propTypes = {
 /**
  * Componente para el mensaje de instrucciones según el estado de validación
  */
-export function InstructionMessage({ validado }) {
+const ALERT_SX = { my: 2 };
+
+export const InstructionMessage = memo(function InstructionMessage({
+    validado,
+}) {
     return (
         <Alert
             color="primary"
             variant="soft"
             startDecorator={<InfoIcon />}
-            sx={{ my: 2 }}
+            sx={ALERT_SX}
         >
             {validado
                 ? "La persona ya ha sido validada. Si hay algún error, edita los campos necesarios y presiona el botón 'Guardar'."
                 : "Si hay algún error, edita los campos necesarios. Cuando la información sea correcta y completa, presiona el botón 'Guardar y validar' para validar la persona. De lo contrario, puedes presionar 'Guardar sin validar' para guardar los cambios sin validar."}
         </Alert>
     );
-}
+});
 
 InstructionMessage.propTypes = {
     validado: PropTypes.bool,
@@ -391,7 +513,7 @@ InstructionMessage.propTypes = {
 /**
  * Componente para renderizar el formulario de verificación
  */
-export function FormSection({
+export const FormSection = memo(function FormSection({
     FormularioVerificacion,
     methods,
     disabled = false,
@@ -432,7 +554,7 @@ export function FormSection({
             })}
         </Grid>
     );
-}
+});
 
 FormSection.propTypes = {
     FormularioVerificacion: PropTypes.array.isRequired,

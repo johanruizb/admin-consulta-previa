@@ -214,10 +214,32 @@ export default function OrderTable({ data, onView }) {
     const [page, setPage] = useSessionStorage("OrderTable__page", 1);
     const [filter, setFilter] = useSessionStorage("OrderTable__filter", {});
 
+    const { selectedCicloId } = useCiclo();
+
     const { data: etiquetasData } = useSWR(
         getURL("/api/usuarios/etiquetas"),
         fetcher
     );
+
+    const { data: cursosData } = useSWR(
+        selectedCicloId
+            ? getURL(`/api/usuarios/cursos?ciclo_id=${selectedCicloId}`)
+            : null,
+        fetcher
+    );
+
+    // URL de grupos dinámica según el curso seleccionado
+    const gruposUrl = useMemo(() => {
+        if (!selectedCicloId) return null;
+        
+        const cursoId = filter.cursos_ids;
+        if (cursoId) {
+            return getURL(`/api/moodle/curso/${cursoId}/grupos?ciclo_id=${selectedCicloId}`);
+        }
+        return getURL(`/api/moodle/grupos?ciclo_id=${selectedCicloId}`);
+    }, [selectedCicloId, filter.cursos_ids]);
+
+    const { data: gruposData } = useSWR(gruposUrl, fetcher);
 
     const etiquetaLookup = useMemo(() => {
         if (!Array.isArray(etiquetasData)) {
@@ -291,6 +313,15 @@ export default function OrderTable({ data, onView }) {
 
     useEffect(() => () => setSearchFilter.cancel(), [setSearchFilter]);
 
+    // Limpiar filtro de grupo cuando cambia el curso seleccionado
+    useEffect(() => {
+        if (filter.grupo_id !== undefined) {
+            updateFilter("grupo_id", undefined);
+        }
+        // Solo depender de cursos_ids para ejecutar cuando cambie el curso
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filter.cursos_ids]);
+
     const ready = !permissionIsLoading && Array.isArray(data);
 
     // Pre-procesar datos: formatear fechas una sola vez
@@ -338,8 +369,6 @@ export default function OrderTable({ data, onView }) {
         },
         [updateFilter]
     );
-
-    const { selectedCicloId } = useCiclo();
 
     // Memoizar el handler de click
     const handleRowClick = useCallback(
@@ -429,6 +458,49 @@ export default function OrderTable({ data, onView }) {
                                     value={etiqueta.value}
                                 >
                                     {etiqueta.label}
+                                </Option>
+                            ))}
+                        </Select>
+                    </FormControl>
+                )}
+                {cursosData && (
+                    <FormControl size="sm">
+                        <FormLabel>Curso</FormLabel>
+                        <Select
+                            size="sm"
+                            placeholder="Filtrar por curso"
+                            slotProps={{
+                                button: { sx: { whiteSpace: "nowrap" } },
+                            }}
+                            onChange={handleSelectChange("cursos_ids")}
+                            value={filter.cursos_ids ?? ""}
+                        >
+                            <Option value="">Todos</Option>
+                            {cursosData.map((curso) => (
+                                <Option key={curso.id} value={curso.id}>
+                                    {curso.shortname || curso.name}
+                                </Option>
+                            ))}
+                        </Select>
+                    </FormControl>
+                )}
+                {gruposData && gruposData.length > 0 && (
+                    <FormControl size="sm">
+                        <FormLabel>Grupo</FormLabel>
+                        <Select
+                            size="sm"
+                            placeholder="Filtrar por grupo"
+                            slotProps={{
+                                button: { sx: { whiteSpace: "nowrap" } },
+                            }}
+                            onChange={handleSelectChange("grupo_id")}
+                            value={filter.grupo_id ?? ""}
+                        >
+                            <Option value="">Todos</Option>
+                            <Option value="__EMPTY__">Sin grupo</Option>
+                            {gruposData.map((grupo) => (
+                                <Option key={grupo.id} value={grupo.id}>
+                                    {grupo.name}
                                 </Option>
                             ))}
                         </Select>

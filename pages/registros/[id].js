@@ -114,7 +114,7 @@ function View({ defaultValues }) {
     // Obtener el ciclo actual desde el backend
     const { data: cicloActualData } = useSWR(
         getURL("/api/usuarios/ciclos/actual"),
-        fetcher
+        fetcher,
     );
 
     // Determinar si el ciclo seleccionado es el actual
@@ -153,7 +153,7 @@ function View({ defaultValues }) {
                         res?.message ??
                             `Se ha producido un error (${response.statusText})`,
 
-                        "danger"
+                        "danger",
                     );
                 }
             })
@@ -161,7 +161,7 @@ function View({ defaultValues }) {
                 openAlert(
                     `Se ha producido un error (${error.toString()})`,
 
-                    "danger"
+                    "danger",
                 );
                 // setLoading(false);
             })
@@ -228,10 +228,11 @@ function View({ defaultValues }) {
                             </Stack>
 
                             <HistoryList historial={defaultValues.historial} />
-
-                            <CourseProgressList
-                                modulos={defaultValues.modulos}
-                            />
+                            {defaultValues.modulos.length && (
+                                <CourseProgressList
+                                    modulos={defaultValues.modulos}
+                                />
+                            )}
                         </DialogContent>
                         <DialogActions
                             sx={{
@@ -261,7 +262,7 @@ function View({ defaultValues }) {
                                                 <AssignmentTurnedInIcon />
                                             }
                                             onClick={handleSubmit((data) =>
-                                                onSubmit(data, true)
+                                                onSubmit(data, true),
                                             )}
                                             color="success"
                                             disabled={loading}
@@ -273,7 +274,7 @@ function View({ defaultValues }) {
                                     <Button
                                         startDecorator={<SaveIcon />}
                                         onClick={handleSubmit((data) =>
-                                            onSubmit(data, false)
+                                            onSubmit(data, false),
                                         )}
                                         color="primary"
                                         disabled={loading}
