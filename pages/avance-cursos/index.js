@@ -168,7 +168,7 @@ export default function Avances({ children }) {
                 <Typography level="h2" component="h1">
                     Avance de cursos
                 </Typography>
-                <FormProvider {...methods}>
+                {/* <FormProvider {...methods}>
                     <Stack
                         spacing={1}
                         direction={{ xs: "column", sm: "row" }}
@@ -181,7 +181,7 @@ export default function Avances({ children }) {
                             <ExportAvances />
                         </Stack>
                     </Stack>
-                </FormProvider>
+                </FormProvider> */}
             </Box>
             <FormProvider {...methods}>
                 <FiltrarCursos
