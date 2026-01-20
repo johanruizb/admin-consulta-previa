@@ -23,7 +23,6 @@ import dayjs from "dayjs";
 import { debounce } from "lodash";
 import { Fragment, memo, useCallback, useEffect, useMemo } from "react";
 import useSWR, { preload } from "swr";
-import CicloSelector from "../Ciclos/CicloSelector";
 import fetcher from "../fetcher";
 import { getURL } from "../utils";
 import { filterTable } from "./functions";
@@ -506,7 +505,6 @@ export default function OrderTable({ data, onView }) {
                         </Select>
                     </FormControl>
                 )}
-                <CicloSelector />
             </Box>
             {ready ? (
                 <Fragment>
