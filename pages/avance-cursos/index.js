@@ -72,8 +72,6 @@ export default function Avances({ children }) {
         );
     }
 
-    console.log(JSON.stringify(formValues, null, 2));
-
     return (
         <Layout>
             {children}
