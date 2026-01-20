@@ -16,7 +16,6 @@ import { useFormContext } from "react-hook-form";
 import FormularioCursos from "./constants";
 import GruposSelect from "./GruposSelect";
 import RangeSlider from "../Field/RangeSlider";
-import CicloSelector from "../Ciclos/CicloSelector";
 import DynamicCursoSelect from "./DynamicCursoSelect";
 import CustomAsyncSelect from "../Form/CustomAsyncSelect";
 
@@ -108,7 +107,6 @@ export default function FiltrarCursos({ setFilter, data }) {
                             }}
                         />
                     </Box>
-                    <CicloSelector size="md" />
                     <AccordionSummary
                         sx={{
                             pt: "24px",

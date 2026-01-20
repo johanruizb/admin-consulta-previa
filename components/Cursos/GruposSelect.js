@@ -1,16 +1,15 @@
-import Option from "@mui/joy/Option";
-import Select from "@mui/joy/Select";
+import fetcher from "@/components/fetcher";
+import { useCiclo } from "@/contexts/CicloContext";
 import FormControl from "@mui/joy/FormControl";
 import FormHelperText from "@mui/joy/FormHelperText";
 import FormLabel from "@mui/joy/FormLabel";
+import Option from "@mui/joy/Option";
+import Select from "@mui/joy/Select";
 import Skeleton from "@mui/joy/Skeleton";
 import Grid from "@mui/material/Grid";
-import useSWR from "swr";
-import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useEffect, useMemo } from "react";
-
-import fetcher from "@/components/fetcher";
-import { useCiclo } from "@/contexts/CicloContext";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
+import useSWR from "swr";
 
 /**
  * Componente de selección de grupos dinámico.
