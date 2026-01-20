@@ -1,33 +1,33 @@
-import CicloSelector from "@/components/Ciclos/CicloSelector";
 import fetcher from "@/components/fetcher";
 import Layout from "@/components/Home/Layout";
 import CustomPie from "@/components/Panel/CustomPie";
 import InscripcionesPorPeriodo from "@/components/Panel/InscripcionesPorPeriodo";
 import { formatNumber, getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
-import useClient from "@/hooks/useClient";
 import useAlert from "@/hooks/useAlert";
+import useClient from "@/hooks/useClient";
 import getParams from "@/utils/params";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import LanguageIcon from "@mui/icons-material/Language";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import Divider from "@mui/joy/Divider";
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
+import Button from "@mui/joy/Button";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import CircularProgress from "@mui/joy/CircularProgress";
-import Button from "@mui/joy/Button";
+import Divider from "@mui/joy/Divider";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import IconButton from "@mui/joy/IconButton";
-import Option from "@mui/joy/Option";
-import Select from "@mui/joy/Select";
 import Link from "@mui/joy/Link";
+import Option from "@mui/joy/Option";
 import Radio from "@mui/joy/Radio";
 import RadioGroup from "@mui/joy/RadioGroup";
+import Select from "@mui/joy/Select";
 import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
 import Grid from "@mui/material/Grid";
@@ -39,7 +39,6 @@ import "dayjs/locale/es";
 import Head from "next/head";
 import { Fragment, useEffect, useEffectEvent, useState } from "react";
 import useSWR from "swr";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
 
 dayjs.locale("es");
 
@@ -352,7 +351,6 @@ export default function Page() {
                     <Typography level="h2" component="h1">
                         Estadísticas
                     </Typography>
-                    <CicloSelector />
                 </Stack>
                 <Box
                     sx={{
