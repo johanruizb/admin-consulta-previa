@@ -8,7 +8,6 @@ import Option from "@mui/joy/Option";
 import { default as JoySelect } from "@mui/joy/Select";
 import { Controller, useFormContext } from "react-hook-form";
 import useSWRImmutable from "swr/immutable";
-import { v4 } from "uuid";
 import fetcher from "../fetcher";
 import { getURL } from "../utils";
 
@@ -99,7 +98,7 @@ function AsyncSelect({ inputProps }) {
                         >
                             {fieldProps?.options?.map((option) => (
                                 <Option
-                                    key={v4()}
+                                    key={option.value}
                                     value={
                                         isNaN(parseInt(option.value))
                                             ? option.value
