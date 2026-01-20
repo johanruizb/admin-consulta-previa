@@ -29,6 +29,7 @@ const FormularioCursos = [
         Component: CustomAsyncSelect,
         controller: {
             name: "activity__module_id",
+            defaultValue: "all",
         },
         field: {
             label: "Modulo",
@@ -161,101 +162,10 @@ const FormularioCursos = [
     },
 ];
 
-const FormularioGrupos = {
-    3: [
-        {
-            Component: CustomSelect,
-            controller: {
-                name: "grupo_usuario",
-            },
-            field: {
-                options: [
-                    {
-                        value: "all",
-                        label: "Todos los grupos",
-                    },
-                    {
-                        value: 1,
-                        label: "Grupo C1",
-                    },
-                    {
-                        value: 2,
-                        label: "Grupo C2",
-                    },
-                    {
-                        value: 3,
-                        label: "Grupo C3",
-                    },
-                    {
-                        value: 4,
-                        label: "Grupo C4",
-                    },
-                    {
-                        value: 5,
-                        label: "Grupo C5",
-                    },
-                    {
-                        value: 6,
-                        label: "Grupo C6",
-                    },
-                ],
-                label: "Grupo",
-                placeholder: "Seleccione un grupo",
-            },
-        },
-    ],
-    4: [
-        {
-            Component: CustomSelect,
-            controller: {
-                name: "grupo_usuario",
-            },
-            field: {
-                options: [
-                    {
-                        value: "all",
-                        label: "Todos los grupos",
-                    },
-                    {
-                        value: 7,
-                        label: "Grupo F1",
-                    },
-                    {
-                        value: 8,
-                        label: "Grupo F2",
-                    },
-                    {
-                        value: 9,
-                        label: "Grupo F3",
-                    },
-                    {
-                        value: 10,
-                        label: "Grupo F4",
-                    },
-                    {
-                        value: 11,
-                        label: "Grupo F5",
-                    },
-                    {
-                        value: 12,
-                        label: "Grupo F6",
-                    },
-                    {
-                        value: 13,
-                        label: "Administrativo",
-                    },
-                ],
-                label: "Grupo",
-                placeholder: "Seleccione un grupo",
-            },
-        },
-    ],
-};
-
 const FiltroCursos = [
     FormularioCursos.slice(0, 3),
     FormularioCursos.slice(3, FormularioCursos.length),
 ];
 
 export default FormularioCursos;
-export { FiltroCursos, FormularioGrupos };
+export { FiltroCursos };
