@@ -15,6 +15,7 @@ import {
     UserTitle,
     UserTitleSkeleton,
 } from "@/components/Registros/DetailComponents";
+import GruposSelector from "@/components/Registros/GruposSelector";
 import { convertToFormData, getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
 import useAlert from "@/hooks/useAlert";
@@ -107,6 +108,18 @@ function View({ defaultValues }) {
     const navigate = useNavigate();
 
     const sm = useMediaQuery((theme) => theme.breakpoints.down("md"));
+
+    // Cargar historial de forma independiente
+    const { data: historial, isLoading: historialLoading } = useSWR(
+        id ? getURL(`/api/usuarios/historial/${id}`) : null,
+        fetcher,
+    );
+
+    // Cargar avances/módulos de forma independiente
+    const { data: modulos, isLoading: modulosLoading } = useSWR(
+        id ? getURL(`/api/usuarios/avances/${id}`) : null,
+        fetcher,
+    );
 
     // Obtener el ciclo seleccionado del contexto
     const { selectedCicloId } = useCiclo();
@@ -224,15 +237,21 @@ function View({ defaultValues }) {
                                         methods={methods}
                                         disabled={!isCurrentCycle}
                                     />
+                                    <GruposSelector
+                                        disabled={!isCurrentCycle}
+                                    />
                                 </FormProvider>
                             </Stack>
-
-                            <HistoryList historial={defaultValues.historial} />
-                            {defaultValues.modulos.length && (
-                                <CourseProgressList
-                                    modulos={defaultValues.modulos}
-                                />
+                            {historialLoading ? (
+                                <HistoryListSkeleton />
+                            ) : (
+                                <HistoryList historial={historial} />
                             )}
+                            {modulosLoading ? (
+                                <CourseProgressListSkeleton />
+                            ) : modulos?.length ? (
+                                <CourseProgressList modulos={modulos} />
+                            ) : null}
                         </DialogContent>
                         <DialogActions
                             sx={{
