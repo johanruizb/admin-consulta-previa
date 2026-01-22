@@ -42,7 +42,7 @@ export default function GruposSelect({ compact = false, size = "md" }) {
         if (!grupos || !Array.isArray(grupos)) return [];
         return grupos.map((grupo) => ({
             value: grupo.id,
-            label: grupo.shortname !== "all" ? grupo.shortname : grupo.name,
+            label: grupo.name,
         }));
     }, [grupos]);
 
