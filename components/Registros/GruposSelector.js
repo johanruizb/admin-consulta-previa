@@ -87,7 +87,7 @@ function useGruposPorCurso(cursoId, cicloId) {
     const url = useMemo(() => {
         if (!cursoId || !cicloId) return null;
         return getURL(
-            `/api/moodle/curso/${cursoId}/grupos?ciclo_id=${cicloId}`,
+            `/api/moodle/curso/${cursoId}/grupos?ciclo_id=${cicloId}&for_assignment=true`,
         );
     }, [cursoId, cicloId]);
 

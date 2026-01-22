@@ -4,7 +4,7 @@ export default async function handler(req, res) {
     const { getToken } = getAuth(req);
     const token = await getToken();
 
-    const { curso_id, ciclo_id } = req.query;
+    const { curso_id, ciclo_id, for_assignment } = req.query;
 
     const url = new URL(
         process.env.NEXT_PUBLIC_BASE_URL +
@@ -13,9 +13,8 @@ export default async function handler(req, res) {
             "/grupos",
     );
 
-    if (ciclo_id) {
-        url.searchParams.set("ciclo_id", ciclo_id);
-    }
+    if (ciclo_id) url.searchParams.set("ciclo_id", ciclo_id);
+    if (for_assignment) url.searchParams.set("for_assignment", for_assignment);
 
     const response = await fetch(url.toString(), {
         method: "GET",
