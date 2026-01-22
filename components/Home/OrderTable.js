@@ -165,8 +165,8 @@ const TableRow = memo(function TableRow({
                             {row.plataforma_registro === "web"
                                 ? "Formulario web"
                                 : row.plataforma_registro === "whatsapp"
-                                ? "WhatsApp"
-                                : "Desconocida"}
+                                  ? "WhatsApp"
+                                  : "Desconocida"}
                         </Typography>
                     </td>
                     <td>
@@ -217,23 +217,25 @@ export default function OrderTable({ data, onView }) {
 
     const { data: etiquetasData } = useSWR(
         getURL("/api/usuarios/etiquetas"),
-        fetcher
+        fetcher,
     );
 
     const { data: cursosData } = useSWR(
         selectedCicloId
             ? getURL(`/api/usuarios/cursos?ciclo_id=${selectedCicloId}`)
             : null,
-        fetcher
+        fetcher,
     );
 
     // URL de grupos dinámica según el curso seleccionado
     const gruposUrl = useMemo(() => {
         if (!selectedCicloId) return null;
-        
+
         const cursoId = filter.cursos_ids;
         if (cursoId) {
-            return getURL(`/api/moodle/curso/${cursoId}/grupos?ciclo_id=${selectedCicloId}`);
+            return getURL(
+                `/api/moodle/curso/${cursoId}/grupos?ciclo_id=${selectedCicloId}`,
+            );
         }
         return getURL(`/api/moodle/grupos?ciclo_id=${selectedCicloId}`);
     }, [selectedCicloId, filter.cursos_ids]);
@@ -280,7 +282,7 @@ export default function OrderTable({ data, onView }) {
                 };
             });
         },
-        [setFilter]
+        [setFilter],
     );
 
     const setSearchFilter = useMemo(
@@ -307,7 +309,7 @@ export default function OrderTable({ data, onView }) {
                     };
                 });
             }, 250),
-        [setFilter]
+        [setFilter],
     );
 
     useEffect(() => () => setSearchFilter.cancel(), [setSearchFilter]);
@@ -342,7 +344,7 @@ export default function OrderTable({ data, onView }) {
 
     const currentRows = useMemo(
         () => rows.chunked?.[page - 1] ?? [],
-        [rows, page]
+        [rows, page],
     );
 
     const totalPages = rows.pages || 0;
@@ -359,14 +361,14 @@ export default function OrderTable({ data, onView }) {
             const value = event.target.value;
             setSearchFilter(value ? value : undefined);
         },
-        [setSearchFilter]
+        [setSearchFilter],
     );
 
     const handleSelectChange = useCallback(
         (key) => (_, newValue) => {
             updateFilter(key, newValue !== "" ? newValue : undefined);
         },
-        [updateFilter]
+        [updateFilter],
     );
 
     // Memoizar el handler de click
@@ -374,13 +376,13 @@ export default function OrderTable({ data, onView }) {
         (id) => {
             onView(id);
         },
-        [onView]
+        [onView],
     );
 
     // Verificar permiso una sola vez
     const hasChangePermission = useMemo(
         () => hasPermission("usuario.change_persona"),
-        [hasPermission]
+        [hasPermission],
     );
 
     return (
@@ -499,7 +501,7 @@ export default function OrderTable({ data, onView }) {
                             <Option value="__EMPTY__">Sin grupo</Option>
                             {gruposData.map((grupo) => (
                                 <Option key={grupo.id} value={grupo.id}>
-                                    {grupo.name}
+                                    {grupo.name ?? grupo.shortname}
                                 </Option>
                             ))}
                         </Select>
