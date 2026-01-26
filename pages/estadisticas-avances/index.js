@@ -1,6 +1,7 @@
 import fetcher from "@/components/fetcher";
 import Layout from "@/components/Home/Layout";
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
+import ExportAvances from "@/components/Pages/Avances/ExportarAvances";
 import CustomPie from "@/components/Panel/CustomPie";
 import { formatNumber, getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
@@ -110,7 +111,11 @@ export default function EstadisticasAvancesPage() {
     const distribucion = data?.distribucion_avance || [];
     const modulos = data?.avance_por_modulo || [];
 
-    console.log("cursos", cursos);
+    const exportFilterValues = {
+        ciclo_id: selectedCicloId,
+        activity__module__course_id: cursoId,
+        grupo_usuario: grupoId || "all",
+    };
 
     return (
         <Layout>
@@ -133,10 +138,23 @@ export default function EstadisticasAvancesPage() {
                 </Breadcrumbs>
             </Box>
 
-            <Typography level="h2" component="h1" sx={{ mb: 3 }}>
-                <InsightsIcon sx={{ mr: 1, verticalAlign: "middle" }} />
-                Estadísticas de avances
-            </Typography>
+            <Box
+                sx={{
+                    display: "flex",
+                    mb: 1,
+                    gap: 1,
+                    flexDirection: { xs: "column", sm: "row" },
+                    alignItems: { xs: "start", sm: "center" },
+                    flexWrap: "wrap",
+                    justifyContent: "space-between",
+                }}
+            >
+                <Typography level="h2" component="h1">
+                    <InsightsIcon sx={{ mr: 1, verticalAlign: "middle" }} />
+                    Estadísticas de avances
+                </Typography>
+                <ExportAvances filterValues={exportFilterValues} />
+            </Box>
 
             {/* Filtros */}
             <Grid container spacing={2}>
