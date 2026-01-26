@@ -150,7 +150,6 @@ export default function EstadisticasAvancesPage() {
                 }}
             >
                 <Typography level="h2" component="h1">
-                    <InsightsIcon sx={{ mr: 1, verticalAlign: "middle" }} />
                     Estadísticas de avances
                 </Typography>
                 <ExportAvances filterValues={exportFilterValues} />
@@ -233,124 +232,146 @@ export default function EstadisticasAvancesPage() {
             {cursoId && data && !isLoading && (
                 <>
                     <Grid container spacing={1}>
-                        <Grid size={6}>
+                        <Grid size={{ xs: 12, md: 6 }}>
                             {/* Cards de resumen */}
-                            <Grid container spacing={1}>
-                                <Grid size={{ xs: 6, md: 4 }}>
-                                    <Card>
-                                        <CardContent>
-                                            <Typography
-                                                level="body-sm"
-                                                color="neutral"
-                                            >
-                                                Total personas
-                                            </Typography>
-                                            <Typography level="h2">
-                                                {formatNumber(
-                                                    resumen.total_personas,
-                                                )}
-                                            </Typography>
-                                        </CardContent>
-                                    </Card>
-                                </Grid>
-                                <Grid size={{ xs: 6, md: 4 }}>
-                                    <Card>
-                                        <CardContent>
-                                            <Typography
-                                                level="body-sm"
-                                                color="neutral"
-                                            >
-                                                Avance promedio
-                                            </Typography>
-                                            <Typography level="h2">
-                                                {resumen.avance_promedio}%
-                                            </Typography>
-                                        </CardContent>
-                                    </Card>
-                                </Grid>
-                                <Grid size={{ xs: 6, md: 4 }}>
-                                    <Card
-                                        sx={{
-                                            borderLeft: `4px solid ${COLORS.completados}`,
-                                        }}
+                            <Card
+                                sx={{
+                                    minHeight: "280px",
+                                    bgcolor: "transparent !important",
+                                    borderColor: "transparent !important",
+                                    pb: "0px !important",
+                                }}
+                            >
+                                <CardContent>
+                                    <Typography level="title-lg" sx={{ mb: 2 }}>
+                                        Estado general del avance
+                                    </Typography>
+                                    <Stack
+                                        spacing={1}
+                                        direction="row"
+                                        sx={{ my: 0.5 }}
                                     >
-                                        <CardContent>
-                                            <Typography
-                                                level="body-sm"
-                                                color="neutral"
-                                            >
-                                                Completados (100%)
-                                            </Typography>
-                                            <Typography
-                                                level="h2"
-                                                sx={{
-                                                    color: COLORS.completados,
-                                                }}
-                                            >
-                                                {formatNumber(
-                                                    resumen.completados,
-                                                )}
-                                            </Typography>
-                                        </CardContent>
-                                    </Card>
-                                </Grid>
-                                <Grid size={{ xs: 6, md: 4 }}>
-                                    <Card
-                                        sx={{
-                                            borderLeft: `4px solid ${COLORS.enProgreso}`,
-                                        }}
+                                        <Card sx={{ flex: 1 }}>
+                                            <CardContent>
+                                                <Typography
+                                                    level="body-sm"
+                                                    color="neutral"
+                                                >
+                                                    Total personas
+                                                </Typography>
+                                                <Typography level="h2">
+                                                    {formatNumber(
+                                                        resumen.total_personas,
+                                                    )}
+                                                </Typography>
+                                            </CardContent>
+                                        </Card>
+                                        <Card sx={{ flex: 1 }}>
+                                            <CardContent>
+                                                <Typography
+                                                    level="body-sm"
+                                                    color="neutral"
+                                                >
+                                                    Avance promedio
+                                                </Typography>
+                                                <Typography level="h2">
+                                                    {resumen.avance_promedio}%
+                                                </Typography>
+                                            </CardContent>
+                                        </Card>
+                                    </Stack>
+
+                                    <Stack
+                                        spacing={1}
+                                        direction="row"
+                                        sx={{ my: 0.5 }}
                                     >
-                                        <CardContent>
-                                            <Typography
-                                                level="body-sm"
-                                                color="neutral"
-                                            >
-                                                En progreso
-                                            </Typography>
-                                            <Typography
-                                                level="h2"
-                                                sx={{
-                                                    color: COLORS.enProgreso,
-                                                }}
-                                            >
-                                                {formatNumber(
-                                                    resumen.en_progreso,
-                                                )}
-                                            </Typography>
-                                        </CardContent>
-                                    </Card>
-                                </Grid>
-                                <Grid size={{ xs: 6, md: 4 }}>
-                                    <Card
-                                        sx={{
-                                            borderLeft: `4px solid ${COLORS.sinAvance}`,
-                                        }}
-                                    >
-                                        <CardContent>
-                                            <Typography
-                                                level="body-sm"
-                                                color="neutral"
-                                            >
-                                                Sin avance
-                                            </Typography>
-                                            <Typography
-                                                level="h2"
-                                                sx={{ color: COLORS.sinAvance }}
-                                            >
-                                                {formatNumber(
-                                                    resumen.sin_avance,
-                                                )}
-                                            </Typography>
-                                        </CardContent>
-                                    </Card>
-                                </Grid>
-                            </Grid>
+                                        <Card
+                                            sx={{
+                                                borderLeft: `4px solid ${COLORS.sinAvance}`,
+                                                flex: 1,
+                                            }}
+                                        >
+                                            <CardContent>
+                                                <Typography
+                                                    level="body-sm"
+                                                    color="neutral"
+                                                >
+                                                    Sin avance
+                                                </Typography>
+                                                <Typography
+                                                    level="h2"
+                                                    sx={{
+                                                        color: COLORS.sinAvance,
+                                                    }}
+                                                >
+                                                    {formatNumber(
+                                                        resumen.sin_avance,
+                                                    )}
+                                                </Typography>
+                                            </CardContent>
+                                        </Card>
+
+                                        <Card
+                                            sx={{
+                                                borderLeft: `4px solid ${COLORS.enProgreso}`,
+                                                flex: 1,
+                                            }}
+                                        >
+                                            <CardContent>
+                                                <Typography
+                                                    level="body-sm"
+                                                    color="neutral"
+                                                >
+                                                    En progreso
+                                                </Typography>
+                                                <Typography
+                                                    level="h2"
+                                                    sx={{
+                                                        color: COLORS.enProgreso,
+                                                    }}
+                                                >
+                                                    {formatNumber(
+                                                        resumen.en_progreso,
+                                                    )}
+                                                </Typography>
+                                            </CardContent>
+                                        </Card>
+
+                                        <Card
+                                            sx={{
+                                                borderLeft: `4px solid ${COLORS.completados}`,
+                                                flex: 1,
+                                            }}
+                                        >
+                                            <CardContent>
+                                                <Typography
+                                                    level="body-sm"
+                                                    color="neutral"
+                                                >
+                                                    Completados (100%)
+                                                </Typography>
+                                                <Typography
+                                                    level="h2"
+                                                    sx={{
+                                                        color: COLORS.completados,
+                                                    }}
+                                                >
+                                                    {formatNumber(
+                                                        resumen.completados,
+                                                    )}
+                                                </Typography>
+                                            </CardContent>
+                                        </Card>
+                                    </Stack>
+                                </CardContent>
+                            </Card>
                         </Grid>
 
-                        <Grid size={6}>
-                            {/* Gráficas */}
+                        {/* Gráficas */}
+                        <Grid size={{ xs: 12, md: 6 }}>
                             {/* Distribución de avance */}
-                            <Card>
+                            <Card sx={{ minHeight: "280px", height: "100%" }}>
                                 <CardContent>
                                     <Typography level="title-lg" sx={{ mb: 2 }}>
                                         Distribución de avance
@@ -365,7 +386,13 @@ export default function EstadisticasAvancesPage() {
                     <Typography level="h3" sx={{ my: 1 }}>
                         Avance por actividad en cada módulo
                     </Typography>
-                    <Grid container spacing={2}>
+                    <Grid
+                        container
+                        spacing={1}
+                        sx={{
+                            pb: 6,
+                        }}
+                    >
                         {modulos.map((modulo) => (
                             <Grid key={modulo.id} size={{ xs: 6 }}>
                                 <Card>
