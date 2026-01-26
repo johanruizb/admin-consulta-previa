@@ -20,12 +20,15 @@ function PermissionProvider({ children }) {
         fetcher,
     );
 
+    const { data: djangoUser } = useSWR(getURL("api/user"), fetcher);
+
     const hasPermission = useCallback(
         (permission) => {
-            if (!permissions) return false;
+            if (!permissions || !djangoUser) return false;
+            if (djangoUser.roleId === 1) return true; // Superusuario
             return permissions.includes(permission);
         },
-        [permissions],
+        [permissions, djangoUser],
     );
 
     const invalid = clerkLoaded && isSignedIn && !isLoading && !permissions;

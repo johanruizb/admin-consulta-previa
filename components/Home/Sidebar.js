@@ -3,6 +3,7 @@ import STORAGE from "@/hooks/storage";
 import useClient from "@/hooks/useClient";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import InsightsIcon from "@mui/icons-material/Insights";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import SchoolIcon from "@mui/icons-material/School";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
@@ -246,6 +247,19 @@ export default function Sidebar() {
                                 icon={<SchoolIcon />}
                             >
                                 Avance de cursos
+                            </NavItem>
+                        )}
+                        {hasPermission(
+                            "superadmin",
+                        ) && (
+                            <NavItem
+                                onClick={() =>
+                                    handleRouteChange("/estadisticas-avances")
+                                }
+                                selected={pathname === "/estadisticas-avances"}
+                                icon={<InsightsIcon />}
+                            >
+                                Estadísticas de avances
                             </NavItem>
                         )}
                         {hasPermission("usuario.view_listaespera") && (
