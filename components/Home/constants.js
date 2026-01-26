@@ -30,7 +30,7 @@ const SettingsForm = [
         },
         field: {
             label: "Interfaz amplia",
-            content: "Usar una interfaz mas amplia en PC",
+            content: "Usar una interfaz apta para pantallas grandes",
         },
     },
 ];
