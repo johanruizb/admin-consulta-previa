@@ -3,77 +3,89 @@ import Button from "@mui/joy/Button";
 
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, useCallback } from "react";
 
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 import { getURL } from "@/components/utils";
 import useAlert from "@/hooks/useAlert";
 import dayjs from "dayjs";
-import { useFormContext, useWatch } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 
-function ExportAvances() {
+function ExportAvances({ filterValues }) {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         setMounted(true);
     }, []);
 
-    return mounted ? <Export /> : null;
+    return mounted ? <Export filterValues={filterValues} /> : null;
 }
 
-function Export() {
+function Export({ filterValues }) {
     const { onOpen } = useAlert();
     const { isLoading: permissionIsLoading, hasPermission } =
         usePermissionContext();
 
     const [loading, setLoading] = useState(false);
 
-    const { handleSubmit } = useFormContext();
+    const formContext = useFormContext();
+    const handleSubmit = formContext?.handleSubmit;
 
-    const onClick = (values) => {
-        setLoading(true);
-        fetch(getURL("/api/moodle/reporte/exportar"), {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-        })
-            .then(async (response) => {
-                if (!response.ok) {
+    const exportData = useCallback(
+        (values) => {
+            setLoading(true);
+            fetch(getURL("/api/moodle/reporte/exportar"), {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(values),
+            })
+                .then(async (response) => {
+                    if (!response.ok) {
+                        onOpen(
+                            `No se pudo exportar el archivo. (${String(
+                                response?.statusText ?? response,
+                            )})`,
+                            "danger",
+                        );
+                    } else {
+                        const blob = await response.blob();
+                        const reader = new FileReader();
+                        reader.onload = () => {
+                            const link = document.createElement("a");
+                            link.href = reader.result;
+                            link.download = `Avance cursos_${dayjs().format(
+                                "YYYY-MM-DD HH-mm-ss",
+                            )}.xlsx`;
+                            link.click();
+                        };
+                        reader.readAsDataURL(blob);
+                        onOpen("Archivo exportado correctamente.", "success");
+                    }
+                })
+                .catch((error) => {
                     onOpen(
                         `No se pudo exportar el archivo. (${String(
-                            response?.statusText ?? response,
+                            error?.statusText ?? error ?? "UNKNOWN_ERROR",
                         )})`,
                         "danger",
                     );
-                } else {
-                    const blob = await response.blob();
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                        const link = document.createElement("a");
-                        link.href = reader.result;
-                        link.download = `Avance cursos_${dayjs().format(
-                            "YYYY-MM-DD HH-mm-ss",
-                        )}.xlsx`;
-                        link.click();
-                    };
-                    reader.readAsDataURL(blob);
-                    onOpen("Archivo exportado correctamente.", "success");
-                }
-            })
-            .catch((error) => {
-                onOpen(
-                    `No se pudo exportar el archivo. (${String(
-                        error?.statusText ?? error ?? "UNKNOWN_ERROR",
-                    )})`,
-                    "danger",
-                );
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    };
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        },
+        [onOpen],
+    );
+
+    const onClick = useCallback(() => {
+        if (filterValues) {
+            exportData(filterValues);
+        } else if (handleSubmit) {
+            handleSubmit(exportData)();
+        }
+    }, [filterValues, handleSubmit, exportData]);
 
     return (
         <Fragment>
@@ -85,7 +97,7 @@ function Export() {
                         startDecorator={<FileDownloadIcon />}
                         disabled={loading}
                         loading={loading}
-                        onClick={handleSubmit(onClick)}
+                        onClick={onClick}
                     >
                         Exportar avances
                     </Button>
