@@ -10,7 +10,7 @@ import Tooltip from "@mui/joy/Tooltip";
 
 dayjs.locale("es");
 
-const COLORS = [
+const DEFAULT_COLORS = [
     "#1f77b4",
     "#ff7f0e",
     "#2ca02c",
@@ -35,7 +35,8 @@ const COLORS = [
     "#b15928",
 ];
 
-export default function CustomPie({ data = [], slotProps = {} }) {
+export default function CustomPie({ data = [], colors, slotProps = {} }) {
+    const chartColors = colors || DEFAULT_COLORS;
     const {
         item: { root: itemRootProps = {}, stack: itemStackProps = {} } = {},
         pie: { root: pieRootProps = {} } = {},
@@ -45,7 +46,7 @@ export default function CustomPie({ data = [], slotProps = {} }) {
         <Stack flexDirection="row" flexWrap="wrap" flex={1}>
             <Box {...pieRootProps}>
                 <PieChart
-                    colors={COLORS}
+                    colors={chartColors}
                     series={[
                         {
                             data,
@@ -101,8 +102,7 @@ export default function CustomPie({ data = [], slotProps = {} }) {
                                     sx={{
                                         minWidth: 20,
                                         minHeight: 20,
-                                        // borderRadius: 10,
-                                        backgroundColor: COLORS[index],
+                                        backgroundColor: chartColors[index % chartColors.length],
                                         mr: "5px !important",
                                     }}
                                 />

@@ -33,8 +33,17 @@ import useSWR from "swr";
 const COLORS = {
     completados: "#2e7d32",
     enProgreso: "#1976d2",
-    sinAvance: "#9e9e9e",
+    sinAvance: "#607d8b",
 };
+
+const DISTRIBUCION_COLORS = [
+    "#607d8b", // 0% - Blue Grey
+    "#f44336", // 1-25% - Rojo
+    "#ff9800", // 26-50% - Naranja
+    "#ffc107", // 51-75% - Amarillo
+    "#8bc34a", // 76-99% - Verde claro
+    "#2e7d32", // 100% - Verde
+];
 
 export default function EstadisticasAvancesPage() {
     const { selectedCicloId } = useCiclo();
@@ -376,7 +385,10 @@ export default function EstadisticasAvancesPage() {
                                     <Typography level="title-lg" sx={{ mb: 2 }}>
                                         Distribución de avance
                                     </Typography>
-                                    <CustomPie data={distribucion} />
+                                    <CustomPie
+                                        data={distribucion}
+                                        colors={DISTRIBUCION_COLORS}
+                                    />
                                 </CardContent>
                             </Card>
                         </Grid>
