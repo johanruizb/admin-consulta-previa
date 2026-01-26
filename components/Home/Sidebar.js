@@ -250,7 +250,7 @@ export default function Sidebar() {
                             </NavItem>
                         )}
                         {hasPermission(
-                            "superadmin",
+                            "moodle.view_actividadescompletadas",
                         ) && (
                             <NavItem
                                 onClick={() =>
