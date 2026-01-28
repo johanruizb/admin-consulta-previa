@@ -10,15 +10,14 @@ import IconButton from "@mui/joy/IconButton";
 import Input from "@mui/joy/Input";
 import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
-import { Fragment, useState } from "react";
 import Head from "next/head";
+import { useSnackbar } from "notistack";
 import ColorSchemeToggle from "@/components/Home/ColorSchemeToggle";
 import UnivalleIcon from "@/components/Icons/Univalle";
-import useAlert from "@/hooks/useAlert";
 import { SignIn } from "@clerk/nextjs";
 
 export default function JoySignInSideTemplate() {
-    const { onOpen } = useAlert();
+    const { enqueueSnackbar } = useSnackbar();
     const [show, setShow] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -40,15 +39,15 @@ export default function JoySignInSideTemplate() {
             body: JSON.stringify(data),
         }).then(async (response) => {
             if (response.ok) {
-                onOpen("Inicio de sesión exitoso", "success");
+                enqueueSnackbar("Inicio de sesión exitoso", { variant: "success" });
                 location.reload();
             } else {
                 const result = await response.json();
-                onOpen(
+                enqueueSnackbar(
                     result?.message ||
                         result ||
                         "Ha ocurrido un error al iniciar sesión",
-                    "danger",
+                    { variant: "error" },
                 );
                 console.error("Error al iniciar sesión", response);
                 setLoading(false);

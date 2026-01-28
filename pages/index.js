@@ -4,8 +4,8 @@ import CustomPie from "@/components/Panel/CustomPie";
 import InscripcionesPorPeriodo from "@/components/Panel/InscripcionesPorPeriodo";
 import { formatNumber, getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
-import useAlert from "@/hooks/useAlert";
 import useClient from "@/hooks/useClient";
+import { useSnackbar } from "notistack";
 import getParams from "@/utils/params";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
@@ -61,7 +61,7 @@ export default function Page() {
     const { selectedCicloId } = useCiclo();
     const [filters, setFilters] = useState(getDefaultFilters);
     const [exporting, setExporting] = useState(false);
-    const { onOpen } = useAlert();
+    const { enqueueSnackbar } = useSnackbar();
     const [filterOptions, setFilterOptions] = useState({
         tipo_cliente: [],
         etnia: [],
@@ -248,9 +248,9 @@ export default function Page() {
         })
             .then(async (response) => {
                 if (!response.ok) {
-                    onOpen(
+                    enqueueSnackbar(
                         `No se pudo exportar el archivo. (${String(response?.statusText ?? response)})`,
-                        "danger"
+                        { variant: "error" }
                     );
                 } else {
                     const blob = await response.blob();
@@ -272,13 +272,13 @@ export default function Page() {
                         link.click();
                     };
                     reader.readAsDataURL(blob);
-                    onOpen("Archivo exportado correctamente.", "success");
+                    enqueueSnackbar("Archivo exportado correctamente.", { variant: "success" });
                 }
             })
             .catch((error) => {
-                onOpen(
+                enqueueSnackbar(
                     `No se pudo exportar el archivo. (${String(error?.statusText ?? error ?? "UNKNOWN_ERROR")})`,
-                    "danger"
+                    { variant: "error" }
                 );
             })
             .finally(() => {

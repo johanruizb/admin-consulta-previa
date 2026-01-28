@@ -1,7 +1,7 @@
 import fetcher from "@/components/fetcher";
 import { getURL } from "@/components/utils";
-import useAlert from "@/hooks/useAlert";
 import usePermission from "@/hooks/usePermission";
+import { useSnackbar } from "notistack";
 import CloseIcon from "@mui/icons-material/Close";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
@@ -34,7 +34,7 @@ async function compressGzip(file) {
 }
 
 function DialogoCarga({ open, setOpen }) {
-    const { onOpen } = useAlert();
+    const { enqueueSnackbar } = useSnackbar();
 
     const { data: procesando, mutate: mutateProcesando } = useSWR(
         getURL("/api/moodle/reporte/procesando"),
@@ -68,20 +68,20 @@ function DialogoCarga({ open, setOpen }) {
             .then(async (response) => {
                 const result = await response.json();
                 if (response.ok) {
-                    onOpen(result.message, "success");
+                    enqueueSnackbar(result.message, { variant: "success" });
                     onClose();
                 } else {
-                    onOpen(
+                    enqueueSnackbar(
                         result?.message ??
                             `Se ha producido un error (${response.statusText})`,
-                        "danger",
+                        { variant: "error" },
                     );
                 }
             })
             .catch((error) => {
-                onOpen(
+                enqueueSnackbar(
                     `Se ha producido un error (${error.toString()})`,
-                    "danger",
+                    { variant: "error" },
                 );
             })
             .finally(() => {
@@ -178,15 +178,15 @@ export default function UploadAvances() {
     const [open, setOpen] = useLocalStorage("open_UploadAvances", false);
 
     const previousData = usePrevious(data);
-    const { onOpen } = useAlert();
+    const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
         if (data?.task_in_progress) {
             setOptions({ refreshInterval: 1000, revalidateOnMount: true });
         } else if (previousData?.task_in_progress) {
-            onOpen(
+            enqueueSnackbar(
                 data?.last_task_message,
-                data?.last_task_status ? "success" : "danger",
+                { variant: data?.last_task_status ? "success" : "error" },
             );
             mutate((key) => Array.isArray(key));
             setOptions({});

@@ -1,4 +1,3 @@
-import CustomAlert from "@/components/Alert";
 import AppInitializer from "@/components/AppInitializer";
 import PermissionProvider from "@/components/Home/permissionContext/PermissionProvider";
 import Navigate from "@/components/Navigate";
@@ -21,7 +20,6 @@ import {
     ThemeProvider,
 } from "@mui/material/styles";
 import { SnackbarProvider } from "notistack";
-import { Fragment } from "react";
 import { SWRConfig } from "swr";
 
 const customTheme = extendTheme({
@@ -72,15 +70,12 @@ export default function App({ Component, pageProps }) {
                                     vertical: "bottom",
                                     horizontal: "right",
                                 }}
-                                autoHideDuration={5000}
+                                autoHideDuration={3000}
                             >
                                 <PermissionProvider>
                                     <AppInitializer>
                                         <CicloProvider>
-                                            <Fragment>
-                                                <Component {...pageProps} />
-                                                <CustomAlert />
-                                            </Fragment>
+                                            <Component {...pageProps} />
                                         </CicloProvider>
                                     </AppInitializer>
                                 </PermissionProvider>

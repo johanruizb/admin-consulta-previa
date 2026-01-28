@@ -1,24 +1,16 @@
-import { useLocalStorage } from "@uidotdev/usehooks";
-// import { v4 as uuidv4 } from "uuid";
+import { useSnackbar } from "notistack";
 
 export default function useAlert() {
-    const [alert, setAlert] = useLocalStorage("CustomAlert", {
-        open: false,
-        variant: "solid",
-        color: "success",
-        content: "",
-    });
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     const onClose = () => {
-        setAlert({ ...alert, open: false });
+        closeSnackbar();
     };
 
     const onOpen = (content, color) => {
-        onClose();
-        setTimeout(() => {
-            setAlert({ open: true, content, color });
-        }, 100);
+        const variant = color === "danger" ? "error" : color || "success";
+        enqueueSnackbar(content, { variant });
     };
 
-    return { alert, onClose, onOpen };
+    return { onClose, onOpen };
 }
