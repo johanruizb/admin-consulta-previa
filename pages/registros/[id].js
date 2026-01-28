@@ -140,7 +140,7 @@ function View({ defaultValues }) {
 
     const openAlert = (content, color = "success") => {
         const variant = color === "danger" ? "error" : color;
-        enqueueSnackbar(content, { variant });
+        enqueueSnackbar(content, { variant, style: { whiteSpace: "pre-line" } });
     };
 
     const methods = useForm({ defaultValues });
