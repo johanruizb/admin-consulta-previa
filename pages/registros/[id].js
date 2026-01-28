@@ -138,9 +138,13 @@ function View({ defaultValues }) {
         navigate.push("/registros", undefined, { shallow: true });
     };
 
-    const openAlert = (content, color = "success") => {
+    const openAlert = (content, color = "success", options = {}) => {
         const variant = color === "danger" ? "error" : color;
-        enqueueSnackbar(content, { variant, style: { whiteSpace: "pre-line" } });
+        enqueueSnackbar(content, {
+            variant,
+            style: { whiteSpace: "pre-line" },
+            ...options,
+        });
     };
 
     const methods = useForm({ defaultValues });
@@ -166,6 +170,9 @@ function View({ defaultValues }) {
                         openAlert(
                             `${res.message}\n\n• ${warningDetails}`,
                             "warning",
+                            {
+                                autoHideDuration: 10000,
+                            },
                         );
                     } else {
                         openAlert(res.message);
