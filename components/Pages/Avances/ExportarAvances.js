@@ -7,8 +7,8 @@ import { Fragment, useEffect, useState, useCallback } from "react";
 
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 import { getURL } from "@/components/utils";
-import useAlert from "@/hooks/useAlert";
 import dayjs from "dayjs";
+import { useSnackbar } from "notistack";
 import { useFormContext } from "react-hook-form";
 
 function ExportAvances({ filterValues }) {
@@ -22,7 +22,7 @@ function ExportAvances({ filterValues }) {
 }
 
 function Export({ filterValues }) {
-    const { onOpen } = useAlert();
+    const { enqueueSnackbar } = useSnackbar();
     const { isLoading: permissionIsLoading, hasPermission } =
         usePermissionContext();
 
@@ -43,11 +43,11 @@ function Export({ filterValues }) {
             })
                 .then(async (response) => {
                     if (!response.ok) {
-                        onOpen(
+                        enqueueSnackbar(
                             `No se pudo exportar el archivo. (${String(
                                 response?.statusText ?? response,
                             )})`,
-                            "danger",
+                            { variant: "error" },
                         );
                     } else {
                         const blob = await response.blob();
@@ -61,22 +61,22 @@ function Export({ filterValues }) {
                             link.click();
                         };
                         reader.readAsDataURL(blob);
-                        onOpen("Archivo exportado correctamente.", "success");
+                        enqueueSnackbar("Archivo exportado correctamente.", { variant: "success" });
                     }
                 })
                 .catch((error) => {
-                    onOpen(
+                    enqueueSnackbar(
                         `No se pudo exportar el archivo. (${String(
                             error?.statusText ?? error ?? "UNKNOWN_ERROR",
                         )})`,
-                        "danger",
+                        { variant: "error" },
                     );
                 })
                 .finally(() => {
                     setLoading(false);
                 });
         },
-        [onOpen],
+        [enqueueSnackbar],
     );
 
     const onClick = useCallback(() => {

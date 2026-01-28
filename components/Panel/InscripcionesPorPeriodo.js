@@ -16,8 +16,8 @@
 import fetcher from "@/components/fetcher";
 import { formatNumber, getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
-import useAlert from "@/hooks/useAlert";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import { useSnackbar } from "notistack";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import CircularProgress from "@mui/joy/CircularProgress";
@@ -41,7 +41,7 @@ export default function InscripcionesPorPeriodo({
     const { selectedCicloId } = useCiclo();
     const [periodo, setPeriodo] = useState("dias");
     const [exporting, setExporting] = useState(false);
-    const { onOpen } = useAlert();
+    const { enqueueSnackbar } = useSnackbar();
 
     const params = new URLSearchParams();
     params.append("ciclo_id", selectedCicloId);
@@ -82,11 +82,11 @@ export default function InscripcionesPorPeriodo({
         )
             .then(async (response) => {
                 if (!response.ok) {
-                    onOpen(
+                    enqueueSnackbar(
                         `No se pudo exportar el archivo. (${String(
                             response?.statusText ?? response,
                         )})`,
-                        "danger",
+                        { variant: "error" },
                     );
                 } else {
                     const blob = await response.blob();
@@ -112,15 +112,15 @@ export default function InscripcionesPorPeriodo({
                         link.click();
                     };
                     reader.readAsDataURL(blob);
-                    onOpen("Archivo exportado correctamente.", "success");
+                    enqueueSnackbar("Archivo exportado correctamente.", { variant: "success" });
                 }
             })
             .catch((error) => {
-                onOpen(
+                enqueueSnackbar(
                     `No se pudo exportar el archivo. (${String(
                         error?.statusText ?? error ?? "UNKNOWN_ERROR",
                     )})`,
-                    "danger",
+                    { variant: "error" },
                 );
             })
             .finally(() => {

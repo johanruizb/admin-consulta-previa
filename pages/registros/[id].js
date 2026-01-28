@@ -18,8 +18,8 @@ import {
 import GruposSelector from "@/components/Registros/GruposSelector";
 import { convertToFormData, getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
-import useAlert from "@/hooks/useAlert";
 import usePermission from "@/hooks/usePermission";
+import { useSnackbar } from "notistack";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import CloseIcon from "@mui/icons-material/Close";
 import InfoIcon from "@mui/icons-material/Info";
@@ -98,7 +98,7 @@ export default function Wrapper() {
 }
 
 function View({ defaultValues }) {
-    const { onOpen: saveConfig } = useAlert();
+    const { enqueueSnackbar } = useSnackbar();
 
     const [loading, setLoading] = useState(false);
 
@@ -139,7 +139,8 @@ function View({ defaultValues }) {
     };
 
     const openAlert = (content, color = "success") => {
-        saveConfig(content, color);
+        const variant = color === "danger" ? "error" : color;
+        enqueueSnackbar(content, { variant });
     };
 
     const methods = useForm({ defaultValues });
@@ -159,8 +160,17 @@ function View({ defaultValues }) {
                 const res = await response.json();
 
                 if (response.ok) {
-                    openAlert(res.message);
-                    router.back();
+                    // Verificar si hay warnings (errores parciales de Moodle)
+                    if (res.warnings && res.warnings.length > 0) {
+                        const warningDetails = res.warnings.join("\n• ");
+                        openAlert(
+                            `${res.message}\n\n• ${warningDetails}`,
+                            "warning",
+                        );
+                    } else {
+                        openAlert(res.message);
+                        router.back();
+                    }
                 } else {
                     openAlert(
                         res?.message ??
