@@ -168,7 +168,7 @@ export default function EstadisticasAvancesPage() {
             </Box>
 
             {/* Filtros */}
-            <Grid container spacing={2}>
+            <Grid container spacing={1}>
                 <Grid size={{ xs: 12, md: 6 }}>
                     <FormControl>
                         <FormLabel>Curso</FormLabel>
@@ -261,7 +261,7 @@ export default function EstadisticasAvancesPage() {
                                     <Stack
                                         spacing={1}
                                         direction="row"
-                                        sx={{ my: 0.5 }}
+                                        sx={{ mb: 0.5 }}
                                     >
                                         <Card sx={{ flex: 1 }}>
                                             <CardContent>
@@ -296,7 +296,7 @@ export default function EstadisticasAvancesPage() {
                                     <Stack
                                         spacing={1}
                                         direction="row"
-                                        sx={{ my: 0.5 }}
+                                        // sx={{ my: 0.5 }}
                                     >
                                         <Card
                                             sx={{
