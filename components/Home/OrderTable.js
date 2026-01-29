@@ -158,6 +158,11 @@ const TableRow = memo(function TableRow({
             <td>
                 <Typography level="body-sm">{row.grupos}</Typography>
             </td>
+            <td>
+                <Typography level="body-sm">
+                    {row.encargado_nombre || "—"}
+                </Typography>
+            </td>
             {selectedCicloId === 2 && (
                 <Fragment>
                     <td>
@@ -620,6 +625,14 @@ export default function OrderTable({ data, onView }) {
                                     >
                                         Grupo
                                     </th>
+                                    <th
+                                        style={{
+                                            width: 100,
+                                            padding: "12px 6px",
+                                        }}
+                                    >
+                                        Encargado
+                                    </th>
                                     {selectedCicloId === 2 && (
                                         <Fragment>
                                             <th
@@ -659,7 +672,7 @@ export default function OrderTable({ data, onView }) {
                                     <tr>
                                         <td
                                             colSpan={
-                                                selectedCicloId == 2 ? 11 : 7
+                                                selectedCicloId == 2 ? 12 : 8
                                             }
                                         >
                                             <Typography textAlign="center">

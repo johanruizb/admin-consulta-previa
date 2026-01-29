@@ -13,25 +13,30 @@ import ColorSchemeToggle from "./ColorSchemeToggle";
 import { EXPERIMENTAL } from "./constants";
 import useSettingsContext from "./settingsContext/useSettings";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { useMemo } from "react";
 
 export default function Header() {
     const { settings } = useSettingsContext();
 
-    const sx = settings.useWideInterface
-        ? {
-              display: "flex",
-              height: {
-                  xs: "var(--Header-height)",
-                  md: "65px",
-              },
-          }
-        : {
-              display: {
-                  xs: "flex",
-                  md: "none",
-              },
-              height: "var(--Header-height)",
-          };
+    const sx = useMemo(
+        () =>
+            settings.useWideInterface
+                ? {
+                      display: "flex",
+                      height: {
+                          xs: "var(--Header-height)",
+                          md: "65px",
+                      },
+                  }
+                : {
+                      display: {
+                          xs: "flex",
+                          md: "none",
+                      },
+                      height: "var(--Header-height)",
+                  },
+        [settings.useWideInterface],
+    );
 
     return (
         <Sheet
