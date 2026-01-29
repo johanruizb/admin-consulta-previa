@@ -38,6 +38,7 @@ import CicloSelector from "../Ciclos/CicloSelector";
 
 const Settings = dynamic(() => import("./Settings"), { ssr: false });
 
+// Extraído fuera del componente para evitar recreación (rendering-hoist-jsx)
 const NavItem = memo(function NavItem({ onClick, selected, icon, children }) {
     return (
         <ListItem>
