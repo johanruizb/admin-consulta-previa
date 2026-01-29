@@ -3,6 +3,7 @@
 import fetcher from "@/components/fetcher";
 import { getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
+import { EncargadoBadge } from "@/components/Encargados";
 import { DialogTitle, Divider } from "@mui/joy";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
@@ -27,6 +28,7 @@ const GrupoSelect = memo(function GrupoSelect({
     value,
     onChange,
     disabled,
+    showEncargado = true,
 }) {
     const handleChange = useCallback(
         (_, newValue) => {
@@ -50,23 +52,33 @@ const GrupoSelect = memo(function GrupoSelect({
     }
 
     return (
-        <FormControl size="sm">
-            <FormLabel>Grupo - {cursoName}</FormLabel>
-            <Select
-                size="sm"
-                placeholder="Seleccionar grupo"
-                value={value ?? ""}
-                onChange={handleChange}
-                disabled={disabled}
-            >
-                <Option value="">Sin grupo</Option>
-                {gruposData.map((grupo) => (
-                    <Option key={grupo.id} value={grupo.id}>
-                        {grupo.name}
-                    </Option>
-                ))}
-            </Select>
-        </FormControl>
+        <Stack spacing={0.5}>
+            <FormControl size="sm">
+                <FormLabel>Grupo - {cursoName}</FormLabel>
+                <Select
+                    size="sm"
+                    placeholder="Seleccionar grupo"
+                    value={value ?? ""}
+                    onChange={handleChange}
+                    disabled={disabled}
+                >
+                    <Option value="">Sin grupo</Option>
+                    {gruposData.map((grupo) => (
+                        <Option key={grupo.id} value={grupo.id}>
+                            {grupo.name}
+                        </Option>
+                    ))}
+                </Select>
+            </FormControl>
+            {showEncargado && value && (
+                <Stack direction="row" spacing={0.5} alignItems="center">
+                    <Typography level="body-xs" textColor="text.tertiary">
+                        Encargado:
+                    </Typography>
+                    <EncargadoBadge grupoId={value} size="sm" showIcon={false} />
+                </Stack>
+            )}
+        </Stack>
     );
 });
 
@@ -78,6 +90,7 @@ GrupoSelect.propTypes = {
     value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     onChange: PropTypes.func.isRequired,
     disabled: PropTypes.bool,
+    showEncargado: PropTypes.bool,
 };
 
 /**

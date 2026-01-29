@@ -2,6 +2,7 @@
 import STORAGE from "@/hooks/storage";
 import useClient from "@/hooks/useClient";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
+import GroupsIcon from "@mui/icons-material/Groups";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import InsightsIcon from "@mui/icons-material/Insights";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
@@ -234,6 +235,15 @@ export default function Sidebar() {
                                 icon={<GroupAddIcon />}
                             >
                                 Registros
+                            </NavItem>
+                        )}
+                        {hasPermission("moodle.view_encargadogrupo") && (
+                            <NavItem
+                                onClick={() => handleRouteChange("/encargados")}
+                                selected={pathname === "/encargados"}
+                                icon={<GroupsIcon />}
+                            >
+                                Encargados
                             </NavItem>
                         )}
                         {hasPermission(
