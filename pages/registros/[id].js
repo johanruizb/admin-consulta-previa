@@ -37,7 +37,7 @@ import Stack from "@mui/joy/Stack";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRouter as useNavigate } from "next/navigation";
 import { useRouter } from "next/router";
-import { Fragment, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import useSWR from "swr";
 import useSWRImmutable from "swr/immutable";
@@ -78,21 +78,15 @@ export default function Wrapper() {
     // Mostrar el modal inmediatamente, con skeleton si los datos no están listos
     return (
         <Registros>
-            <Fragment>
-                <Modal
-                    open
-                    onClose={() => {}}
-                    sx={{
-                        zIndex: 1001,
-                    }}
-                >
-                    {dataReady ? (
-                        <View defaultValues={values} />
-                    ) : (
-                        <ViewSkeleton />
-                    )}
-                </Modal>
-            </Fragment>
+            <Modal
+                open
+                onClose={() => {}}
+                sx={{
+                    zIndex: 1001,
+                }}
+            >
+                {dataReady ? <View defaultValues={values} /> : <ViewSkeleton />}
+            </Modal>
         </Registros>
     );
 }
@@ -100,7 +94,7 @@ export default function Wrapper() {
 function View({ defaultValues }) {
     const { enqueueSnackbar } = useSnackbar();
 
-    const [loading, setLoading] = useState(false);
+    const [isPending, startTransition] = useTransition();
 
     const router = useRouter();
     const { id } = router.query;
@@ -134,9 +128,9 @@ function View({ defaultValues }) {
     const cicloActualId = cicloActualData?.data?.id;
     const isCurrentCycle = !cicloActualId || selectedCicloId === cicloActualId;
 
-    const onClose = () => {
+    const onClose = useCallback(() => {
         navigate.push("/registros", undefined, { shallow: true });
-    };
+    }, [navigate]);
 
     const openAlert = (content, color = "success", options = {}) => {
         const variant = color === "danger" ? "error" : color;
@@ -150,132 +144,123 @@ function View({ defaultValues }) {
     const methods = useForm({ defaultValues });
     const { handleSubmit } = methods;
 
-    const onSubmit = (data, validate = false) => {
-        delete data.historial;
-        const formData = convertToFormData({ ...data, validate });
+    const onSubmit = useCallback(
+        (data, validate = false) => {
+            const submitData = { ...data };
+            delete submitData.historial;
+            const formData = convertToFormData({ ...submitData, validate });
 
-        setLoading(true);
+            startTransition(async () => {
+                try {
+                    const response = await fetch(
+                        getURL("/api/usuarios/inscritos/" + id),
+                        {
+                            method: "POST",
+                            body: formData,
+                        },
+                    );
+                    const res = await response.json();
 
-        fetch(getURL("/api/usuarios/inscritos/" + id), {
-            method: "POST",
-            body: formData,
-        })
-            .then(async (response) => {
-                const res = await response.json();
-
-                if (response.ok) {
-                    // Verificar si hay warnings (errores parciales de Moodle)
-                    if (res.warnings && res.warnings.length > 0) {
-                        const warningDetails = res.warnings.join("\n• ");
-                        openAlert(
-                            `${res.message}\n\n• ${warningDetails}`,
-                            "warning",
-                            {
-                                autoHideDuration: 10000,
-                            },
-                        );
+                    if (response.ok) {
+                        if (res.warnings && res.warnings.length > 0) {
+                            const warningDetails = res.warnings.join("\n• ");
+                            openAlert(
+                                `${res.message}\n\n• ${warningDetails}`,
+                                "warning",
+                                { autoHideDuration: 10000 },
+                            );
+                        } else {
+                            openAlert(res.message);
+                            router.back();
+                        }
                     } else {
-                        openAlert(res.message);
-                        router.back();
+                        openAlert(
+                            res?.message ??
+                                `Se ha producido un error (${response.statusText})`,
+                            "danger",
+                        );
                     }
-                } else {
+                } catch (error) {
                     openAlert(
-                        res?.message ??
-                            `Se ha producido un error (${response.statusText})`,
-
+                        `Se ha producido un error (${error.toString()})`,
                         "danger",
                     );
                 }
-            })
-            .catch((error) => {
-                openAlert(
-                    `Se ha producido un error (${error.toString()})`,
-
-                    "danger",
-                );
-                // setLoading(false);
-            })
-            .finally(() => {
-                setLoading(false);
             });
-    };
+        },
+        [id, openAlert, router, startTransition],
+    );
 
     const validado = defaultValues?.info_validada;
 
     return (
-        <Registros>
-            <Fragment>
-                <Modal
-                    open
-                    onClose={onClose}
+        <Modal
+            open
+            onClose={onClose}
+            sx={{
+                zIndex: 1001,
+            }}
+        >
+            <ModalDialog
+                layout={sm ? "fullscreen" : "center"}
+                slotProps={{
+                    root: {
+                        sx: sm
+                            ? {}
+                            : {
+                                  width: "70%",
+                              },
+                    },
+                }}
+            >
+                <DialogTitle>
+                    <UserTitle
+                        defaultValues={defaultValues}
+                        DOCUMENTOS={DOCUMENTOS}
+                    />
+                </DialogTitle>
+                <DialogContent>
+                    {isCurrentCycle ? (
+                        <InstructionMessage validado={validado} />
+                    ) : (
+                        <Alert
+                            color="warning"
+                            startDecorator={<InfoIcon />}
+                            sx={{ my: 2 }}
+                        >
+                            La información de versiones anteriores solo se puede
+                            ver, mas no modificar. Para editar, seleccione el
+                            ciclo actual.
+                        </Alert>
+                    )}
+
+                    <Stack spacing={2}>
+                        <FormProvider {...methods}>
+                            <FormSection
+                                FormularioVerificacion={FormularioVerificacion}
+                                methods={methods}
+                                disabled={!isCurrentCycle}
+                            />
+                            <GruposSelector disabled={!isCurrentCycle} />
+                        </FormProvider>
+                    </Stack>
+                    {historialLoading ? (
+                        <HistoryListSkeleton />
+                    ) : (
+                        <HistoryList historial={historial} />
+                    )}
+                    {modulosLoading ? (
+                        <CourseProgressListSkeleton />
+                    ) : modulos?.length ? (
+                        <CourseProgressList modulos={modulos} />
+                    ) : null}
+                </DialogContent>
+                <DialogActions
                     sx={{
-                        zIndex: 1001,
+                        justifyContent: "space-between",
                     }}
                 >
-                    <ModalDialog
-                        layout={sm ? "fullscreen" : "center"}
-                        slotProps={{
-                            root: {
-                                sx: sm
-                                    ? {}
-                                    : {
-                                          width: "70%",
-                                      },
-                            },
-                        }}
-                    >
-                        <DialogTitle>
-                            <UserTitle
-                                defaultValues={defaultValues}
-                                DOCUMENTOS={DOCUMENTOS}
-                            />
-                        </DialogTitle>
-                        <DialogContent>
-                            {isCurrentCycle ? (
-                                <InstructionMessage validado={validado} />
-                            ) : (
-                                <Alert
-                                    color="warning"
-                                    startDecorator={<InfoIcon />}
-                                    sx={{ my: 2 }}
-                                >
-                                    La información de versiones anteriores solo
-                                    se puede ver, mas no modificar. Para editar,
-                                    seleccione el ciclo actual.
-                                </Alert>
-                            )}
-
-                            <Stack spacing={2}>
-                                <FormProvider {...methods}>
-                                    <FormSection
-                                        FormularioVerificacion={
-                                            FormularioVerificacion
-                                        }
-                                        methods={methods}
-                                        disabled={!isCurrentCycle}
-                                    />
-                                    <GruposSelector
-                                        disabled={!isCurrentCycle}
-                                    />
-                                </FormProvider>
-                            </Stack>
-                            {historialLoading ? (
-                                <HistoryListSkeleton />
-                            ) : (
-                                <HistoryList historial={historial} />
-                            )}
-                            {modulosLoading ? (
-                                <CourseProgressListSkeleton />
-                            ) : modulos?.length ? (
-                                <CourseProgressList modulos={modulos} />
-                            ) : null}
-                        </DialogContent>
-                        <DialogActions
-                            sx={{
-                                justifyContent: "space-between",
-                            }}
-                        >
-                            {/* <Button
+                    {/* <Button
                                 onClick={handleSubmit(onSubmit)}
                                 variant="solid"
                                 endDecorator={<SaveIcon />}
@@ -286,57 +271,46 @@ function View({ defaultValues }) {
                             >
                                 {validado ? "Guardar" : "Validar"}
                             </Button> */}
-                            {isCurrentCycle && (
-                                <ButtonGroup
-                                    variant="solid"
-                                    spacing="0.5rem"
-                                    size="lg"
-                                >
-                                    {validado ? null : (
-                                        <Button
-                                            endDecorator={
-                                                <AssignmentTurnedInIcon />
-                                            }
-                                            onClick={handleSubmit((data) =>
-                                                onSubmit(data, true),
-                                            )}
-                                            color="success"
-                                            disabled={loading}
-                                            loading={loading}
-                                        >
-                                            Guardar y validar
-                                        </Button>
+                    {isCurrentCycle && (
+                        <ButtonGroup variant="solid" spacing="0.5rem" size="lg">
+                            {validado ? null : (
+                                <Button
+                                    endDecorator={<AssignmentTurnedInIcon />}
+                                    onClick={handleSubmit((data) =>
+                                        onSubmit(data, true),
                                     )}
-                                    <Button
-                                        startDecorator={<SaveIcon />}
-                                        onClick={handleSubmit((data) =>
-                                            onSubmit(data, false),
-                                        )}
-                                        color="primary"
-                                        disabled={loading}
-                                        loading={loading}
-                                    >
-                                        {validado
-                                            ? "Guardar"
-                                            : "Guardar sin validar"}
-                                    </Button>
-                                </ButtonGroup>
+                                    color="success"
+                                    disabled={isPending}
+                                    loading={isPending}
+                                >
+                                    Guardar y validar
+                                </Button>
                             )}
                             <Button
-                                onClick={onClose}
-                                variant="plain"
-                                startDecorator={<CloseIcon />}
-                                size="lg"
-                                disabled={loading}
-                                // loading={loading}
+                                startDecorator={<SaveIcon />}
+                                onClick={handleSubmit((data) =>
+                                    onSubmit(data, false),
+                                )}
+                                color="primary"
+                                disabled={isPending}
+                                loading={isPending}
                             >
-                                Cerrar
+                                {validado ? "Guardar" : "Guardar sin validar"}
                             </Button>
-                        </DialogActions>
-                    </ModalDialog>
-                </Modal>
-            </Fragment>
-        </Registros>
+                        </ButtonGroup>
+                    )}
+                    <Button
+                        onClick={onClose}
+                        variant="plain"
+                        startDecorator={<CloseIcon />}
+                        size="lg"
+                        disabled={isPending}
+                    >
+                        Cerrar
+                    </Button>
+                </DialogActions>
+            </ModalDialog>
+        </Modal>
     );
 }
 
