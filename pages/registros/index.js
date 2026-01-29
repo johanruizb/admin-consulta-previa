@@ -20,6 +20,7 @@ import Typography from "@mui/joy/Typography";
 import { useMediaQuery } from "@mui/material";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 import useSWR from "swr";
 
 export default function Registros({ children }) {
@@ -35,9 +36,12 @@ export default function Registros({ children }) {
         fetcher
     );
 
-    const onView = (id) => {
-        router.push(`/registros/${id}`, undefined, { shallow: true });
-    };
+    const onView = useCallback(
+        (id) => {
+            router.push(`/registros/${id}`, undefined, { shallow: true });
+        },
+        [router]
+    );
 
     usePermission("usuario.view_persona");
 

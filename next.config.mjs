@@ -8,6 +8,13 @@ const nextConfig = {
         // Enables the styled-components SWC transform
         styledComponents: true,
     },
+    experimental: {
+        optimizePackageImports: [
+            "@mui/material",
+            "@mui/joy",
+            "@mui/icons-material",
+        ],
+    },
     transpilePackages: [
         "@mui/x-data-grid",
         "@mui/x-charts",

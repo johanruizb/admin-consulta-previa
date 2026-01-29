@@ -9,7 +9,6 @@ import useClient from "@/hooks/useClient";
 import usePermission from "@/hooks/usePermission";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import InsightsIcon from "@mui/icons-material/Insights";
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Card from "@mui/joy/Card";
@@ -24,10 +23,8 @@ import Typography from "@mui/joy/Typography";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import { BarChart } from "@mui/x-charts/BarChart";
-import { useFirstRender } from "@mui/x-data-grid";
-import { useIsClient, useIsFirstRender } from "@uidotdev/usehooks";
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 
 const COLORS = {
@@ -76,32 +73,48 @@ export default function EstadisticasAvancesPage() {
     );
 
     // Obtener estadísticas de avances
-    const params = new URLSearchParams();
-    if (selectedCicloId) params.append("ciclo_id", selectedCicloId);
-    if (cursoId) params.append("curso_id", cursoId);
-    if (grupoId) params.append("grupo_id", grupoId);
+    const statsUrl = useMemo(() => {
+        const params = new URLSearchParams();
+        if (selectedCicloId) params.append("ciclo_id", selectedCicloId);
+        if (cursoId) params.append("curso_id", cursoId);
+        if (grupoId) params.append("grupo_id", grupoId);
+        return params.toString();
+    }, [selectedCicloId, cursoId, grupoId]);
 
     const { data, isLoading, error } = useSWR(
         selectedCicloId && cursoId
-            ? getURL(`api/moodle/estadisticas-avances?${params.toString()}`)
+            ? getURL(`api/moodle/estadisticas-avances?${statsUrl}`)
             : null,
         fetcher,
     );
 
-    const handleCursoChange = (_, value) => {
+    const handleCursoChange = useCallback((_, value) => {
         setCursoId(value);
         setGrupoId(null);
-    };
+    }, []);
 
-    const handleGrupoChange = (_, value) => {
+    const handleGrupoChange = useCallback((_, value) => {
         setGrupoId(value);
-    };
+    }, []);
 
     useEffect(() => {
         if (cursos && cursos.length > 0 && !cursoId) {
             setCursoId(cursos[0].id);
         }
     }, [cursos, cursoId]);
+
+    const resumen = data?.resumen_general || {};
+    const distribucion = data?.distribucion_avance || [];
+    const modulos = data?.avance_por_modulo || [];
+
+    const exportFilterValues = useMemo(
+        () => ({
+            ciclo_id: selectedCicloId,
+            activity__module__course_id: cursoId,
+            grupo_usuario: grupoId || "all",
+        }),
+        [selectedCicloId, cursoId, grupoId],
+    );
 
     if (!mounted || permissionIsLoading) {
         return (
@@ -115,16 +128,6 @@ export default function EstadisticasAvancesPage() {
             </Stack>
         );
     }
-
-    const resumen = data?.resumen_general || {};
-    const distribucion = data?.distribucion_avance || [];
-    const modulos = data?.avance_por_modulo || [];
-
-    const exportFilterValues = {
-        ciclo_id: selectedCicloId,
-        activity__module__course_id: cursoId,
-        grupo_usuario: grupoId || "all",
-    };
 
     return (
         <Layout>
