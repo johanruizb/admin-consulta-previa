@@ -1,3 +1,6 @@
+---
+applyTo: "/home/jr0237/Documentos/consulta-previa-registro/consulta-previa-admin/**"
+---
 # Consulta Previa Admin - AI Coding Guidelines
 
 ## 🔴 Reglas Críticas
