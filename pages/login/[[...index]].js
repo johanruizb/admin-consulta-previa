@@ -1,60 +1,15 @@
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
-import CssBaseline from "@mui/joy/CssBaseline";
-import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
-import GlobalStyles from "@mui/joy/GlobalStyles";
-import IconButton from "@mui/joy/IconButton";
-import Input from "@mui/joy/Input";
-import Stack from "@mui/joy/Stack";
-import Typography from "@mui/joy/Typography";
-import Head from "next/head";
-import { useSnackbar } from "notistack";
+import { Fragment } from "react";
 import ColorSchemeToggle from "@/components/Home/ColorSchemeToggle";
 import UnivalleIcon from "@/components/Icons/Univalle";
 import { SignIn } from "@clerk/nextjs";
+import Box from "@mui/joy/Box";
+import CssBaseline from "@mui/joy/CssBaseline";
+import GlobalStyles from "@mui/joy/GlobalStyles";
+import IconButton from "@mui/joy/IconButton";
+import Typography from "@mui/joy/Typography";
+import Head from "next/head";
 
 export default function JoySignInSideTemplate() {
-    const { enqueueSnackbar } = useSnackbar();
-    const [show, setShow] = useState(false);
-    const [loading, setLoading] = useState(false);
-
-    const onSubmit = (event) => {
-        event.preventDefault();
-        setLoading(true);
-
-        const formElements = event.currentTarget.elements;
-        const data = {
-            username: formElements.username.value,
-            password: formElements.password.value,
-        };
-
-        fetch("api/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        }).then(async (response) => {
-            if (response.ok) {
-                enqueueSnackbar("Inicio de sesión exitoso", { variant: "success" });
-                location.reload();
-            } else {
-                const result = await response.json();
-                enqueueSnackbar(
-                    result?.message ||
-                        result ||
-                        "Ha ocurrido un error al iniciar sesión",
-                    { variant: "error" },
-                );
-                console.error("Error al iniciar sesión", response);
-                setLoading(false);
-            }
-        });
-    };
-
     return (
         <Fragment>
             <Head>
