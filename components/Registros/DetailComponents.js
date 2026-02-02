@@ -517,6 +517,7 @@ export const FormSection = memo(function FormSection({
     FormularioVerificacion,
     methods,
     disabled = false,
+    disabledFields = [],
 }) {
     return (
         <Grid container spacing={1.25}>
@@ -531,12 +532,18 @@ export const FormSection = memo(function FormSection({
 
                 if (!Component) return null;
 
+                // Verificar si el campo está en la lista de campos deshabilitados
+                const isFieldDisabled = disabledFields.includes(name);
+
                 // Propagar disabled a los inputProps
                 const enhancedInputProps = {
                     ...inputProps,
                     field: {
                         ...inputProps.field,
-                        readOnly: disabled || inputProps.field?.readOnly,
+                        readOnly:
+                            disabled ||
+                            isFieldDisabled ||
+                            inputProps.field?.readOnly,
                     },
                 };
 
@@ -544,11 +551,31 @@ export const FormSection = memo(function FormSection({
                     ["genero_otro", "otra_conectividad"].includes(name) ||
                     name === undefined;
 
+                // Componente renderizado
+                const renderedComponent = (
+                    <Component inputProps={enhancedInputProps} />
+                );
+
+                // Envolver en Tooltip si el campo está deshabilitado por restricción de permisos
+                const componentWithTooltip = isFieldDisabled ? (
+                    <Tooltip
+                        title="Este campo no se puede modificar. Contacta al administrador."
+                        placement="bottom"
+                        arrow
+                    >
+                        <Box component="span" sx={{ cursor: "not-allowed" }}>
+                            {renderedComponent}
+                        </Box>
+                    </Tooltip>
+                ) : (
+                    renderedComponent
+                );
+
                 return isGridless ? (
-                    <Component key={index} inputProps={enhancedInputProps} />
+                    <Box key={index}>{componentWithTooltip}</Box>
                 ) : (
                     <Grid key={index} size={size}>
-                        <Component inputProps={enhancedInputProps} />
+                        {componentWithTooltip}
                     </Grid>
                 );
             })}
@@ -560,6 +587,7 @@ FormSection.propTypes = {
     FormularioVerificacion: PropTypes.array.isRequired,
     methods: PropTypes.object.isRequired,
     disabled: PropTypes.bool,
+    disabledFields: PropTypes.arrayOf(PropTypes.string),
 };
 
 // ============================================================
