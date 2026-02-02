@@ -44,7 +44,7 @@ import useSWRImmutable from "swr/immutable";
 import Registros from ".";
 
 export default function Wrapper() {
-    const { hasPermission } = usePermissionContext();
+    const { hasPermission, isAdmin } = usePermissionContext();
 
     const [mounted, setMounted] = useState(false);
     const router = useRouter();
@@ -85,13 +85,13 @@ export default function Wrapper() {
                     zIndex: 1001,
                 }}
             >
-                {dataReady ? <View defaultValues={values} /> : <ViewSkeleton />}
+                {dataReady ? <View defaultValues={values} isAdmin={isAdmin} /> : <ViewSkeleton />}
             </Modal>
         </Registros>
     );
 }
 
-function View({ defaultValues }) {
+function View({ defaultValues, isAdmin }) {
     const { enqueueSnackbar } = useSnackbar();
 
     const [isPending, startTransition] = useTransition();
@@ -240,6 +240,7 @@ function View({ defaultValues }) {
                                 FormularioVerificacion={FormularioVerificacion}
                                 methods={methods}
                                 disabled={!isCurrentCycle}
+                                disabledFields={!isAdmin ? ['num_doc'] : []}
                             />
                             <GruposSelector disabled={!isCurrentCycle} />
                         </FormProvider>
