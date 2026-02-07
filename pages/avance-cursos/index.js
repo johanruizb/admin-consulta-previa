@@ -2,13 +2,12 @@ import FiltrarCursos from "@/components/Cursos/FiltrarCursos";
 import Layout from "@/components/Home/Layout";
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 import ExportAvances from "@/components/Pages/Avances/ExportarAvances";
-import UploadAvances from "@/components/Pages/Avances/UploadAvances";
 import TablaAvancesV2 from "@/components/Pages/TablaAvancesV2";
 import DevWrapper from "@/components/Wrapper/DevWrapper";
+import { useAvancesData } from "@/hooks/useAvancesData";
+import { useAvancesForm } from "@/hooks/useAvancesForm";
 import useClient from "@/hooks/useClient";
 import usePermission from "@/hooks/usePermission";
-import { useAvancesForm } from "@/hooks/useAvancesForm";
-import { useAvancesData } from "@/hooks/useAvancesData";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ReplayIcon from "@mui/icons-material/Replay";
@@ -24,7 +23,7 @@ import Stack from "@mui/material/Stack";
 import { useRenderCount } from "@uidotdev/usehooks";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 import { FormProvider } from "react-hook-form";
 
 export default function Avances({ children }) {
