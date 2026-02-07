@@ -547,10 +547,6 @@ export const FormSection = memo(function FormSection({
                     },
                 };
 
-                const isGridless =
-                    ["genero_otro", "otra_conectividad"].includes(name) ||
-                    name === undefined;
-
                 // Componente renderizado
                 const renderedComponent = (
                     <Component inputProps={enhancedInputProps} />
@@ -571,9 +567,7 @@ export const FormSection = memo(function FormSection({
                     renderedComponent
                 );
 
-                return isGridless ? (
-                    <Box key={index}>{componentWithTooltip}</Box>
-                ) : (
+                return (
                     <Grid key={index} size={size}>
                         {componentWithTooltip}
                     </Grid>
