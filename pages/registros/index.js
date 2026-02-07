@@ -11,6 +11,8 @@ import { useCiclo } from "@/contexts/CicloContext";
 import usePermission from "@/hooks/usePermission";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import ReplayIcon from "@mui/icons-material/Replay";
+import { Button, IconButton, Tooltip } from "@mui/joy";
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import CircularProgress from "@mui/joy/CircularProgress";
@@ -25,22 +27,22 @@ import useSWR from "swr";
 
 export default function Registros({ children }) {
     const smallViewport = useMediaQuery((theme) =>
-        theme.breakpoints.down("sm")
+        theme.breakpoints.down("sm"),
     );
 
     const router = useRouter();
     const { selectedCicloId } = useCiclo();
 
-    const { data, isLoading } = useSWR(
+    const { data, isLoading, isValidating, mutate } = useSWR(
         getURL(`/api/usuarios/inscritos?ciclo_id=${selectedCicloId}`),
-        fetcher
+        fetcher,
     );
 
     const onView = useCallback(
         (id) => {
             router.push(`/registros/${id}`, undefined, { shallow: true });
         },
-        [router]
+        [router],
     );
 
     usePermission("usuario.view_persona");
@@ -123,6 +125,44 @@ export default function Registros({ children }) {
                 <OrderTable data={data} onView={onView} />
             )}
             {children}
+            <Tooltip
+                title={
+                    isLoading
+                        ? "Cargando lista..."
+                        : isValidating
+                          ? "Actualizando lista..."
+                          : "Actualizar lista"
+                }
+                placement="left"
+                arrow
+            >
+                <Box
+                    sx={{
+                        position: "fixed",
+                        bottom: 16,
+                        right: 16,
+                        zIndex: 1,
+                    }}
+                >
+                    <Button
+                        variant="solid"
+                        color="primary"
+                        sx={
+                            {
+                                // width: 56,
+                                // height: 56,
+                                // borderRadius: "50%",
+                            }
+                        }
+                        onClick={() => mutate({})}
+                        loading={isLoading || isValidating}
+                        size="lg"
+                        startDecorator={<ReplayIcon />}
+                    >
+                        Actualizar
+                    </Button>
+                </Box>
+            </Tooltip>
         </Layout>
     );
 }

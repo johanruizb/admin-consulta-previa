@@ -39,7 +39,7 @@ import { useRouter as useNavigate } from "next/navigation";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState, useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import useSWR from "swr";
+import useSWR, { useSWRConfig } from "swr";
 import useSWRImmutable from "swr/immutable";
 import Registros from ".";
 
@@ -96,16 +96,19 @@ export default function Wrapper() {
 }
 
 function View({ defaultValues, isAdmin }) {
-    const { enqueueSnackbar } = useSnackbar();
-
     const [isPending, startTransition] = useTransition();
 
+    const { enqueueSnackbar } = useSnackbar();
     const router = useRouter();
+    const navigate = useNavigate();
     const { id } = router.query;
 
-    const navigate = useNavigate();
-
     const sm = useMediaQuery((theme) => theme.breakpoints.down("md"));
+
+    // Obtener el ciclo seleccionado del contexto
+    const { selectedCicloId } = useCiclo();
+
+    const { mutate } = useSWRConfig();
 
     // Cargar historial de forma independiente
     const { data: historial, isLoading: historialLoading } = useSWR(
@@ -118,9 +121,6 @@ function View({ defaultValues, isAdmin }) {
         id ? getURL(`/api/usuarios/avances/${id}`) : null,
         fetcher,
     );
-
-    // Obtener el ciclo seleccionado del contexto
-    const { selectedCicloId } = useCiclo();
 
     // Obtener el ciclo actual desde el backend
     const { data: cicloActualData } = useSWR(
@@ -187,6 +187,16 @@ function View({ defaultValues, isAdmin }) {
                     openAlert(
                         `Se ha producido un error (${error.toString()})`,
                         "danger",
+                    );
+                } finally {
+                    // Refrescar datos después de la actualización
+                    mutate(getURL("/api/usuarios/inscritos/" + id));
+                    mutate(getURL(`/api/usuarios/historial/${id}`));
+                    mutate(getURL(`/api/usuarios/avances/${id}`));
+                    mutate(
+                        getURL(
+                            `/api/usuarios/inscritos?ciclo_id=${selectedCicloId}`,
+                        ),
                     );
                 }
             });
