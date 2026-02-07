@@ -46,6 +46,7 @@ export default function TextField({ inputProps }) {
                                     onBlur,
                                 }) || onBlur(e);
                             }}
+                            fullWidth
                             {...fieldProps}
                         />
                         <FormHelperText>{error?.message ?? " "}</FormHelperText>

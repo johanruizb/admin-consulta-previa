@@ -85,7 +85,11 @@ export default function Wrapper() {
                     zIndex: 1001,
                 }}
             >
-                {dataReady ? <View defaultValues={values} isAdmin={isAdmin} /> : <ViewSkeleton />}
+                {dataReady ? (
+                    <View defaultValues={values} isAdmin={isAdmin} />
+                ) : (
+                    <ViewSkeleton />
+                )}
             </Modal>
         </Registros>
     );
@@ -167,7 +171,6 @@ function View({ defaultValues, isAdmin }) {
                             openAlert(
                                 `${res.message}\n\n• ${warningDetails}`,
                                 "warning",
-                                { autoHideDuration: 10000 },
                             );
                         } else {
                             openAlert(res.message);
@@ -240,7 +243,7 @@ function View({ defaultValues, isAdmin }) {
                                 FormularioVerificacion={FormularioVerificacion}
                                 methods={methods}
                                 disabled={!isCurrentCycle}
-                                disabledFields={!isAdmin ? ['num_doc'] : []}
+                                disabledFields={!isAdmin ? ["num_doc"] : []}
                             />
                             <GruposSelector disabled={!isCurrentCycle} />
                         </FormProvider>

@@ -1,7 +1,5 @@
 import { useFormContext, useWatch } from "react-hook-form";
-
 import Grid from "@mui/material/Grid";
-
 import TextField from "../Field/TextField";
 
 export default function OtraConectividad({ inputProps }) {
@@ -12,11 +10,5 @@ export default function OtraConectividad({ inputProps }) {
         name: "conectividad",
     });
 
-    return (
-        conectividad === "otra" && (
-            <Grid size={{ xs: 12, md: 6 }}>
-                <TextField inputProps={inputProps} />
-            </Grid>
-        )
-    );
+    return conectividad === "otra" && <TextField inputProps={inputProps} />;
 }
