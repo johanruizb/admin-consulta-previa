@@ -12,11 +12,5 @@ export default function OtroGenero({ inputProps }) {
         name: "genero",
     });
 
-    return (
-        genero === 0 && (
-            <Grid size={{ xs: 12, md: 6 }}>
-                <TextField inputProps={inputProps} />
-            </Grid>
-        )
-    );
+    return genero === 0 && <TextField inputProps={inputProps} />;
 }

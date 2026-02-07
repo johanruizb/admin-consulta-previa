@@ -10,11 +10,5 @@ export default function OtraConectividad({ inputProps }) {
         name: "conectividad",
     });
 
-    return (
-        conectividad === "otra" && (
-            <Grid size={12}>
-                <TextField inputProps={inputProps} />
-            </Grid>
-        )
-    );
+    return conectividad === "otra" && <TextField inputProps={inputProps} />;
 }
