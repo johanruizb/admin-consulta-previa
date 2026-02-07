@@ -70,7 +70,7 @@ export default function App({ Component, pageProps }) {
                                     vertical: "bottom",
                                     horizontal: "right",
                                 }}
-                                autoHideDuration={3000}
+                                autoHideDuration={5000}
                             >
                                 <PermissionProvider>
                                     <AppInitializer>
