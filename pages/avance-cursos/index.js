@@ -2,6 +2,7 @@ import FiltrarCursos from "@/components/Cursos/FiltrarCursos";
 import Layout from "@/components/Home/Layout";
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 import ExportAvances from "@/components/Pages/Avances/ExportarAvances";
+import ExportarAsistencia from "@/components/Pages/Avances/ExportarAsistencia";
 import TablaAvancesV2 from "@/components/Pages/TablaAvancesV2";
 import DevWrapper from "@/components/Wrapper/DevWrapper";
 import { useAvancesData } from "@/hooks/useAvancesData";
@@ -175,6 +176,7 @@ export default function Avances({ children }) {
                     >
                         <Stack spacing={1} direction="row">
                             <ExportAvances />
+                            <ExportarAsistencia />
                         </Stack>
                     </Stack>
                 </FormProvider>
