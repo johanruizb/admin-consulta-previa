@@ -6,10 +6,10 @@
     "update": "npx npm-check-updates --reject eslint",
     "upgrade": "npx npm-check-updates -u --reject eslint && npm i --force",
     "format": "npx prettier --write . --tab-width 4 && python3 ./utils/format.py",
-    "dev": "next dev -p 2418 --turbopack",
-    "build": "next build",
-    "start": "next start -p 20426",
-    "lint": "next lint"
+    "dev": "npx next dev -p 2418 --turbopack",
+    "build": "npx next build",
+    "start": "npx next start -p 20426",
+    "lint": "npx next lint"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.36.9",
