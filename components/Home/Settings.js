@@ -18,7 +18,6 @@ export default function Settings({ open, onClose }) {
     const { setMode: setMaterialMode } = useMaterialColorScheme();
     const { setMode: setJoyMode } = useJoyColorScheme();
 
-    // const [settings, setSettings] = useLocalStorage("settings_app", {});
     const { settings, saveSettings: setSettings } = useSettingsContext();
 
     const methods = useForm({
