@@ -12,6 +12,7 @@ import useClient from "@/hooks/useClient";
 import usePermission from "@/hooks/usePermission";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import { Divider } from "@mui/joy";
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Card from "@mui/joy/Card";
@@ -441,9 +442,6 @@ export default function EstadisticasAvancesPage() {
                         <Grid
                             container
                             spacing={1}
-                        // sx={{
-                        //     pb: 6,
-                        // }}
                         >
                             {modulos.map((modulo) => (
                                 <Grid key={modulo.id} size={{ xs: 6 }}>
@@ -535,6 +533,10 @@ export default function EstadisticasAvancesPage() {
 
                         {isAdmin && hasAvanceGrupos && !avanceGruposLoading && (
                             <>
+                                <Divider sx={{
+                                    mb: 1,
+                                    mt: 3,
+                                }} />
                                 <Typography level="h3" sx={{ my: 1 }}>
                                     Avance por grupo
                                 </Typography>

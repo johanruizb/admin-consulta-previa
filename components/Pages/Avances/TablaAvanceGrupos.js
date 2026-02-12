@@ -11,7 +11,7 @@ import { useSnackbar } from "notistack";
 import { memo, useCallback, useMemo, useState } from "react";
 
 const AVANCE_COLORS = {
-    sin_avance: { bg: "#e0e0e0", text: "#616161" },
+    sin_avance: { bg: "transparent", text: "text.primary" },
     bajo: { bg: "#ffcdd2", text: "#c62828" },
     moderado: { bg: "#fff9c4", text: "#f57f17" },
     alto: { bg: "#c8e6c9", text: "#2e7d32" },
@@ -52,12 +52,9 @@ const AvanceCell = memo(function AvanceCell({ value, isTotal }) {
                     justifyContent: "center",
                     height: "100%",
                     width: "100%",
-                    // bgcolor: isTotal ? "rgba(11, 107, 203, 0.15)" : colors.bg,
-                    // color: isTotal ? "text.primary" : colors.text,
                     bgcolor: colors.bg,
                     color: colors.text,
-                    fontWeight: 600,
-                    fontSize: "0.8rem",
+                    // fontSize: isTotal ? "larger" : "0.8rem",
                 }}
             >
                 <Typography level="body2">
@@ -113,10 +110,10 @@ function ExportToolbar({ cicloId, cursoId }) {
 
     return (
         <Toolbar
-
             sx={{
                 justifyContent: "space-between",
-            }}>
+            }}
+        >
             <Typography level="title-lg" sx={{ px: 2 }}>
                 Avances en grupos
             </Typography>
@@ -186,15 +183,7 @@ export default function TablaAvanceGrupos({ data, cicloId, cursoId }) {
     if (!data || !filas?.length) return null;
 
     return (
-        <Sheet
-        // variant="outlined"
-        // sx={{
-        //     width: "100%",
-        //     borderRadius: "sm",
-        //     overflow: "auto",
-        //     height: Math.min(400 + rows.length * 52, 700),
-        // }}
-        >
+        <Sheet>
             <DataGrid
                 rows={rows}
                 columns={columns}
@@ -213,23 +202,30 @@ export default function TablaAvanceGrupos({ data, cicloId, cursoId }) {
                     params.row.id === "total" ? "row-total" : ""
                 }
                 getCellClassName={(params) => {
-                    if (params.value && Object.hasOwnProperty.call(params.value, "cantidad") && Object.hasOwnProperty.call(params.value, "porcentaje")) return "cell-avance";
+                    if (
+                        params.field.includes("avance_mod") ||
+                        params.field.includes("avance_general")
+                    )
+                        return "cell-total";
+                    if (
+                        params.value &&
+                        Object.hasOwnProperty.call(params.value, "cantidad") &&
+                        Object.hasOwnProperty.call(params.value, "porcentaje")
+                    )
+                        return "cell-avance";
                     return "";
                 }}
                 sx={{
                     "& .row-total": {
-                        // bgcolor: "rgba(11, 107, 203, 0.12) !important",
-                        fontWeight: 700,
+                        fontWeight: "bold",
                     },
                     "& .cell-total": {
-                        fontWeight: 700,
+                        fontWeight: "bold",
+                        padding: 0,
                     },
                     "& .MuiDataGrid-columnHeader": {
                         fontSize: "0.8rem",
                     },
-                    // "& .MuiDataGrid-cell": {
-                    //     padding: 0,
-                    // },
                     "& .MuiDataGrid-cell.cell-avance": {
                         padding: 0,
                     },
