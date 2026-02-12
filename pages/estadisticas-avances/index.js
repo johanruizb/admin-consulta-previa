@@ -52,7 +52,7 @@ export default function EstadisticasAvancesPage() {
     const [grupoId, setGrupoId] = useState(null);
     const [mounted, setMounted] = useState(false);
 
-    const { isLoading: permissionIsLoading, isAdmin } = usePermissionContext();
+    const { isLoading: permissionIsLoading } = usePermissionContext();
     usePermission("moodle.view_actividadescompletadas");
     useClient(() => setMounted(true));
 
@@ -521,7 +521,7 @@ export default function EstadisticasAvancesPage() {
                         </Grid>
 
                         {/* Avance por grupo */}
-                        {isAdmin && avanceGruposLoading && (
+                        {avanceGruposLoading && (
                             <Stack
                                 justifyContent="center"
                                 alignItems="center"
@@ -531,7 +531,7 @@ export default function EstadisticasAvancesPage() {
                             </Stack>
                         )}
 
-                        {isAdmin && hasAvanceGrupos && !avanceGruposLoading && (
+                        {hasAvanceGrupos && !avanceGruposLoading && (
                             <>
                                 <Divider sx={{
                                     mb: 1,
