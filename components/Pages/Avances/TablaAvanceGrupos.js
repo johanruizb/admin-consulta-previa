@@ -11,7 +11,7 @@ import { useSnackbar } from "notistack";
 import { memo, useCallback, useMemo, useState } from "react";
 
 const AVANCE_COLORS = {
-    sin_avance: { bg: "#e0e0e0", text: "#616161" },
+    sin_avance: { bg: "transparent", text: "text.primary" },
     bajo: { bg: "#ffcdd2", text: "#c62828" },
     moderado: { bg: "#fff9c4", text: "#f57f17" },
     alto: { bg: "#c8e6c9", text: "#2e7d32" },
@@ -56,7 +56,7 @@ const AvanceCell = memo(function AvanceCell({ value, isTotal }) {
                     // color: isTotal ? "text.primary" : colors.text,
                     bgcolor: colors.bg,
                     color: colors.text,
-                    fontWeight: 600,
+                    // fontWeight: 600,
                     fontSize: "0.8rem",
                 }}
             >
@@ -213,23 +213,23 @@ export default function TablaAvanceGrupos({ data, cicloId, cursoId }) {
                     params.row.id === "total" ? "row-total" : ""
                 }
                 getCellClassName={(params) => {
+                    console.log("Cell params:", params);
+
+                    if (params.field.includes("avance_mod") || params.field.includes("avance_general")) return "cell-total";
                     if (params.value && Object.hasOwnProperty.call(params.value, "cantidad") && Object.hasOwnProperty.call(params.value, "porcentaje")) return "cell-avance";
                     return "";
                 }}
                 sx={{
                     "& .row-total": {
-                        // bgcolor: "rgba(11, 107, 203, 0.12) !important",
-                        fontWeight: 700,
+                        fontWeight: "bold",
                     },
                     "& .cell-total": {
-                        fontWeight: 700,
+                        fontWeight: "bold",
+                        padding: 0,
                     },
                     "& .MuiDataGrid-columnHeader": {
                         fontSize: "0.8rem",
                     },
-                    // "& .MuiDataGrid-cell": {
-                    //     padding: 0,
-                    // },
                     "& .MuiDataGrid-cell.cell-avance": {
                         padding: 0,
                     },
