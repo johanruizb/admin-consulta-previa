@@ -12,9 +12,12 @@ import { memo, useCallback, useMemo, useState } from "react";
 
 const AVANCE_COLORS = {
     sin_avance: { bg: "transparent", text: "text.primary" },
-    bajo: { bg: "#ffcdd2", text: "#c62828" },
-    moderado: { bg: "#fff9c4", text: "#f57f17" },
-    alto: { bg: "#c8e6c9", text: "#2e7d32" },
+    bajo: { bg: "#ffcdd2", text: "text.primary" },
+    moderado: { bg: "#fff9c4", text: "text.primary" },
+    alto: { bg: "#c8e6c9", text: "text.primary" },
+    // bajo: { bg: "#ffcdd2", text: "#c62828" },
+    // moderado: { bg: "#fff9c4", text: "#f57f17" },
+    // alto: { bg: "#c8e6c9", text: "#2e7d32" },
 };
 
 function getAvanceLevel(porcentaje) {
