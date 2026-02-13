@@ -6,6 +6,7 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import InsightsIcon from "@mui/icons-material/Insights";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import PersonOffIcon from "@mui/icons-material/PersonOff";
 import SchoolIcon from "@mui/icons-material/School";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
@@ -236,6 +237,19 @@ export default function Sidebar() {
                                 icon={<GroupAddIcon />}
                             >
                                 Registros
+                            </NavItem>
+                        )}
+                        {hasPermission("usuario.delete_persona") && (
+                            <NavItem
+                                onClick={() =>
+                                    handleRouteChange("/personas-eliminadas")
+                                }
+                                selected={
+                                    pathname === "/personas-eliminadas"
+                                }
+                                icon={<PersonOffIcon />}
+                            >
+                                Eliminados
                             </NavItem>
                         )}
                         {hasPermission("moodle.view_encargadogrupo") && (

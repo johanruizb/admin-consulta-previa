@@ -170,8 +170,8 @@ const TableRow = memo(function TableRow({
                             {row.plataforma_registro === "web"
                                 ? "Formulario web"
                                 : row.plataforma_registro === "whatsapp"
-                                  ? "WhatsApp"
-                                  : "Desconocida"}
+                                    ? "WhatsApp"
+                                    : "Desconocida"}
                         </Typography>
                     </td>
                     <td>

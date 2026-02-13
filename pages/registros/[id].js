@@ -20,11 +20,14 @@ import { convertToFormData, getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
 import usePermission from "@/hooks/usePermission";
 import { useSnackbar } from "notistack";
+import ModalDarDeBaja from "@/components/Registros/ModalDarDeBaja";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import CloseIcon from "@mui/icons-material/Close";
 import InfoIcon from "@mui/icons-material/Info";
+import PersonOffIcon from "@mui/icons-material/PersonOff";
 import SaveIcon from "@mui/icons-material/Save";
 import Alert from "@mui/joy/Alert";
+import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import { ButtonGroup } from "@mui/joy";
 import DialogActions from "@mui/joy/DialogActions";
@@ -80,7 +83,7 @@ export default function Wrapper() {
         <Registros>
             <Modal
                 open
-                onClose={() => {}}
+                onClose={() => { }}
                 sx={{
                     zIndex: 1001,
                 }}
@@ -97,6 +100,7 @@ export default function Wrapper() {
 
 function View({ defaultValues, isAdmin }) {
     const [isPending, startTransition] = useTransition();
+    const [bajaModalOpen, setBajaModalOpen] = useState(false);
 
     const { enqueueSnackbar } = useSnackbar();
     const router = useRouter();
@@ -179,7 +183,7 @@ function View({ defaultValues, isAdmin }) {
                     } else {
                         openAlert(
                             res?.message ??
-                                `Se ha producido un error (${response.statusText})`,
+                            `Se ha producido un error (${response.statusText})`,
                             "danger",
                         );
                     }
@@ -207,124 +211,159 @@ function View({ defaultValues, isAdmin }) {
     const validado = defaultValues?.info_validada;
 
     return (
-        <Modal
-            open
-            onClose={onClose}
-            sx={{
-                zIndex: 1001,
-            }}
-        >
-            <ModalDialog
-                layout={sm ? "fullscreen" : "center"}
-                slotProps={{
-                    root: {
-                        sx: sm
-                            ? {}
-                            : {
-                                  width: "70%",
-                              },
-                    },
+        <>
+            <Modal
+                open
+                onClose={onClose}
+                sx={{
+                    zIndex: 1001,
                 }}
             >
-                <DialogTitle>
-                    <UserTitle
-                        defaultValues={defaultValues}
-                        DOCUMENTOS={DOCUMENTOS}
-                    />
-                </DialogTitle>
-                <DialogContent>
-                    {isCurrentCycle ? (
-                        <InstructionMessage validado={validado} />
-                    ) : (
-                        <Alert
-                            color="warning"
-                            startDecorator={<InfoIcon />}
-                            sx={{ my: 2 }}
-                        >
-                            La información de versiones anteriores solo se puede
-                            ver, mas no modificar. Para editar, seleccione el
-                            ciclo actual.
-                        </Alert>
-                    )}
-
-                    <Stack spacing={2}>
-                        <FormProvider {...methods}>
-                            <FormSection
-                                FormularioVerificacion={FormularioVerificacion}
-                                methods={methods}
-                                disabled={!isCurrentCycle}
-                                disabledFields={!isAdmin ? ["num_doc"] : []}
-                            />
-                            <GruposSelector disabled={!isCurrentCycle} />
-                        </FormProvider>
-                    </Stack>
-                    {historialLoading ? (
-                        <HistoryListSkeleton />
-                    ) : (
-                        <HistoryList historial={historial} />
-                    )}
-                    {modulosLoading ? (
-                        <CourseProgressListSkeleton />
-                    ) : modulos?.length ? (
-                        <CourseProgressList modulos={modulos} />
-                    ) : null}
-                </DialogContent>
-                <DialogActions
-                    sx={{
-                        justifyContent: "space-between",
+                <ModalDialog
+                    layout={sm ? "fullscreen" : "center"}
+                    slotProps={{
+                        root: {
+                            sx: sm
+                                ? {}
+                                : {
+                                    width: "70%",
+                                },
+                        },
                     }}
                 >
-                    {/* <Button
-                                onClick={handleSubmit(onSubmit)}
-                                variant="solid"
-                                endDecorator={<SaveIcon />}
+                    <DialogTitle
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            gap: 2,
+                        }}
+                    >
+                        <UserTitle
+                            defaultValues={defaultValues}
+                            DOCUMENTOS={DOCUMENTOS}
+                        />
+                        {isCurrentCycle && (
+                            <Button
+                                onClick={() => setBajaModalOpen(true)}
+                                variant="soft"
+                                color="danger"
+                                startDecorator={<PersonOffIcon />}
                                 size="lg"
-                                color={validado ? "primary" : "success"}
-                                loading={loading}
-                                disabled={!isCurrentCycle}
+                                disabled={isPending}
                             >
-                                {validado ? "Guardar" : "Validar"}
-                            </Button> */}
-                    {isCurrentCycle && (
-                        <ButtonGroup variant="solid" spacing="0.5rem" size="lg">
-                            {validado ? null : (
+                                Dar de baja
+                            </Button>
+                        )}
+                    </DialogTitle>
+                    <DialogContent>
+                        {isCurrentCycle ? (
+                            <InstructionMessage validado={validado} />
+                        ) : (
+                            <Alert
+                                color="warning"
+                                startDecorator={<InfoIcon />}
+                                sx={{ my: 2 }}
+                            >
+                                La información de versiones anteriores solo se puede
+                                ver, mas no modificar. Para editar, seleccione el
+                                ciclo actual.
+                            </Alert>
+                        )}
+
+                        <Stack spacing={2}>
+                            <FormProvider {...methods}>
+                                <FormSection
+                                    FormularioVerificacion={FormularioVerificacion}
+                                    methods={methods}
+                                    disabled={!isCurrentCycle}
+                                    disabledFields={!isAdmin ? ["num_doc"] : []}
+                                />
+                                <GruposSelector disabled={!isCurrentCycle} />
+                            </FormProvider>
+                        </Stack>
+                        {historialLoading ? (
+                            <HistoryListSkeleton />
+                        ) : (
+                            <HistoryList historial={historial} />
+                        )}
+                        {modulosLoading ? (
+                            <CourseProgressListSkeleton />
+                        ) : modulos?.length ? (
+                            <CourseProgressList modulos={modulos} />
+                        ) : null}
+                    </DialogContent>
+                    <DialogActions
+                        sx={{
+                            justifyContent: "space-between",
+                        }}
+                    >
+                        {isCurrentCycle && (
+                            <ButtonGroup variant="solid" spacing="0.5rem" size="lg">
+                                {validado ? null : (
+                                    <Button
+                                        endDecorator={<AssignmentTurnedInIcon />}
+                                        onClick={handleSubmit((data) =>
+                                            onSubmit(data, true),
+                                        )}
+                                        color="success"
+                                        disabled={isPending}
+                                        loading={isPending}
+                                    >
+                                        Guardar y validar
+                                    </Button>
+                                )}
                                 <Button
-                                    endDecorator={<AssignmentTurnedInIcon />}
+                                    startDecorator={<SaveIcon />}
                                     onClick={handleSubmit((data) =>
-                                        onSubmit(data, true),
+                                        onSubmit(data, false),
                                     )}
-                                    color="success"
+                                    color="primary"
                                     disabled={isPending}
                                     loading={isPending}
                                 >
-                                    Guardar y validar
+                                    {validado ? "Guardar" : "Guardar sin validar"}
                                 </Button>
-                            )}
+                            </ButtonGroup>
+                        )}
+                        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
                             <Button
-                                startDecorator={<SaveIcon />}
-                                onClick={handleSubmit((data) =>
-                                    onSubmit(data, false),
-                                )}
-                                color="primary"
+                                onClick={onClose}
+                                variant="plain"
+                                startDecorator={<CloseIcon />}
+                                size="lg"
                                 disabled={isPending}
-                                loading={isPending}
                             >
-                                {validado ? "Guardar" : "Guardar sin validar"}
+                                Cerrar
                             </Button>
-                        </ButtonGroup>
-                    )}
-                    <Button
-                        onClick={onClose}
-                        variant="plain"
-                        startDecorator={<CloseIcon />}
-                        size="lg"
-                        disabled={isPending}
-                    >
-                        Cerrar
-                    </Button>
-                </DialogActions>
-            </ModalDialog>
-        </Modal>
+                        </Box>
+                    </DialogActions>
+                </ModalDialog>
+            </Modal>
+
+            <ModalDarDeBaja
+                open={bajaModalOpen}
+                onClose={() => setBajaModalOpen(false)}
+                personaId={id}
+                personaNombre={`${defaultValues?.nombres} ${defaultValues?.apellidos}`}
+                onSuccess={(result) => {
+                    setBajaModalOpen(false);
+                    const msg = result?.message || "Persona dada de baja exitosamente";
+                    if (result?.warnings?.length) {
+                        const warningDetails = result.warnings.join("\n• ");
+                        enqueueSnackbar(`${msg}\n\n• ${warningDetails}`, {
+                            variant: "warning",
+                            style: { whiteSpace: "pre-line" },
+                        });
+                    } else {
+                        enqueueSnackbar(msg, { variant: "success" });
+                    }
+                    mutate(getURL(`/api/usuarios/inscritos?ciclo_id=${selectedCicloId}`));
+                    navigate.push("/registros");
+                }}
+            />
+        </>
     );
 }
 
@@ -347,8 +386,8 @@ function ViewSkeleton() {
                     sx: sm
                         ? {}
                         : {
-                              width: "70%",
-                          },
+                            width: "70%",
+                        },
                 },
             }}
         >

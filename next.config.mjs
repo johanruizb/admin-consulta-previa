@@ -23,7 +23,12 @@ const nextConfig = {
         "@mui/icons-material",
     ],
     images: {
-        domains: ["status.consultaprevia.net"],
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'status.consultaprevia.net',
+            },
+        ],
     },
 };
 

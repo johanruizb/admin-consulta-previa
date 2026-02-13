@@ -212,8 +212,8 @@ export default function TablaAvanceGrupos({ data, cicloId, cursoId }) {
                         return "cell-total";
                     if (
                         params.value &&
-                        Object.hasOwnProperty.call(params.value, "cantidad") &&
-                        Object.hasOwnProperty.call(params.value, "porcentaje")
+                        Object.prototype.hasOwnProperty.call(params.value, "cantidad") &&
+                        Object.prototype.hasOwnProperty.call(params.value, "porcentaje")
                     )
                         return "cell-avance";
                     return "";
