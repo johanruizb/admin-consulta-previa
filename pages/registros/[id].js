@@ -83,7 +83,7 @@ export default function Wrapper() {
         <Registros>
             <Modal
                 open
-                onClose={() => {}}
+                onClose={() => { }}
                 sx={{
                     zIndex: 1001,
                 }}
@@ -183,7 +183,7 @@ function View({ defaultValues, isAdmin }) {
                     } else {
                         openAlert(
                             res?.message ??
-                                `Se ha producido un error (${response.statusText})`,
+                            `Se ha producido un error (${response.statusText})`,
                             "danger",
                         );
                     }
@@ -211,113 +211,39 @@ function View({ defaultValues, isAdmin }) {
     const validado = defaultValues?.info_validada;
 
     return (
-        <Modal
-            open
-            onClose={onClose}
-            sx={{
-                zIndex: 1001,
-            }}
-        >
-            <ModalDialog
-                layout={sm ? "fullscreen" : "center"}
-                slotProps={{
-                    root: {
-                        sx: sm
-                            ? {}
-                            : {
-                                  width: "70%",
-                              },
-                    },
+        <>
+            <Modal
+                open
+                onClose={onClose}
+                sx={{
+                    zIndex: 1001,
                 }}
             >
-                <DialogTitle>
-                    <UserTitle
-                        defaultValues={defaultValues}
-                        DOCUMENTOS={DOCUMENTOS}
-                    />
-                </DialogTitle>
-                <DialogContent>
-                    {isCurrentCycle ? (
-                        <InstructionMessage validado={validado} />
-                    ) : (
-                        <Alert
-                            color="warning"
-                            startDecorator={<InfoIcon />}
-                            sx={{ my: 2 }}
-                        >
-                            La información de versiones anteriores solo se puede
-                            ver, mas no modificar. Para editar, seleccione el
-                            ciclo actual.
-                        </Alert>
-                    )}
-
-                    <Stack spacing={2}>
-                        <FormProvider {...methods}>
-                            <FormSection
-                                FormularioVerificacion={FormularioVerificacion}
-                                methods={methods}
-                                disabled={!isCurrentCycle}
-                                disabledFields={!isAdmin ? ["num_doc"] : []}
-                            />
-                            <GruposSelector disabled={!isCurrentCycle} />
-                        </FormProvider>
-                    </Stack>
-                    {historialLoading ? (
-                        <HistoryListSkeleton />
-                    ) : (
-                        <HistoryList historial={historial} />
-                    )}
-                    {modulosLoading ? (
-                        <CourseProgressListSkeleton />
-                    ) : modulos?.length ? (
-                        <CourseProgressList modulos={modulos} />
-                    ) : null}
-                </DialogContent>
-                <DialogActions
-                    sx={{
-                        justifyContent: "space-between",
+                <ModalDialog
+                    layout={sm ? "fullscreen" : "center"}
+                    slotProps={{
+                        root: {
+                            sx: sm
+                                ? {}
+                                : {
+                                    width: "70%",
+                                },
+                        },
                     }}
                 >
-                    {/* <Button
-                                onClick={handleSubmit(onSubmit)}
-                                variant="solid"
-                                endDecorator={<SaveIcon />}
-                                size="lg"
-                                color={validado ? "primary" : "success"}
-                                loading={loading}
-                                disabled={!isCurrentCycle}
-                            >
-                                {validado ? "Guardar" : "Validar"}
-                            </Button> */}
-                    {isCurrentCycle && (
-                        <ButtonGroup variant="solid" spacing="0.5rem" size="lg">
-                            {validado ? null : (
-                                <Button
-                                    endDecorator={<AssignmentTurnedInIcon />}
-                                    onClick={handleSubmit((data) =>
-                                        onSubmit(data, true),
-                                    )}
-                                    color="success"
-                                    disabled={isPending}
-                                    loading={isPending}
-                                >
-                                    Guardar y validar
-                                </Button>
-                            )}
-                            <Button
-                                startDecorator={<SaveIcon />}
-                                onClick={handleSubmit((data) =>
-                                    onSubmit(data, false),
-                                )}
-                                color="primary"
-                                disabled={isPending}
-                                loading={isPending}
-                            >
-                                {validado ? "Guardar" : "Guardar sin validar"}
-                            </Button>
-                        </ButtonGroup>
-                    )}
-                    <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                    <DialogTitle
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            gap: 2,
+                        }}
+                    >
+                        <UserTitle
+                            defaultValues={defaultValues}
+                            DOCUMENTOS={DOCUMENTOS}
+                        />
                         {isCurrentCycle && (
                             <Button
                                 onClick={() => setBajaModalOpen(true)}
@@ -330,18 +256,91 @@ function View({ defaultValues, isAdmin }) {
                                 Dar de baja
                             </Button>
                         )}
-                        <Button
-                            onClick={onClose}
-                            variant="plain"
-                            startDecorator={<CloseIcon />}
-                            size="lg"
-                            disabled={isPending}
-                        >
-                            Cerrar
-                        </Button>
-                    </Box>
-                </DialogActions>
-            </ModalDialog>
+                    </DialogTitle>
+                    <DialogContent>
+                        {isCurrentCycle ? (
+                            <InstructionMessage validado={validado} />
+                        ) : (
+                            <Alert
+                                color="warning"
+                                startDecorator={<InfoIcon />}
+                                sx={{ my: 2 }}
+                            >
+                                La información de versiones anteriores solo se puede
+                                ver, mas no modificar. Para editar, seleccione el
+                                ciclo actual.
+                            </Alert>
+                        )}
+
+                        <Stack spacing={2}>
+                            <FormProvider {...methods}>
+                                <FormSection
+                                    FormularioVerificacion={FormularioVerificacion}
+                                    methods={methods}
+                                    disabled={!isCurrentCycle}
+                                    disabledFields={!isAdmin ? ["num_doc"] : []}
+                                />
+                                <GruposSelector disabled={!isCurrentCycle} />
+                            </FormProvider>
+                        </Stack>
+                        {historialLoading ? (
+                            <HistoryListSkeleton />
+                        ) : (
+                            <HistoryList historial={historial} />
+                        )}
+                        {modulosLoading ? (
+                            <CourseProgressListSkeleton />
+                        ) : modulos?.length ? (
+                            <CourseProgressList modulos={modulos} />
+                        ) : null}
+                    </DialogContent>
+                    <DialogActions
+                        sx={{
+                            justifyContent: "space-between",
+                        }}
+                    >
+                        {isCurrentCycle && (
+                            <ButtonGroup variant="solid" spacing="0.5rem" size="lg">
+                                {validado ? null : (
+                                    <Button
+                                        endDecorator={<AssignmentTurnedInIcon />}
+                                        onClick={handleSubmit((data) =>
+                                            onSubmit(data, true),
+                                        )}
+                                        color="success"
+                                        disabled={isPending}
+                                        loading={isPending}
+                                    >
+                                        Guardar y validar
+                                    </Button>
+                                )}
+                                <Button
+                                    startDecorator={<SaveIcon />}
+                                    onClick={handleSubmit((data) =>
+                                        onSubmit(data, false),
+                                    )}
+                                    color="primary"
+                                    disabled={isPending}
+                                    loading={isPending}
+                                >
+                                    {validado ? "Guardar" : "Guardar sin validar"}
+                                </Button>
+                            </ButtonGroup>
+                        )}
+                        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                            <Button
+                                onClick={onClose}
+                                variant="plain"
+                                startDecorator={<CloseIcon />}
+                                size="lg"
+                                disabled={isPending}
+                            >
+                                Cerrar
+                            </Button>
+                        </Box>
+                    </DialogActions>
+                </ModalDialog>
+            </Modal>
 
             <ModalDarDeBaja
                 open={bajaModalOpen}
@@ -364,7 +363,7 @@ function View({ defaultValues, isAdmin }) {
                     navigate.push("/registros");
                 }}
             />
-        </Modal>
+        </>
     );
 }
 
@@ -387,8 +386,8 @@ function ViewSkeleton() {
                     sx: sm
                         ? {}
                         : {
-                              width: "70%",
-                          },
+                            width: "70%",
+                        },
                 },
             }}
         >
