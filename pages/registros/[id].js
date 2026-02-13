@@ -20,11 +20,14 @@ import { convertToFormData, getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
 import usePermission from "@/hooks/usePermission";
 import { useSnackbar } from "notistack";
+import ModalDarDeBaja from "@/components/Registros/ModalDarDeBaja";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import CloseIcon from "@mui/icons-material/Close";
 import InfoIcon from "@mui/icons-material/Info";
+import PersonOffIcon from "@mui/icons-material/PersonOff";
 import SaveIcon from "@mui/icons-material/Save";
 import Alert from "@mui/joy/Alert";
+import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import { ButtonGroup } from "@mui/joy";
 import DialogActions from "@mui/joy/DialogActions";
@@ -97,6 +100,7 @@ export default function Wrapper() {
 
 function View({ defaultValues, isAdmin }) {
     const [isPending, startTransition] = useTransition();
+    const [bajaModalOpen, setBajaModalOpen] = useState(false);
 
     const { enqueueSnackbar } = useSnackbar();
     const router = useRouter();
@@ -313,17 +317,53 @@ function View({ defaultValues, isAdmin }) {
                             </Button>
                         </ButtonGroup>
                     )}
-                    <Button
-                        onClick={onClose}
-                        variant="plain"
-                        startDecorator={<CloseIcon />}
-                        size="lg"
-                        disabled={isPending}
-                    >
-                        Cerrar
-                    </Button>
+                    <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                        {isCurrentCycle && (
+                            <Button
+                                onClick={() => setBajaModalOpen(true)}
+                                variant="soft"
+                                color="danger"
+                                startDecorator={<PersonOffIcon />}
+                                size="lg"
+                                disabled={isPending}
+                            >
+                                Dar de baja
+                            </Button>
+                        )}
+                        <Button
+                            onClick={onClose}
+                            variant="plain"
+                            startDecorator={<CloseIcon />}
+                            size="lg"
+                            disabled={isPending}
+                        >
+                            Cerrar
+                        </Button>
+                    </Box>
                 </DialogActions>
             </ModalDialog>
+
+            <ModalDarDeBaja
+                open={bajaModalOpen}
+                onClose={() => setBajaModalOpen(false)}
+                personaId={id}
+                personaNombre={`${defaultValues?.nombres} ${defaultValues?.apellidos}`}
+                onSuccess={(result) => {
+                    setBajaModalOpen(false);
+                    const msg = result?.message || "Persona dada de baja exitosamente";
+                    if (result?.warnings?.length) {
+                        const warningDetails = result.warnings.join("\n• ");
+                        enqueueSnackbar(`${msg}\n\n• ${warningDetails}`, {
+                            variant: "warning",
+                            style: { whiteSpace: "pre-line" },
+                        });
+                    } else {
+                        enqueueSnackbar(msg, { variant: "success" });
+                    }
+                    mutate(getURL(`/api/usuarios/inscritos?ciclo_id=${selectedCicloId}`));
+                    navigate.push("/registros");
+                }}
+            />
         </Modal>
     );
 }
