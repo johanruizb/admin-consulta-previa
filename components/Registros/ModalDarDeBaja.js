@@ -90,9 +90,13 @@ export default function ModalDarDeBaja({
             newErrors.causa_otra = "Especifique la causa";
         }
 
+        if (!archivo) {
+            newErrors.soporte = "Adjunte un documento de soporte";
+        }
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
-    }, [causa, causaOtra]);
+    }, [causa, causaOtra, archivo]);
 
     const handleSubmit = useCallback(() => {
         if (!validate()) return;
@@ -238,8 +242,8 @@ export default function ModalDarDeBaja({
                         </FormControl>
 
                         {/* Soporte documental */}
-                        <FormControl error={!!errors.soporte}>
-                            <FormLabel>Soporte documental</FormLabel>
+                        <FormControl error={!!errors.soporte} required>
+                            <FormLabel>Documento de soporte</FormLabel>
                             <input
                                 ref={fileInputRef}
                                 type="file"
@@ -298,7 +302,7 @@ export default function ModalDarDeBaja({
                             </Box>
                             <FormHelperText>
                                 {errors.soporte ||
-                                    "PDF, JPG, PNG o Word (opcional)"}
+                                    "PDF, JPG, PNG o Word"}
                             </FormHelperText>
                         </FormControl>
 
