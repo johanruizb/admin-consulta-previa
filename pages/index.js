@@ -28,6 +28,7 @@ import Option from "@mui/joy/Option";
 import Radio from "@mui/joy/Radio";
 import RadioGroup from "@mui/joy/RadioGroup";
 import Select from "@mui/joy/Select";
+import Switch from "@mui/joy/Switch";
 import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
 import Grid from "@mui/material/Grid";
@@ -55,6 +56,7 @@ const getDefaultFilters = () => ({
     departamento: null,
     plataforma: null,
     courses: null,
+    info_validada: false,
 });
 
 export default function Page() {
@@ -86,10 +88,10 @@ export default function Page() {
     const statsParams =
         selectedCicloId && curso
             ? {
-                  ciclo_id: selectedCicloId,
-                  courses: Array.isArray(curso) ? curso : curso?.split(","),
-                  ...activeFilters,
-              }
+                ciclo_id: selectedCicloId,
+                courses: Array.isArray(curso) ? curso : curso?.split(","),
+                ...activeFilters,
+            }
             : null;
 
     const { data, isLoading } = useSWR(
@@ -106,17 +108,16 @@ export default function Page() {
         summaryParams.ciclo_id = selectedCicloId;
     }
     const summaryQuery = getParams(summaryParams);
-    const summaryUrl = `api/usuarios/summary${
-        summaryQuery ? `?${summaryQuery}` : ""
-    }`;
+    const summaryUrl = `api/usuarios/summary${summaryQuery ? `?${summaryQuery}` : ""
+        }`;
 
     const { data: summaryData } = useSWR(getURL(summaryUrl));
 
     const { data: cursos, isLoading: cursosIsLoading } = useSWR(
         selectedCicloId
             ? getURL(
-                  `api/usuarios/cursos/disponibles?ciclo_id=${selectedCicloId}`
-              )
+                `api/usuarios/cursos/disponibles?ciclo_id=${selectedCicloId}`
+            )
             : null,
         fetcher
     );
@@ -231,11 +232,11 @@ export default function Page() {
     const handleExportEstadisticas = () => {
         const exportParams = new URLSearchParams();
         exportParams.append("ciclo_id", selectedCicloId);
-        
+
         if (Array.isArray(curso)) {
             exportParams.append("courses", curso.join(","));
         }
-        
+
         Object.entries(activeFilters).forEach(([key, value]) => {
             if (value && key !== "courses") {
                 exportParams.append(key, value);
@@ -369,7 +370,7 @@ export default function Page() {
                             <RadioGroup
                                 value={
                                     Array.isArray(curso) &&
-                                    curso.length === cursos?.length
+                                        curso.length === cursos?.length
                                         ? cursos?.map((c) => c.id).join(",")
                                         : curso?.[0]?.toString() || ""
                                 }
@@ -463,6 +464,23 @@ export default function Page() {
                         </Grid>
                     ))}
                 </Grid>
+                <FormControl
+                    orientation="horizontal"
+                    sx={{ alignItems: "center", gap: 1, mt: 1.5 }}
+                >
+                    <Switch
+                        checked={filters.info_validada}
+                        onChange={(e) =>
+                            setFilters((prev) => ({
+                                ...prev,
+                                info_validada: e.target.checked,
+                            }))
+                        }
+                    />
+                    <FormLabel>
+                        Mostrar solo validadas
+                    </FormLabel>
+                </FormControl>
             </Box>
             <Grid
                 container
