@@ -4,6 +4,7 @@ import usePermissionContext from "@/components/Home/permissionContext/usePermiss
 import ExportAvances from "@/components/Pages/Avances/ExportarAvances";
 import GraficoAvanceGrupos from "@/components/Pages/Avances/GraficoAvanceGrupos";
 import TablaAvanceGrupos from "@/components/Pages/Avances/TablaAvanceGrupos";
+import TablaMetaCurso from "@/components/Pages/Avances/TablaMetaCurso";
 import CustomPie from "@/components/Panel/CustomPie";
 import { formatNumber, getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
@@ -436,6 +437,10 @@ export default function EstadisticasAvancesPage() {
                         </Grid>
 
                         {/* Gráficas por módulo */}
+                        <Divider sx={{
+                            mb: 1,
+                            mt: 3,
+                        }} />
                         <Typography level="h3" sx={{ my: 1 }}>
                             Avance por actividad en cada módulo
                         </Typography>
@@ -519,6 +524,20 @@ export default function EstadisticasAvancesPage() {
                                 </Grid>
                             )}
                         </Grid>
+
+                        {/* Tabla de meta por curso */}
+                        {data?.tabla_meta && (
+                            <>
+                                <Divider sx={{
+                                    mb: 1,
+                                    mt: 3,
+                                }} />
+                                <Typography level="h3" sx={{ my: 1 }}>
+                                    Cumplimiento de la meta
+                                </Typography>
+                                <TablaMetaCurso data={data.tabla_meta} />
+                            </>
+                        )}
 
                         {/* Avance por grupo */}
                         {avanceGruposLoading && (
