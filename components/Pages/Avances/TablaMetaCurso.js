@@ -100,6 +100,11 @@ function TablaMetaCurso({ data }) {
                             <Typography level="body-sm" fontWeight="lg">
                                 Activos
                             </Typography>
+                            {activos.descripcion && (
+                                <Typography level="body-xs" color="neutral">
+                                    {activos.descripcion}
+                                </Typography>
+                            )}
                         </td>
                         <td>
                             <strong>
@@ -120,6 +125,11 @@ function TablaMetaCurso({ data }) {
                             <Typography level="body-sm" fontWeight="lg">
                                 Inactivos
                             </Typography>
+                            {inactivos.descripcion && (
+                                <Typography level="body-xs" color="neutral">
+                                    {inactivos.descripcion}
+                                </Typography>
+                            )}
                         </td>
                         <td>
                             <strong>
