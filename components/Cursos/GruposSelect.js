@@ -50,6 +50,8 @@ export default function GruposSelect({ compact = false, size = "md" }) {
     useEffect(() => {
         if (options.length > 0) {
             setValue("grupo_usuario", "all");
+        } else {
+            setValue("grupo_usuario", null);
         }
     }, [courseId, selectedCicloId, setValue, options.length]);
 
