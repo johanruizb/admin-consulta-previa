@@ -58,7 +58,7 @@ export default function GruposSelect({ compact = false, size = "md" }) {
         return null;
     }
 
-    if (error || options.length === 0) {
+    if (error) {
         return null;
     }
 
