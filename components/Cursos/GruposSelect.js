@@ -89,6 +89,9 @@ export default function GruposSelect({ compact = false, size = "md" }) {
                                     {option.label}
                                 </Option>
                             ))}
+                            <Option value="sin_grupo">
+                                Sin grupo asignado
+                            </Option>
                         </Select>
                     )}
                     {!compact && (

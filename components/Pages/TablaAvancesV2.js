@@ -19,8 +19,8 @@ const Status = memo(function Status({ params, header }) {
             ? dayjs(fecha).format("DD [de] MMMM [de] YYYY, [a las] HH:mm:ss a")
             : "Actividad no completada"
         : completado
-          ? "Completado"
-          : "Módulo no completado";
+            ? "Completado"
+            : "Módulo no completado";
 
     return (
         <Tooltip
@@ -61,9 +61,8 @@ export default function TablaAvancesV2({
         if (id === "resumen")
             return (
                 <Tooltip
-                    title={`Usuarios que lo han completado: ${
-                        params.row[header.field]
-                    }`}
+                    title={`Usuarios que lo han completado: ${params.row[header.field]
+                        }`}
                     placement="top"
                     arrow
                     enterDelay={500}
@@ -156,6 +155,11 @@ export default function TablaAvancesV2({
                         height: "calc(120vh - 150px)",
                         overflow: "auto",
                         mb: 12,
+                        "& .MuiDataGrid-cell[data-field='usuario']": {
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                        },
                     }}
                 >
                     <DataGrid
@@ -180,10 +184,10 @@ export default function TablaAvancesV2({
                             const number = Number(params.field);
                             className +=
                                 number ||
-                                number === 0 ||
-                                params.field
-                                    .toLowerCase()
-                                    .includes("completado")
+                                    number === 0 ||
+                                    params.field
+                                        .toLowerCase()
+                                        .includes("completado")
                                     ? "cell-avance"
                                     : "";
                             return className;
@@ -206,9 +210,9 @@ export default function TablaAvancesV2({
                                 transform: "rotate(-90deg)",
                             },
                             "& .MuiDataGrid-columnHeaderTitleContainerContent":
-                                {
-                                    height: 136,
-                                },
+                            {
+                                height: 136,
+                            },
                             // "& .MuiDataGrid-columnHeaderTitle:before": {
                             //     content: `""`,
                             //     paddingTop: "120%",
