@@ -15,12 +15,13 @@ export default async function handler(req, res) {
     const { getToken } = getAuth(req);
     const token = await getToken();
 
-    const { ciclo_id, curso_id, grupo_id } = req.query;
+    const { ciclo_id, curso_id, grupo_id, resumen_modulo_ids } = req.query;
 
     const params = new URLSearchParams();
     if (ciclo_id) params.append("ciclo_id", ciclo_id);
     if (curso_id) params.append("curso_id", curso_id);
     if (grupo_id) params.append("grupo_id", grupo_id);
+    if (resumen_modulo_ids) params.append("resumen_modulo_ids", resumen_modulo_ids);
 
     const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/moodle/estadisticas-avances?${params.toString()}`,

@@ -82,6 +82,11 @@ function TablaMetaCurso({ data }) {
                                 <Typography level="body-sm">
                                     {modulo.name}
                                 </Typography>
+                                {modulo.descripcion_completitud && (
+                                    <Typography level="body-xs" color="neutral">
+                                        {modulo.descripcion_completitud}
+                                    </Typography>
+                                )}
                             </td>
                             <td>{formatNumber(modulo.completados)}</td>
                             <td>

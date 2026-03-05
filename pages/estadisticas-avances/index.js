@@ -1,6 +1,15 @@
 import fetcher from "@/components/fetcher";
 import Layout from "@/components/Home/Layout";
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
+import {
+    AvanceGruposSkeleton,
+    DistribucionSkeleton,
+    ModulosSkeleton,
+    ResumenGeneralSkeleton,
+    SectionLoader,
+    TablaMetaSkeleton,
+} from "@/components/Pages/Avances/EstadisticasSkeletons";
+import { ConfiguracionCompletitudButton } from "@/components/Pages/Avances/ConfiguracionCompletitudModal";
 import ExportAvances from "@/components/Pages/Avances/ExportarAvances";
 import GraficoAvanceGrupos from "@/components/Pages/Avances/GraficoAvanceGrupos";
 import TablaAvanceGrupos from "@/components/Pages/Avances/TablaAvanceGrupos";
@@ -18,6 +27,7 @@ import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
+import Checkbox from "@mui/joy/Checkbox";
 import CircularProgress from "@mui/joy/CircularProgress";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
@@ -29,7 +39,7 @@ import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import { BarChart } from "@mui/x-charts/BarChart";
 import Head from "next/head";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useSWR from "swr";
 
 const COLORS = {
@@ -51,9 +61,11 @@ export default function EstadisticasAvancesPage() {
     const { selectedCicloId } = useCiclo();
     const [cursoId, setCursoId] = useState(null);
     const [grupoId, setGrupoId] = useState(null);
+    const [selectedModulos, setSelectedModulos] = useState(null);
     const [mounted, setMounted] = useState(false);
+    const filterChangeRef = useRef(null);
 
-    const { isLoading: permissionIsLoading } = usePermissionContext();
+    const { isLoading: permissionIsLoading, isAdmin } = usePermissionContext();
     usePermission("moodle.view_actividadescompletadas");
     useClient(() => setMounted(true));
 
@@ -83,22 +95,33 @@ export default function EstadisticasAvancesPage() {
         if (selectedCicloId) params.append("ciclo_id", selectedCicloId);
         if (cursoId) params.append("curso_id", cursoId);
         if (grupoId) params.append("grupo_id", grupoId);
+        if (selectedModulos?.length) params.append("resumen_modulo_ids", selectedModulos.join(","));
         return params.toString();
-    }, [selectedCicloId, cursoId, grupoId]);
+    }, [selectedCicloId, cursoId, grupoId, selectedModulos]);
 
-    const { data, isLoading, error } = useSWR(
+    const { data, isLoading, isValidating, error } = useSWR(
         selectedCicloId && cursoId
             ? getURL(`api/moodle/estadisticas-avances?${statsUrl}`)
             : null,
         fetcher,
+        { keepPreviousData: true },
     );
 
+    const isRefetching = isValidating && !isLoading;
+    const lastFilter = filterChangeRef.current;
+    const isResumenRefetching = isRefetching;
+    const isModulosRefetching = isRefetching && lastFilter !== "modulo";
+    const isTablaMetaRefetching = isRefetching && lastFilter !== "modulo";
+
     const handleCursoChange = useCallback((_, value) => {
+        filterChangeRef.current = "course";
         setCursoId(value);
         setGrupoId(null);
+        setSelectedModulos(null);
     }, []);
 
     const handleGrupoChange = useCallback((_, value) => {
+        filterChangeRef.current = "group";
         setGrupoId(value);
     }, []);
 
@@ -107,6 +130,34 @@ export default function EstadisticasAvancesPage() {
             setCursoId(cursos[0].id);
         }
     }, [cursos, cursoId]);
+
+    // Auto-seleccionar módulo "Principal" cuando llegan los datos
+    const modulosDisponibles = data?.modulos_disponibles || [];
+    useEffect(() => {
+        if (modulosDisponibles.length > 0 && selectedModulos === null && !isValidating) {
+            const principal = modulosDisponibles.find((m) =>
+                m.name.toLowerCase().includes("principal"),
+            );
+            setSelectedModulos(
+                principal ? [principal.id] : modulosDisponibles.map((m) => m.id),
+            );
+        }
+    }, [modulosDisponibles, selectedModulos, isValidating]);
+
+    const handleModuloToggle = useCallback(
+        (moduloId) => {
+            filterChangeRef.current = "modulo";
+            setSelectedModulos((prev) => {
+                if (!prev) return [moduloId];
+                if (prev.includes(moduloId)) {
+                    if (prev.length === 1) return prev;
+                    return prev.filter((id) => id !== moduloId);
+                }
+                return [...prev, moduloId];
+            });
+        },
+        [],
+    );
 
     const resumen = data?.resumen_general || {};
     const distribucion = data?.distribucion_avance || [];
@@ -264,13 +315,7 @@ export default function EstadisticasAvancesPage() {
                     </Card>
                 )}
 
-                {cursoId && isLoading && (
-                    <Stack justifyContent="center" alignItems="center" py={4}>
-                        <CircularProgress />
-                    </Stack>
-                )}
-
-                {cursoId && error && (
+                {cursoId && error && !data && (
                     <Card color="danger">
                         <CardContent>
                             <Typography color="danger">
@@ -280,159 +325,185 @@ export default function EstadisticasAvancesPage() {
                     </Card>
                 )}
 
-                {cursoId && data && !isLoading && (
+                {cursoId && (data || isLoading) && (
                     <>
                         <Grid container spacing={1}>
                             <Grid size={{ xs: 12, md: 6 }}>
-                                {/* Cards de resumen */}
-                                <Card
-                                    sx={{
-                                        minHeight: "280px",
-                                        bgcolor: "transparent !important",
-                                        borderColor: "transparent !important",
-                                        pb: "0px !important",
-                                    }}
+                                <SectionLoader
+                                    showSkeleton={!data}
+                                    skeleton={<ResumenGeneralSkeleton />}
+                                    isRefetching={isResumenRefetching}
                                 >
-                                    <CardContent>
-                                        <Typography level="title-lg" sx={{ mb: 2 }}>
-                                            Estado general del avance
-                                        </Typography>
-                                        <Stack
-                                            spacing={1}
-                                            direction="row"
-                                            sx={{ mb: 0.5 }}
-                                        >
-                                            <Card sx={{ flex: 1 }}>
-                                                <CardContent>
-                                                    <Typography
-                                                        level="body-sm"
-                                                        color="neutral"
-                                                    >
-                                                        Total personas
-                                                    </Typography>
-                                                    <Typography level="h2">
-                                                        {formatNumber(
-                                                            resumen.total_personas,
-                                                        )}
-                                                    </Typography>
-                                                </CardContent>
-                                            </Card>
-                                            <Card sx={{ flex: 1 }}>
-                                                <CardContent>
-                                                    <Typography
-                                                        level="body-sm"
-                                                        color="neutral"
-                                                    >
-                                                        Avance promedio
-                                                    </Typography>
-                                                    <Typography level="h2">
-                                                        {resumen.avance_promedio}%
-                                                    </Typography>
-                                                </CardContent>
-                                            </Card>
-                                        </Stack>
-
-                                        <Stack
-                                            spacing={1}
-                                            direction="row"
-                                        // sx={{ my: 0.5 }}
-                                        >
-                                            <Card
-                                                sx={{
-                                                    borderLeft: `4px solid ${COLORS.sinAvance}`,
-                                                    flex: 1,
-                                                }}
+                                    <Card
+                                        sx={{
+                                            minHeight: "280px",
+                                            bgcolor: "transparent !important",
+                                            borderColor: "transparent !important",
+                                            pb: "0px !important",
+                                        }}
+                                    >
+                                        <CardContent>
+                                            <Typography level="title-lg" sx={{ mb: 1 }}>
+                                                Estado general del avance
+                                            </Typography>
+                                            {modulosDisponibles.length > 0 && (
+                                                <Stack
+                                                    direction="row"
+                                                    flexWrap="wrap"
+                                                    gap={1.5}
+                                                    sx={{ mb: 1.5 }}
+                                                >
+                                                    {modulosDisponibles.map((modulo) => (
+                                                        <Checkbox
+                                                            key={modulo.id}
+                                                            label={modulo.name}
+                                                            size="sm"
+                                                            checked={selectedModulos?.includes(modulo.id) ?? false}
+                                                            onChange={() => handleModuloToggle(modulo.id)}
+                                                        />
+                                                    ))}
+                                                </Stack>
+                                            )}
+                                            <Stack
+                                                spacing={1}
+                                                direction="row"
+                                                sx={{ mb: 0.5 }}
                                             >
-                                                <CardContent>
-                                                    <Typography
-                                                        level="body-sm"
-                                                        color="neutral"
-                                                    >
-                                                        Sin avance
-                                                    </Typography>
-                                                    <Typography
-                                                        level="h2"
-                                                        sx={{
-                                                            color: COLORS.sinAvance,
-                                                        }}
-                                                    >
-                                                        {formatNumber(
-                                                            resumen.sin_avance,
-                                                        )}
-                                                    </Typography>
-                                                </CardContent>
-                                            </Card>
+                                                <Card sx={{ flex: 1 }}>
+                                                    <CardContent>
+                                                        <Typography
+                                                            level="body-sm"
+                                                            color="neutral"
+                                                        >
+                                                            Total personas
+                                                        </Typography>
+                                                        <Typography level="h2">
+                                                            {formatNumber(
+                                                                resumen.total_personas,
+                                                            )}
+                                                        </Typography>
+                                                    </CardContent>
+                                                </Card>
+                                                <Card sx={{ flex: 1 }}>
+                                                    <CardContent>
+                                                        <Typography
+                                                            level="body-sm"
+                                                            color="neutral"
+                                                        >
+                                                            Avance promedio
+                                                        </Typography>
+                                                        <Typography level="h2">
+                                                            {resumen.avance_promedio}%
+                                                        </Typography>
+                                                    </CardContent>
+                                                </Card>
+                                            </Stack>
 
-                                            <Card
-                                                sx={{
-                                                    borderLeft: `4px solid ${COLORS.enProgreso}`,
-                                                    flex: 1,
-                                                }}
+                                            <Stack
+                                                spacing={1}
+                                                direction="row"
                                             >
-                                                <CardContent>
-                                                    <Typography
-                                                        level="body-sm"
-                                                        color="neutral"
-                                                    >
-                                                        En progreso
-                                                    </Typography>
-                                                    <Typography
-                                                        level="h2"
-                                                        sx={{
-                                                            color: COLORS.enProgreso,
-                                                        }}
-                                                    >
-                                                        {formatNumber(
-                                                            resumen.en_progreso,
-                                                        )}
-                                                    </Typography>
-                                                </CardContent>
-                                            </Card>
+                                                <Card
+                                                    sx={{
+                                                        borderLeft: `4px solid ${COLORS.sinAvance}`,
+                                                        flex: 1,
+                                                    }}
+                                                >
+                                                    <CardContent>
+                                                        <Typography
+                                                            level="body-sm"
+                                                            color="neutral"
+                                                        >
+                                                            Sin avance
+                                                        </Typography>
+                                                        <Typography
+                                                            level="h2"
+                                                            sx={{
+                                                                color: COLORS.sinAvance,
+                                                            }}
+                                                        >
+                                                            {formatNumber(
+                                                                resumen.sin_avance,
+                                                            )}
+                                                        </Typography>
+                                                    </CardContent>
+                                                </Card>
 
-                                            <Card
-                                                sx={{
-                                                    borderLeft: `4px solid ${COLORS.completados}`,
-                                                    flex: 1,
-                                                }}
-                                            >
-                                                <CardContent>
-                                                    <Typography
-                                                        level="body-sm"
-                                                        color="neutral"
-                                                    >
-                                                        Completados (100%)
-                                                    </Typography>
-                                                    <Typography
-                                                        level="h2"
-                                                        sx={{
-                                                            color: COLORS.completados,
-                                                        }}
-                                                    >
-                                                        {formatNumber(
-                                                            resumen.completados,
-                                                        )}
-                                                    </Typography>
-                                                </CardContent>
-                                            </Card>
-                                        </Stack>
-                                    </CardContent>
-                                </Card>
+                                                <Card
+                                                    sx={{
+                                                        borderLeft: `4px solid ${COLORS.enProgreso}`,
+                                                        flex: 1,
+                                                    }}
+                                                >
+                                                    <CardContent>
+                                                        <Typography
+                                                            level="body-sm"
+                                                            color="neutral"
+                                                        >
+                                                            En progreso
+                                                        </Typography>
+                                                        <Typography
+                                                            level="h2"
+                                                            sx={{
+                                                                color: COLORS.enProgreso,
+                                                            }}
+                                                        >
+                                                            {formatNumber(
+                                                                resumen.en_progreso,
+                                                            )}
+                                                        </Typography>
+                                                    </CardContent>
+                                                </Card>
+
+                                                <Card
+                                                    sx={{
+                                                        borderLeft: `4px solid ${COLORS.completados}`,
+                                                        flex: 1,
+                                                    }}
+                                                >
+                                                    <CardContent>
+                                                        <Typography
+                                                            level="body-sm"
+                                                            color="neutral"
+                                                        >
+                                                            Completados (100%)
+                                                        </Typography>
+                                                        <Typography
+                                                            level="h2"
+                                                            sx={{
+                                                                color: COLORS.completados,
+                                                            }}
+                                                        >
+                                                            {formatNumber(
+                                                                resumen.completados,
+                                                            )}
+                                                        </Typography>
+                                                    </CardContent>
+                                                </Card>
+                                            </Stack>
+                                        </CardContent>
+                                    </Card>
+                                </SectionLoader>
                             </Grid>
 
-                            {/* Gráficas */}
                             <Grid size={{ xs: 12, md: 6 }}>
-                                {/* Distribución de avance */}
-                                <Card sx={{ minHeight: "280px", height: "100%" }}>
-                                    <CardContent>
-                                        <Typography level="title-lg" sx={{ mb: 2 }}>
-                                            Distribución de avance
-                                        </Typography>
-                                        <CustomPie
-                                            data={distribucion}
-                                            colors={DISTRIBUCION_COLORS}
-                                        />
-                                    </CardContent>
-                                </Card>
+                                <SectionLoader
+                                    showSkeleton={!data}
+                                    skeleton={<DistribucionSkeleton />}
+                                    isRefetching={isResumenRefetching}
+                                >
+                                    <Card sx={{ minHeight: "280px", height: "100%" }}>
+                                        <CardContent>
+                                            <Typography level="title-lg" sx={{ mb: 2 }}>
+                                                Distribución de avance
+                                            </Typography>
+                                            <CustomPie
+                                                data={distribucion}
+                                                colors={DISTRIBUCION_COLORS}
+                                            />
+                                        </CardContent>
+                                    </Card>
+                                </SectionLoader>
                             </Grid>
                         </Grid>
 
@@ -444,139 +515,172 @@ export default function EstadisticasAvancesPage() {
                         <Typography level="h3" sx={{ my: 1 }}>
                             Avance por actividad en cada módulo
                         </Typography>
-                        <Grid
-                            container
-                            spacing={1}
+                        <SectionLoader
+                            showSkeleton={!data}
+                            skeleton={
+                                <Grid container spacing={1}>
+                                    <ModulosSkeleton />
+                                </Grid>
+                            }
+                            isRefetching={isModulosRefetching}
                         >
-                            {modulos.map((modulo) => (
-                                <Grid key={modulo.id} size={{ xs: 6 }}>
-                                    <Card>
-                                        <CardContent>
-                                            <Typography
-                                                level="title-lg"
-                                                sx={{ mb: 2 }}
-                                            >
-                                                {modulo.name}
-                                            </Typography>
-                                            {modulo.actividades?.length > 0 ? (
-                                                <BarChart
-                                                    dataset={modulo.actividades}
-                                                    xAxis={[
-                                                        {
-                                                            scaleType: "band",
-                                                            dataKey: "name",
-                                                            tickLabelStyle: {
-                                                                angle:
-                                                                    modulo
-                                                                        .actividades
-                                                                        .length > 4
-                                                                        ? -45
-                                                                        : 0,
-                                                                textAnchor:
-                                                                    modulo
-                                                                        .actividades
-                                                                        .length > 4
-                                                                        ? "end"
-                                                                        : "middle",
-                                                                fontSize: 11,
-                                                            },
-                                                        },
-                                                    ]}
-                                                    series={[
-                                                        {
-                                                            dataKey: "completados",
-                                                            label: "Completados",
-                                                            color: COLORS.completados,
-                                                        },
-                                                        {
-                                                            dataKey:
-                                                                "no_completados",
-                                                            label: "Sin completar",
-                                                            color: COLORS.sinAvance,
-                                                        },
-                                                    ]}
-                                                    height={300}
-                                                    margin={{
-                                                        bottom:
-                                                            modulo.actividades
-                                                                .length > 4
-                                                                ? 120
-                                                                : 40,
-                                                    }}
-                                                />
-                                            ) : (
+                            <Grid
+                                container
+                                spacing={1}
+                            >
+                                {modulos.map((modulo) => (
+                                    <Grid key={modulo.id} size={{ xs: 6 }}>
+                                        <Card>
+                                            <CardContent>
                                                 <Typography
-                                                    color="neutral"
-                                                    textAlign="center"
+                                                    level="title-lg"
+                                                    sx={{ mb: 2 }}
                                                 >
-                                                    Sin actividades
+                                                    {modulo.name}
                                                 </Typography>
-                                            )}
-                                        </CardContent>
-                                    </Card>
-                                </Grid>
-                            ))}
-                            {modulos.length === 0 && (
-                                <Grid size={{ xs: 12 }}>
-                                    <Typography color="neutral" textAlign="center">
-                                        No hay datos de módulos disponibles
-                                    </Typography>
-                                </Grid>
-                            )}
-                        </Grid>
+                                                {modulo.actividades?.length > 0 ? (
+                                                    <BarChart
+                                                        dataset={modulo.actividades}
+                                                        xAxis={[
+                                                            {
+                                                                scaleType: "band",
+                                                                dataKey: "name",
+                                                                tickLabelStyle: {
+                                                                    angle:
+                                                                        modulo
+                                                                            .actividades
+                                                                            .length > 4
+                                                                            ? -45
+                                                                            : 0,
+                                                                    textAnchor:
+                                                                        modulo
+                                                                            .actividades
+                                                                            .length > 4
+                                                                            ? "end"
+                                                                            : "middle",
+                                                                    fontSize: 11,
+                                                                },
+                                                            },
+                                                        ]}
+                                                        series={[
+                                                            {
+                                                                dataKey: "completados",
+                                                                label: "Completados",
+                                                                color: COLORS.completados,
+                                                            },
+                                                            {
+                                                                dataKey:
+                                                                    "no_completados",
+                                                                label: "Sin completar",
+                                                                color: COLORS.sinAvance,
+                                                            },
+                                                        ]}
+                                                        height={300}
+                                                        margin={{
+                                                            bottom:
+                                                                modulo.actividades
+                                                                    .length > 4
+                                                                    ? 120
+                                                                    : 40,
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <Typography
+                                                        color="neutral"
+                                                        textAlign="center"
+                                                    >
+                                                        Sin actividades
+                                                    </Typography>
+                                                )}
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                ))}
+                                {modulos.length === 0 && (
+                                    <Grid size={{ xs: 12 }}>
+                                        <Typography color="neutral" textAlign="center">
+                                            No hay datos de módulos disponibles
+                                        </Typography>
+                                    </Grid>
+                                )}
+                            </Grid>
+                        </SectionLoader>
 
                         {/* Tabla de meta por curso */}
-                        {data?.tabla_meta && (
-                            <>
-                                <Divider sx={{
-                                    mb: 1,
-                                    mt: 3,
-                                }} />
-                                <Typography level="h3" sx={{ my: 1 }}>
-                                    Cumplimiento de la meta
-                                </Typography>
-                                <TablaMetaCurso data={data.tabla_meta} />
-                            </>
-                        )}
+                        <SectionLoader
+                            showSkeleton={!data}
+                            skeleton={
+                                <>
+                                    <Divider sx={{ mb: 1, mt: 3 }} />
+                                    <Typography level="h3" sx={{ my: 1 }}>
+                                        Cumplimiento de la meta
+                                    </Typography>
+                                    <TablaMetaSkeleton />
+                                </>
+                            }
+                            isRefetching={isTablaMetaRefetching}
+                        >
+                            {data?.tabla_meta && (
+                                <>
+                                    <Divider sx={{
+                                        mb: 1,
+                                        mt: 3,
+                                    }} />
+                                    <Stack direction="row" alignItems="center" gap={1} sx={{ my: 1 }}>
+                                        <Typography level="h3">
+                                            Cumplimiento de la meta
+                                        </Typography>
+                                        {isAdmin && cursoId && (
+                                            <ConfiguracionCompletitudButton cursoId={cursoId} />
+                                        )}
+                                    </Stack>
+                                    <TablaMetaCurso data={data.tabla_meta} />
+                                </>
+                            )}
+                        </SectionLoader>
 
                         {/* Avance por grupo */}
-                        {avanceGruposLoading && (
-                            <Stack
-                                justifyContent="center"
-                                alignItems="center"
-                                py={4}
-                            >
-                                <CircularProgress />
-                            </Stack>
-                        )}
-
-                        {hasAvanceGrupos && !avanceGruposLoading && (
-                            <>
-                                <Divider sx={{
-                                    mb: 1,
-                                    mt: 3,
-                                }} />
-                                <Typography level="h3" sx={{ my: 1 }}>
-                                    Avance por grupo
-                                </Typography>
-                                <Grid container spacing={1} sx={{ pb: 2 }}>
-                                    <Grid size={{ xs: 12 }}>
-                                        <GraficoAvanceGrupos
-                                            data={
-                                                avanceGrupos?.resumen_grafico
-                                            }
-                                        />
+                        <SectionLoader
+                            showSkeleton={avanceGruposLoading}
+                            skeleton={
+                                <>
+                                    <Divider sx={{ mb: 1, mt: 3 }} />
+                                    <Typography level="h3" sx={{ my: 1 }}>
+                                        Avance por grupo
+                                    </Typography>
+                                    <AvanceGruposSkeleton />
+                                </>
+                            }
+                            isRefetching={false}
+                        >
+                            {hasAvanceGrupos && (
+                                <>
+                                    <Divider sx={{
+                                        mb: 1,
+                                        mt: 3,
+                                    }} />
+                                    <Typography level="h3" sx={{ my: 1 }}>
+                                        Avance por grupo
+                                    </Typography>
+                                    <Grid container spacing={1} sx={{ pb: 2 }}>
+                                        <Grid size={{ xs: 12 }}>
+                                            <GraficoAvanceGrupos
+                                                data={
+                                                    avanceGrupos?.resumen_grafico
+                                                }
+                                            />
+                                        </Grid>
+                                        <Grid size={{ xs: 12 }}>
+                                            <TablaAvanceGrupos
+                                                data={avanceGrupos}
+                                                cicloId={selectedCicloId}
+                                                cursoId={cursoId}
+                                            />
+                                        </Grid>
                                     </Grid>
-                                    <Grid size={{ xs: 12 }}>
-                                        <TablaAvanceGrupos
-                                            data={avanceGrupos}
-                                            cicloId={selectedCicloId}
-                                            cursoId={cursoId}
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </>
-                        )}
+                                </>
+                            )}
+                        </SectionLoader>
                     </>
                 )}
             </Box>
