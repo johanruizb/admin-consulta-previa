@@ -1,6 +1,11 @@
 import { getAuth } from "@clerk/nextjs/server";
 
 export default async function handler(req, res) {
+    if (req.method !== "GET" && req.method !== "PUT") {
+        res.setHeader("Allow", "GET, PUT");
+        return res.status(405).json({ message: "Method not allowed" });
+    }
+
     const { getToken } = getAuth(req);
     const token = await getToken();
     const { curso_id } = req.query;

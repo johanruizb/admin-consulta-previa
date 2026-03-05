@@ -134,7 +134,7 @@ export default function EstadisticasAvancesPage() {
     // Auto-seleccionar módulo "Principal" cuando llegan los datos
     const modulosDisponibles = data?.modulos_disponibles || [];
     useEffect(() => {
-        if (modulosDisponibles.length > 0 && selectedModulos === null) {
+        if (modulosDisponibles.length > 0 && selectedModulos === null && !isValidating) {
             const principal = modulosDisponibles.find((m) =>
                 m.name.toLowerCase().includes("principal"),
             );
@@ -142,7 +142,7 @@ export default function EstadisticasAvancesPage() {
                 principal ? [principal.id] : modulosDisponibles.map((m) => m.id),
             );
         }
-    }, [modulosDisponibles, selectedModulos]);
+    }, [modulosDisponibles, selectedModulos, isValidating]);
 
     const handleModuloToggle = useCallback(
         (moduloId) => {

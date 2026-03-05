@@ -318,6 +318,7 @@ export function ConfiguracionCompletitudButton({ cursoId }) {
                 color="neutral"
                 onClick={() => setOpen(true)}
                 title="Configurar completitud de módulos"
+                aria-label="Configurar completitud de módulos"
             >
                 <SettingsRoundedIcon fontSize="small" />
             </IconButton>
