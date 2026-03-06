@@ -384,7 +384,7 @@ export default function EstadisticasAvancesPage() {
                                                         </Typography>
                                                     </CardContent>
                                                 </Card>
-                                                <Card sx={{ flex: 1 }}>
+                                                {/* <Card sx={{ flex: 1 }}>
                                                     <CardContent>
                                                         <Typography
                                                             level="body-sm"
@@ -396,7 +396,7 @@ export default function EstadisticasAvancesPage() {
                                                             {resumen.avance_promedio}%
                                                         </Typography>
                                                     </CardContent>
-                                                </Card>
+                                                </Card> */}
                                             </Stack>
 
                                             <Stack
@@ -414,7 +414,7 @@ export default function EstadisticasAvancesPage() {
                                                             level="body-sm"
                                                             color="neutral"
                                                         >
-                                                            Sin avance
+                                                            Inactivos (0%)
                                                         </Typography>
                                                         <Typography
                                                             level="h2"
@@ -440,7 +440,7 @@ export default function EstadisticasAvancesPage() {
                                                             level="body-sm"
                                                             color="neutral"
                                                         >
-                                                            En progreso
+                                                            Activos (1-99%)
                                                         </Typography>
                                                         <Typography
                                                             level="h2"
