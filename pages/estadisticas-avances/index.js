@@ -22,7 +22,7 @@ import useClient from "@/hooks/useClient";
 import usePermission from "@/hooks/usePermission";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import { Divider } from "@mui/joy";
+import { Divider, Tooltip } from "@mui/joy";
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Card from "@mui/joy/Card";
@@ -403,83 +403,101 @@ export default function EstadisticasAvancesPage() {
                                                 spacing={1}
                                                 direction="row"
                                             >
-                                                <Card
-                                                    sx={{
-                                                        borderLeft: `4px solid ${COLORS.sinAvance}`,
-                                                        flex: 1,
-                                                    }}
-                                                >
-                                                    <CardContent>
-                                                        <Typography
-                                                            level="body-sm"
-                                                            color="neutral"
-                                                        >
-                                                            Inactivos (0%)
-                                                        </Typography>
-                                                        <Typography
-                                                            level="h2"
-                                                            sx={{
-                                                                color: COLORS.sinAvance,
-                                                            }}
-                                                        >
-                                                            {formatNumber(
-                                                                resumen.sin_avance,
-                                                            )}
-                                                        </Typography>
-                                                    </CardContent>
-                                                </Card>
 
-                                                <Card
-                                                    sx={{
-                                                        borderLeft: `4px solid ${COLORS.enProgreso}`,
-                                                        flex: 1,
-                                                    }}
+                                                <Tooltip
+                                                    title={`${resumen.sin_avance} personas no han realizado ninguna actividad`}
+                                                    arrow
                                                 >
-                                                    <CardContent>
-                                                        <Typography
-                                                            level="body-sm"
-                                                            color="neutral"
-                                                        >
-                                                            Activos (1-99%)
-                                                        </Typography>
-                                                        <Typography
-                                                            level="h2"
-                                                            sx={{
-                                                                color: COLORS.enProgreso,
-                                                            }}
-                                                        >
-                                                            {formatNumber(
-                                                                resumen.en_progreso,
-                                                            )}
-                                                        </Typography>
-                                                    </CardContent>
-                                                </Card>
+                                                    <Card
+                                                        sx={{
+                                                            borderLeft: `4px solid ${COLORS.sinAvance}`,
+                                                            flex: 1,
+                                                        }}
+                                                    >
+                                                        <CardContent>
+                                                            <Typography
+                                                                level="body-sm"
+                                                                color="neutral"
+                                                            >
+                                                                Inactivos
+                                                            </Typography>
+                                                            <Typography
+                                                                level="h2"
+                                                                sx={{
+                                                                    color: COLORS.sinAvance,
+                                                                }}
+                                                            >
+                                                                {formatNumber(
+                                                                    resumen.sin_avance,
+                                                                )}
+                                                            </Typography>
+                                                        </CardContent>
+                                                    </Card>
+                                                </Tooltip>
 
-                                                <Card
-                                                    sx={{
-                                                        borderLeft: `4px solid ${COLORS.completados}`,
-                                                        flex: 1,
-                                                    }}
+                                                <Tooltip
+                                                    title={`${resumen.en_progreso} personas han realizado al menos una actividad, pero no han alcanzado el 100% de avance`}
+                                                    arrow
                                                 >
-                                                    <CardContent>
-                                                        <Typography
-                                                            level="body-sm"
-                                                            color="neutral"
-                                                        >
-                                                            Completados (100%)
-                                                        </Typography>
-                                                        <Typography
-                                                            level="h2"
-                                                            sx={{
-                                                                color: COLORS.completados,
-                                                            }}
-                                                        >
-                                                            {formatNumber(
-                                                                resumen.completados,
-                                                            )}
-                                                        </Typography>
-                                                    </CardContent>
-                                                </Card>
+                                                    <Card
+                                                        sx={{
+                                                            borderLeft: `4px solid ${COLORS.enProgreso}`,
+                                                            flex: 1,
+                                                        }}
+                                                    >
+                                                        <CardContent>
+                                                            <Typography
+                                                                level="body-sm"
+                                                                color="neutral"
+                                                            >
+                                                                Activos
+                                                            </Typography>
+                                                            <Typography
+                                                                level="h2"
+                                                                sx={{
+                                                                    color: COLORS.enProgreso,
+                                                                }}
+                                                            >
+                                                                {formatNumber(
+                                                                    resumen.en_progreso,
+                                                                )}
+                                                            </Typography>
+                                                        </CardContent>
+                                                    </Card>
+                                                </Tooltip>
+
+
+                                                <Tooltip
+                                                    title={`${resumen.completados} personas han completado todas las actividades o han alcanzado el 100% de avance según la configuración de completitud establecida para el curso`}
+                                                    arrow
+                                                >
+
+                                                    <Card
+                                                        sx={{
+                                                            borderLeft: `4px solid ${COLORS.completados}`,
+                                                            flex: 1,
+                                                        }}
+                                                    >
+                                                        <CardContent>
+                                                            <Typography
+                                                                level="body-sm"
+                                                                color="neutral"
+                                                            >
+                                                                Completados
+                                                            </Typography>
+                                                            <Typography
+                                                                level="h2"
+                                                                sx={{
+                                                                    color: COLORS.completados,
+                                                                }}
+                                                            >
+                                                                {formatNumber(
+                                                                    resumen.completados,
+                                                                )}
+                                                            </Typography>
+                                                        </CardContent>
+                                                    </Card>
+                                                </Tooltip>
                                             </Stack>
                                         </CardContent>
                                     </Card>

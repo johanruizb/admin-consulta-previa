@@ -55,69 +55,65 @@ export default function FiltrarCursos({ setFilter, data }) {
     }, [search, data]);
 
     return (
-        <Box
-            sx={{
-                display: { xs: "none", sm: "initial" },
-            }}
-        >
+        <Box>
+            <Stack direction="row" spacing={1}>
+                <FormControl sx={{ minWidth: 150, flex: 1 }} size="md">
+                    <FormLabel>Buscar</FormLabel>
+                    <Input
+                        size="md"
+                        placeholder="Buscar en la tabla"
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setSearchDebounced(value);
+                        }}
+                        startDecorator={<SearchIcon />}
+                    />
+                </FormControl>
+                <Box sx={{ minWidth: 160 }}>
+                    <DynamicCursoSelect
+                        inputProps={{
+                            ...FormularioCursos[0],
+                            field: {
+                                ...FormularioCursos[0].field,
+                                size: "md",
+                            },
+                        }}
+                    />
+                </Box>
+                <GruposSelect compact />
+                <Box sx={{ minWidth: 160 }}>
+                    <CustomAsyncSelect
+                        inputProps={{
+                            ...FormularioCursos[1],
+                            field: {
+                                ...FormularioCursos[1].field,
+                                size: "md",
+                            },
+                        }}
+                    />
+                </Box>
+            </Stack>
+            <RangeSlider
+                inputProps={{
+                    controller: {
+                        name: "porcentaje_avance",
+                    },
+                }}
+            />
             <Accordion
                 expanded={expanded}
                 onChange={(e, expanded) => setExpanded(expanded)}
             >
-                <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="flex-end"
-                    spacing={1}
-                    flexWrap="wrap"
-                    useFlexGap
+                <AccordionSummary
+                    sx={{
+                        pt: "24px",
+                        ".MuiAccordionSummary-button": {
+                            minHeight: "32px",
+                        },
+                    }}
                 >
-                    <FormControl sx={{ minWidth: 150, flex: 1 }} size="md">
-                        <FormLabel>Buscar</FormLabel>
-                        <Input
-                            size="md"
-                            placeholder="Buscar en la tabla"
-                            onChange={(e) => {
-                                const value = e.target.value;
-                                setSearchDebounced(value);
-                            }}
-                            startDecorator={<SearchIcon />}
-                        />
-                    </FormControl>
-                    <Box sx={{ minWidth: 160 }}>
-                        <DynamicCursoSelect
-                            inputProps={{
-                                ...FormularioCursos[0],
-                                field: {
-                                    ...FormularioCursos[0].field,
-                                    size: "md",
-                                },
-                            }}
-                        />
-                    </Box>
-                    <GruposSelect compact />
-                    <Box sx={{ minWidth: 160 }}>
-                        <CustomAsyncSelect
-                            inputProps={{
-                                ...FormularioCursos[1],
-                                field: {
-                                    ...FormularioCursos[1].field,
-                                    size: "md",
-                                },
-                            }}
-                        />
-                    </Box>
-                    <AccordionSummary
-                        sx={{
-                            pt: "24px",
-                            ".MuiAccordionSummary-button": {
-                                minHeight: "32px",
-                            },
-                        }}
-                    >
-                        {expanded ? "Ocultar" : "Ver"} todos los filtros
-                    </AccordionSummary>
-                </Stack>
+                    {expanded ? "Ocultar" : "Ver"} todos los filtros
+                </AccordionSummary>
                 <AccordionDetails
                     sx={{
                         pt: 1,
@@ -138,28 +134,15 @@ export default function FiltrarCursos({ setFilter, data }) {
                             return Component ? (
                                 <Fragment key={index}>
                                     {gridless ? (
-                                        <Component
-                                            key={index}
-                                            inputProps={inputProps}
-                                        />
+                                        <Component key={index} inputProps={inputProps} />
                                     ) : (
                                         <Grid key={index} size={size}>
-                                            <Component
-                                                inputProps={inputProps}
-                                            />
+                                            <Component inputProps={inputProps} />
                                         </Grid>
                                     )}
                                 </Fragment>
                             ) : null;
                         })}
-                        {/* <GruposSelect /> */}
-                        <RangeSlider
-                            inputProps={{
-                                controller: {
-                                    name: "porcentaje_avance",
-                                },
-                            }}
-                        />
                     </Grid>
                 </AccordionDetails>
             </Accordion>

@@ -41,51 +41,51 @@ export default function RangeSlider({ inputProps }) {
     const debounceOnChange = useCallback(debounce(onChange, 250), []);
 
     return activity__module_id === "all" ? null : (
-        <Grid size={12}>
-            <Controller
-                control={control}
-                render={({ field, fieldState: { error } }) => {
-                    return (
-                        <FormControl
-                            error={error}
-                            required={controllerProps.rules?.required?.value}
+        <Controller
+            control={control}
+            render={({ field, fieldState: { error } }) => {
+                return (
+                    <FormControl
+                        error={error}
+                        required={controllerProps.rules?.required?.value}
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: "100%",
+                            py: 1,
+                        }}
+                    >
+                        <FormLabel>Porcentaje de avance</FormLabel>
+                        <Box
                             sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
+                                width: "92%",
+                                // height: "36px",
+                                pb: 1.5,
                             }}
                         >
-                            <FormLabel>Porcentaje de avance</FormLabel>
-                            <Box
-                                sx={{
-                                    width: "92%",
-                                    // height: "36px",
-                                    pb: 1.5,
-                                }}
-                            >
-                                <Slider
-                                    getAriaLabel={() => "Porcentaje de avance"}
-                                    marks={marks}
-                                    // value={field.value ?? [0, 100]}
-                                    defaultValue={[0, 100]}
-                                    // max={100}
-                                    // min={0}
-                                    step={5}
-                                    onChange={(_, value) =>
-                                        debounceOnChange(value, field)
-                                    }
-                                    valueLabelDisplay="auto"
-                                    getAriaValueText={valueText}
-                                    disableSwap
-                                    // scale={(x) => x ** 10}
-                                    // size="sm"
-                                />
-                            </Box>
-                        </FormControl>
-                    );
-                }}
-                {...controllerProps}
-            />
-        </Grid>
+                            <Slider
+                                getAriaLabel={() => "Porcentaje de avance"}
+                                marks={marks}
+                                // value={field.value ?? [0, 100]}
+                                defaultValue={[0, 100]}
+                                // max={100}
+                                // min={0}
+                                step={5}
+                                onChange={(_, value) =>
+                                    debounceOnChange(value, field)
+                                }
+                                valueLabelDisplay="auto"
+                                getAriaValueText={valueText}
+                                disableSwap
+                            // scale={(x) => x ** 10}
+                            // size="sm"
+                            />
+                        </Box>
+                    </FormControl>
+                );
+            }}
+            {...controllerProps}
+        />
     );
 }
