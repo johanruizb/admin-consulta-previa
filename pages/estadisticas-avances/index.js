@@ -279,14 +279,14 @@ export default function EstadisticasAvancesPage() {
                             <FormControl>
                                 <FormLabel>Grupo (opcional)</FormLabel>
                                 <Select
-                                    placeholder="Todos los grupos"
+                                    placeholder="Todos"
                                     value={grupoId}
                                     onChange={handleGrupoChange}
                                     disabled={
                                         !cursoId || gruposLoading || !grupos?.length
                                     }
                                 >
-                                    <Option value={null}>Todos los grupos</Option>
+                                    <Option value={null}>Todos</Option>
                                     {grupos
                                         ?.filter((g) => g.id !== "all")
                                         .map((grupo) => (

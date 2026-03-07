@@ -68,8 +68,8 @@ function ExportarAsistenciaInner() {
     const { data: cursos, isLoading: cursosLoading } = useSWR(
         selectedCicloId
             ? getURL(
-                  `api/usuarios/cursos/disponibles?ciclo_id=${selectedCicloId}`,
-              )
+                `api/usuarios/cursos/disponibles?ciclo_id=${selectedCicloId}`,
+            )
             : null,
         fetcher,
     );
@@ -77,8 +77,8 @@ function ExportarAsistenciaInner() {
     const { data: misGrupos } = useSWR(
         selectedCicloId && !isAdmin
             ? getURL(
-                  `api/moodle/encargados/mis_grupos?ciclo_id=${selectedCicloId}`,
-              )
+                `api/moodle/encargados/mis_grupos?ciclo_id=${selectedCicloId}`,
+            )
             : null,
         fetcher,
     );
@@ -148,11 +148,11 @@ function ExportarAsistenciaInner() {
             cursoId === "all"
                 ? "Todos los cursos"
                 : (cursoOptions.find((c) => c.value === cursoId)?.label ??
-                  cursoId);
+                    cursoId);
 
         let grupoLabel;
         if (grupoIds.length === 0) {
-            grupoLabel = "Todos los grupos";
+            grupoLabel = "Todos";
         } else {
             const nombres = grupoIds.map(
                 (id) => grupoOptions.find((g) => g.value === id)?.label ?? id,
@@ -195,7 +195,7 @@ function ExportarAsistenciaInner() {
                     const errorData = await response.json().catch(() => null);
                     enqueueSnackbar(
                         errorData?.message ||
-                            `No se pudo exportar el archivo. (${response.statusText})`,
+                        `No se pudo exportar el archivo. (${response.statusText})`,
                         { variant: "error" },
                     );
                 } else {
@@ -281,7 +281,7 @@ function ExportarAsistenciaInner() {
                                 placeholder={
                                     gruposLoading
                                         ? "Cargando grupos..."
-                                        : "Todos los grupos"
+                                        : "Todos"
                                 }
                                 renderValue={(selected) => (
                                     <Box
