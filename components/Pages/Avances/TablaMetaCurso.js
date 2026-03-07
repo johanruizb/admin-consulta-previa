@@ -4,6 +4,7 @@ import CardContent from "@mui/joy/CardContent";
 import Chip from "@mui/joy/Chip";
 import Sheet from "@mui/joy/Sheet";
 import Table from "@mui/joy/Table";
+import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
 import { memo } from "react";
 
@@ -34,7 +35,7 @@ function PorcentajeChip({ value }) {
 function TablaMetaCurso({ data }) {
     if (!data) return null;
 
-    const { meta, modulos, activos, inactivos } = data;
+    const { meta, modulos, activos, inactivos, completados } = data;
 
     if (!meta || !modulos?.length) {
         return (
@@ -95,16 +96,55 @@ function TablaMetaCurso({ data }) {
                             <td>{formatNumber(modulo.faltan)}</td>
                         </tr>
                     ))}
+                    {completados && (
+                        <tr
+                            style={{
+                                borderTop: "2px solid var(--joy-palette-divider)",
+                                fontWeight: 700,
+                            }}
+                        >
+                            <td>
+                                <Typography level="body-sm" fontWeight="lg">
+                                    Completados
+                                </Typography>
+                                {completados.descripcion && (
+                                    <Typography level="body-xs" color="neutral">
+                                        {completados.descripcion}
+                                    </Typography>
+                                )}
+                            </td>
+                            <td>
+                                <strong>
+                                    {formatNumber(completados.cantidad)}
+                                </strong>
+                            </td>
+                            <td>
+                                <PorcentajeChip value={completados.porcentaje} />
+                            </td>
+                            <td>
+                                <strong>
+                                    {formatNumber(completados.faltan)}
+                                </strong>
+                            </td>
+                        </tr>
+                    )}
                     <tr
                         style={{
-                            borderTop: "2px solid var(--joy-palette-divider)",
+                            borderTop: completados ? undefined : "2px solid var(--joy-palette-divider)",
                             fontWeight: 700,
                         }}
                     >
                         <td>
-                            <Typography level="body-sm" fontWeight="lg">
-                                Activos
-                            </Typography>
+                            <Tooltip
+                                title="Personas que han realizado al menos una actividad, excluyendo quienes ya completaron todos los módulos activos"
+                                variant="outlined"
+                                placement="top-start"
+                                arrow
+                            >
+                                <Typography level="body-sm" fontWeight="lg" sx={{ cursor: "help" }}>
+                                    Activos (en progreso)
+                                </Typography>
+                            </Tooltip>
                             {activos.descripcion && (
                                 <Typography level="body-xs" color="neutral">
                                     {activos.descripcion}
