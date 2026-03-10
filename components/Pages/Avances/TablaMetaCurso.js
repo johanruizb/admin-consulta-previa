@@ -142,7 +142,7 @@ function TablaMetaCurso({ data }) {
                                 arrow
                             >
                                 <Typography level="body-sm" fontWeight="lg" sx={{ cursor: "help" }}>
-                                    Activos (en progreso)
+                                    En riesgo
                                 </Typography>
                             </Tooltip>
                             {activos.descripcion && (
