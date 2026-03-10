@@ -450,7 +450,7 @@ export default function EstadisticasAvancesPage() {
                                                                 level="body-sm"
                                                                 color="neutral"
                                                             >
-                                                                Activos
+                                                                En riesgo
                                                             </Typography>
                                                             <Typography
                                                                 level="h2"
