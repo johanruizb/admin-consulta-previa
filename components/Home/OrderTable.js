@@ -696,11 +696,23 @@ export default function OrderTable({ data, onView }) {
                                 xs: "none",
                                 md: "flex",
                             },
-                            ".MuiPagination-root": {
-                                width: "100% !important",
-                            },
+                            alignItems: "center",
+                            position: "relative",
                         }}
                     >
+                        <Typography
+                            level="body-sm"
+                            sx={{
+                                color: "neutral.500",
+                                whiteSpace: "nowrap",
+                                position: "absolute",
+                                left: 0,
+                            }}
+                        >
+                            {rows.filtered.length === processedData.length
+                                ? `Mostrando ${processedData.length} registros`
+                                : `Mostrando ${rows.filtered.length} de ${processedData.length} registros`}
+                        </Typography>
                         <Pagination
                             size="medium"
                             page={page}
@@ -708,6 +720,7 @@ export default function OrderTable({ data, onView }) {
                             variant="outlined"
                             onChange={(_, page) => setPage(page)}
                             sx={{
+                                width: "100%",
                                 ".MuiPagination-ul": {
                                     width: "100%",
                                     justifyContent: "center",

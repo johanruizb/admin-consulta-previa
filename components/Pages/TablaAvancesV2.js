@@ -53,7 +53,7 @@ export default function TablaAvancesV2({
     onView,
     filter,
 }) {
-    const { headers, resultados: rows } = data ?? {};
+    const { headers, resultados: rows, columnGroupingModel: rawColumnGroupingModel } = data ?? {};
 
     // Memoizar getStatus para evitar recreación en cada render
     const getStatus = useCallback((params, header) => {
@@ -128,6 +128,7 @@ export default function TablaAvancesV2({
                 )
                     return {
                         ...h,
+                        headerClassName: "module-column-header",
                         renderCell: (params) => getStatus(params, header),
                         valueGetter: (value, row) =>
                             row[header.field]?.estado > 0,
@@ -137,6 +138,17 @@ export default function TablaAvancesV2({
             }),
         );
     }, [headers, getStatus]);
+
+    const columnGroupingModel = useMemo(() => {
+        if (!rawColumnGroupingModel) return undefined;
+        return rawColumnGroupingModel.map((group) => ({
+            ...group,
+            children: group.children.map((child) => ({
+                ...child,
+                field: child.field?.toString(),
+            })),
+        }));
+    }, [rawColumnGroupingModel]);
 
     const __rows = useMemo(() => filter ?? rows ?? [], [filter, rows]);
 
@@ -165,6 +177,8 @@ export default function TablaAvancesV2({
                     <DataGrid
                         rows={__rows}
                         columns={columns}
+                        {...(columnGroupingModel ? { columnGroupingModel } : {})}
+                        columnGroupHeaderHeight={40}
                         columnVisibilityModel={{
                             id: false,
                         }}
@@ -201,29 +215,27 @@ export default function TablaAvancesV2({
                             "& .row-resumen": {
                                 bgcolor: "rgba(11, 107, 203, 0.25) !important",
                             },
-                            "& .MuiDataGrid-columnHeaderTitle": {
-                                // position: "relative",
+                            "& .module-column-header .MuiDataGrid-columnHeaderTitle": {
                                 textAlign: "center",
                                 whiteSpace: "nowrap",
                                 transformOrigin: "50% 50%",
-                                // overflow: "visible",
                                 transform: "rotate(-90deg)",
                             },
-                            "& .MuiDataGrid-columnHeaderTitleContainerContent":
+                            "& .module-column-header .MuiDataGrid-columnHeaderTitleContainerContent":
                             {
                                 height: 136,
                             },
-                            // "& .MuiDataGrid-columnHeaderTitle:before": {
-                            //     content: `""`,
-                            //     paddingTop: "120%",
-                            //     /* takes width as reference, + 10% for faking some extra padding */
-                            //     display: "inline-block",
-                            //     verticalAlign: "middle",
-                            // },
-                            // "& .MuiDataGrid-columnHeader": {
-                            //     height: "auto !important",
-                            //     // width: "250px !important",
-                            // },
+                            "& .MuiDataGrid-columnGroupHeader .MuiDataGrid-columnHeaderTitle": {
+                                transform: "none",
+                                whiteSpace: "normal",
+                                lineHeight: 1.2,
+                                textOverflow: "ellipsis",
+                                overflow: "hidden",
+                            },
+                            "& .MuiDataGrid-columnGroupHeader .MuiDataGrid-columnHeaderTitleContainerContent":
+                            {
+                                height: "auto",
+                            },
                         }}
                         onRowClick={(params) => {
                             if (
