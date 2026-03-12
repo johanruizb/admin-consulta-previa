@@ -33,14 +33,11 @@ export function useAvancesData(formValues) {
         return res.json();
     }, []);
 
-    // SWR con configuración optimizada
     const { data, error, isLoading, isValidating, mutate } = useSWR(
         swrKey,
         fetcher,
         {
-            revalidateOnFocus: false, // Evitar revalidación al hacer focus
             revalidateOnReconnect: true,
-            dedupingInterval: 5000, // Dedup requests por 5 segundos
             errorRetryCount: 2,
         },
     );
