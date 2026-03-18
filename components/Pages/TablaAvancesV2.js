@@ -116,12 +116,15 @@ export default function TablaAvancesV2({
                 const isCheckbox =
                     isNumber ||
                     header.field.toLowerCase().includes("completado");
+                const isPorcentaje = header.field === "porcentaje_avance";
 
                 const h = {
                     ...header,
                     field: header.field.toString(),
-                    width: headers.length > 5 && isCheckbox ? 100 : 70,
+                    width: headers.length > 5 && isCheckbox ? 100 : (isPorcentaje ? 120 : 70),
                 };
+                if (isPorcentaje)
+                    return h;
                 if (
                     isNumber ||
                     header.field.toLowerCase().includes("completado")
@@ -214,6 +217,9 @@ export default function TablaAvancesV2({
                         sx={{
                             "& .row-resumen": {
                                 bgcolor: "rgba(11, 107, 203, 0.25) !important",
+                                position: "sticky",
+                                top: 0,
+                                zIndex: 4,
                             },
                             "& .module-column-header .MuiDataGrid-columnHeaderTitle": {
                                 textAlign: "center",
