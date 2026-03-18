@@ -5,7 +5,7 @@ import Slider from "@mui/joy/Slider";
 import Grid from "@mui/material/Grid";
 import { debounce, range } from "lodash";
 import { useCallback } from "react";
-import { Controller, useFormContext, useWatch } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
 function getMarks() {
     const rango = range(0, 101, 10);
@@ -23,15 +23,10 @@ function valueText(value) {
     return `${value}%`;
 }
 
-export default function RangeSlider({ inputProps }) {
+export default function RangeSlider({ inputProps, personCount }) {
     const { control } = useFormContext();
 
     const { controller: controllerProps } = inputProps;
-
-    const activity__module_id = useWatch({
-        control,
-        name: "activity__module_id",
-    });
 
     const onChange = (value, field) => {
         field.onChange(value);
@@ -40,10 +35,14 @@ export default function RangeSlider({ inputProps }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const debounceOnChange = useCallback(debounce(onChange, 250), []);
 
-    return activity__module_id === "all" ? null : (
+    return (
         <Controller
             control={control}
             render={({ field, fieldState: { error } }) => {
+                const value = field.value ?? [0, 100];
+                const label = personCount != null
+                    ? `Porcentaje de avance (${value[0]}% - ${value[1]}%): ${personCount} personas`
+                    : `Porcentaje de avance (${value[0]}% - ${value[1]}%)`;
                 return (
                     <FormControl
                         error={error}
@@ -56,21 +55,17 @@ export default function RangeSlider({ inputProps }) {
                             py: 1,
                         }}
                     >
-                        <FormLabel>Porcentaje de avance</FormLabel>
+                        <FormLabel>{label}</FormLabel>
                         <Box
                             sx={{
                                 width: "92%",
-                                // height: "36px",
                                 pb: 1.5,
                             }}
                         >
                             <Slider
                                 getAriaLabel={() => "Porcentaje de avance"}
                                 marks={marks}
-                                // value={field.value ?? [0, 100]}
                                 defaultValue={[0, 100]}
-                                // max={100}
-                                // min={0}
                                 step={5}
                                 onChange={(_, value) =>
                                     debounceOnChange(value, field)
@@ -78,8 +73,6 @@ export default function RangeSlider({ inputProps }) {
                                 valueLabelDisplay="auto"
                                 getAriaValueText={valueText}
                                 disableSwap
-                            // scale={(x) => x ** 10}
-                            // size="sm"
                             />
                         </Box>
                     </FormControl>
