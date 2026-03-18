@@ -99,6 +99,7 @@ export default function FiltrarCursos({ setFilter, data }) {
                         name: "porcentaje_avance",
                     },
                 }}
+                personCount={data?.resultados ? Math.max(data.resultados.length - 1, 0) : undefined}
             />
             <Accordion
                 expanded={expanded}
