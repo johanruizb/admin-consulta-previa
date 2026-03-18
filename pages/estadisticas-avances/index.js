@@ -10,6 +10,7 @@ import {
     TablaMetaSkeleton,
 } from "@/components/Pages/Avances/EstadisticasSkeletons";
 import { ConfiguracionCompletitudButton } from "@/components/Pages/Avances/ConfiguracionCompletitudModal";
+import { PesosActividadesButton } from "@/components/Pages/Avances/PesosActividadesModal";
 import ExportAvances from "@/components/Pages/Avances/ExportarAvances";
 import GraficoAvanceGrupos from "@/components/Pages/Avances/GraficoAvanceGrupos";
 import TablaAvanceGrupos from "@/components/Pages/Avances/TablaAvanceGrupos";
@@ -384,19 +385,6 @@ export default function EstadisticasAvancesPage() {
                                                         </Typography>
                                                     </CardContent>
                                                 </Card>
-                                                {/* <Card sx={{ flex: 1 }}>
-                                                    <CardContent>
-                                                        <Typography
-                                                            level="body-sm"
-                                                            color="neutral"
-                                                        >
-                                                            Avance promedio
-                                                        </Typography>
-                                                        <Typography level="h2">
-                                                            {resumen.avance_promedio}%
-                                                        </Typography>
-                                                    </CardContent>
-                                                </Card> */}
                                             </Stack>
 
                                             <Stack
@@ -649,7 +637,10 @@ export default function EstadisticasAvancesPage() {
                                             Cumplimiento de la meta
                                         </Typography>
                                         {isAdmin && cursoId && (
-                                            <ConfiguracionCompletitudButton cursoId={cursoId} />
+                                            <>
+                                                <ConfiguracionCompletitudButton cursoId={cursoId} />
+                                                <PesosActividadesButton cursoId={cursoId} />
+                                            </>
                                         )}
                                     </Stack>
                                     <TablaMetaCurso data={data.tabla_meta} />

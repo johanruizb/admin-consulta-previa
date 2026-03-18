@@ -112,19 +112,47 @@ export default function TablaAvancesV2({
         if (!headers) return defaultColumns;
         return defaultColumns.concat(
             headers.map((header) => {
-                const isNumber = Number(header.field);
+                const field = String(header.field ?? "");
+                const isNumber = Number(field);
                 const isCheckbox =
                     isNumber ||
-                    header.field.toLowerCase().includes("completado");
-                const isPorcentaje = header.field === "porcentaje_avance";
+                    field.toLowerCase().includes("completado");
+                const isPorcentaje = field === "porcentaje_avance";
+                const isGrupo = field.toLowerCase().includes("grupo");
 
                 const h = {
                     ...header,
-                    field: header.field.toString(),
-                    width: headers.length > 5 && isCheckbox ? 100 : (isPorcentaje ? 120 : 70),
+                    field,
+                    width:
+                        headers.length > 5 && isCheckbox
+                            ? 100
+                            : isPorcentaje || isGrupo
+                                ? 70
+                                : 70,
                 };
                 if (isPorcentaje)
-                    return h;
+                    return {
+                        ...h,
+                        align: "center",
+                        headerClassName: "module-column-header",
+                        renderCell: (params) => {
+                            const value = params.row?.[header.field];
+
+                            if (value === null || value === undefined || value === "")
+                                return "";
+
+                            const numericValue = Number(value);
+                            return Number.isNaN(numericValue)
+                                ? `${value} %`
+                                : `${numericValue} %`;
+                        },
+                    };
+                if (isGrupo)
+                    return {
+                        ...h,
+                        align: "center",
+                        headerClassName: "module-column-header",
+                    };
                 if (
                     isNumber ||
                     header.field.toLowerCase().includes("completado")
