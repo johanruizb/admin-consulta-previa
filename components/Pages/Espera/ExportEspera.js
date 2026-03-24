@@ -87,7 +87,7 @@ function Export() {
     return (
         <Fragment>
             {permissionIsLoading ? null : hasPermission(
-                  "usuario.view_listaespera",
+                  "autenticacion.exportar_lista_espera",
               ) ? (
                 <Button
                     startDecorator={<FileDownloadIcon />}

@@ -1,4 +1,5 @@
 import { getURL } from "@/components/utils";
+import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { Button } from "@mui/joy";
 import Box from "@mui/joy/Box";
@@ -70,6 +71,7 @@ const AvanceCell = memo(function AvanceCell({ value, isTotal }) {
 
 function ExportToolbar({ cicloId, cursoId }) {
     const { enqueueSnackbar } = useSnackbar();
+    const { hasPermission } = usePermissionContext();
     const [loading, setLoading] = useState(false);
 
     const handleExport = useCallback(() => {
@@ -127,7 +129,7 @@ function ExportToolbar({ cicloId, cursoId }) {
                 <Button
                     startDecorator={<FileDownloadIcon />}
                     onClick={handleExport}
-                    disabled={loading}
+                    disabled={loading || !hasPermission("autenticacion.exportar_avance_grupo")}
                     // variant="outlined"
                     size="sm"
                 >
