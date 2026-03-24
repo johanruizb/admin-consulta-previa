@@ -138,7 +138,7 @@ function Export() {
     return (
         <Fragment>
             {permissionIsLoading ? null : hasPermission(
-                  "usuario.change_persona"
+                  "autenticacion.exportar_inscritos"
               ) ? (
                 <Fragment>
                     <ButtonGroup

@@ -1,5 +1,6 @@
 import fetcher from "@/components/fetcher";
 import Layout from "@/components/Home/Layout";
+import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 import CustomPie from "@/components/Panel/CustomPie";
 import InscripcionesPorPeriodo from "@/components/Panel/InscripcionesPorPeriodo";
 import { formatNumber, getURL } from "@/components/utils";
@@ -64,6 +65,7 @@ export default function Page() {
     const [filters, setFilters] = useState(getDefaultFilters);
     const [exporting, setExporting] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
+    const { hasPermission } = usePermissionContext();
     const [filterOptions, setFilterOptions] = useState({
         tipo_cliente: [],
         etnia: [],
@@ -418,7 +420,7 @@ export default function Page() {
                             color="neutral"
                             size="sm"
                             onClick={handleExportEstadisticas}
-                            disabled={exporting || loading || !data?.has_statistics}
+                            disabled={exporting || loading || !data?.has_statistics || !hasPermission("autenticacion.exportar_estadisticas")}
                             loading={exporting}
                         >
                             <FileDownloadIcon />

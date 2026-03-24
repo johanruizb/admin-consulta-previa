@@ -14,6 +14,7 @@
  */
 
 import fetcher from "@/components/fetcher";
+import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 import { formatNumber, getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
@@ -42,6 +43,7 @@ export default function InscripcionesPorPeriodo({
     const [periodo, setPeriodo] = useState("dias");
     const [exporting, setExporting] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
+    const { hasPermission } = usePermissionContext();
 
     const params = new URLSearchParams();
     params.append("ciclo_id", selectedCicloId);
@@ -242,7 +244,8 @@ export default function InscripcionesPorPeriodo({
                                 disabled={
                                     exporting ||
                                     !data?.data ||
-                                    data.data.length === 0
+                                    data.data.length === 0 ||
+                                    !hasPermission("autenticacion.exportar_inscripciones_periodo")
                                 }
                                 loading={exporting}
                             >

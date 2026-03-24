@@ -234,7 +234,7 @@ function ExportarAsistenciaInner() {
     ]);
 
     if (permissionIsLoading) return null;
-    if (!hasPermission("moodle.view_actividadescompletadas")) return null;
+    if (!hasPermission("autenticacion.exportar_asistencia")) return null;
 
     return (
         <Fragment>
