@@ -166,6 +166,12 @@ export default function ConfiguracionInscripcion() {
     const estadoEfectivo = config?.estado_efectivo ?? "cerrado";
     const estadoInfo = ESTADO_CONFIG[estadoEfectivo] ?? ESTADO_CONFIG.cerrado;
 
+    const isFechaCierreInvalida =
+        form.usar_fechas &&
+        form.fecha_apertura &&
+        form.fecha_cierre &&
+        new Date(form.fecha_cierre) <= new Date(form.fecha_apertura);
+
     return (
         <Layout>
             <Head>
@@ -342,7 +348,10 @@ export default function ConfiguracionInscripcion() {
                                                 </FormHelperText>
                                             </FormControl>
 
-                                            <FormControl sx={{ flex: 1 }}>
+                                            <FormControl
+                                                sx={{ flex: 1 }}
+                                                error={isFechaCierreInvalida}
+                                            >
                                                 <FormLabel>
                                                     Fecha de cierre
                                                 </FormLabel>
@@ -366,9 +375,9 @@ export default function ConfiguracionInscripcion() {
                                                     }}
                                                 />
                                                 <FormHelperText>
-                                                    Las inscripciones se
-                                                    cierran automáticamente
-                                                    en esta fecha
+                                                    {isFechaCierreInvalida
+                                                        ? "La fecha de cierre debe ser posterior a la fecha de apertura"
+                                                        : "Las inscripciones se cierran automáticamente en esta fecha"}
                                                 </FormHelperText>
                                             </FormControl>
                                         </Stack>
@@ -385,7 +394,7 @@ export default function ConfiguracionInscripcion() {
                                                     setForm((prev) => ({
                                                         ...prev,
                                                         estado_post_cierre:
-                                                            val,
+                                                            val ?? "lista_espera",
                                                     }))
                                                 }
                                             >
@@ -425,7 +434,7 @@ export default function ConfiguracionInscripcion() {
                                                 onChange={(_, val) =>
                                                     setForm((prev) => ({
                                                         ...prev,
-                                                        estado: val,
+                                                        estado: val ?? "cerrado",
                                                     }))
                                                 }
                                             >
@@ -458,6 +467,7 @@ export default function ConfiguracionInscripcion() {
                         <Button
                             startDecorator={<SaveRoundedIcon />}
                             loading={saving}
+                            disabled={isFechaCierreInvalida}
                             onClick={handleSave}
                         >
                             Guardar
