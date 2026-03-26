@@ -9,6 +9,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import PersonOffIcon from "@mui/icons-material/PersonOff";
 import SchoolIcon from "@mui/icons-material/School";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
+import TuneRoundedIcon from "@mui/icons-material/TuneRounded";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import Box from "@mui/joy/Box";
@@ -296,6 +297,22 @@ export default function Sidebar() {
                                 icon={<SchoolIcon />}
                             >
                                 Lista de espera
+                            </NavItem>
+                        )}
+                        {hasPermission("is_superuser") && (
+                            <NavItem
+                                onClick={() =>
+                                    handleRouteChange(
+                                        "/configuracion-inscripcion",
+                                    )
+                                }
+                                selected={
+                                    pathname ===
+                                    "/configuracion-inscripcion"
+                                }
+                                icon={<TuneRoundedIcon />}
+                            >
+                                Configuración inscripción
                             </NavItem>
                         )}
                         {hasPermission("is_superuser") && (
