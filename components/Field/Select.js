@@ -1,5 +1,8 @@
+import HelpIcon from "@mui/icons-material/Help";
 import Option from "@mui/joy/Option";
 import Select from "@mui/joy/Select";
+import Stack from "@mui/joy/Stack";
+import Tooltip from "@mui/joy/Tooltip";
 import FormControl from "@mui/joy/FormControl";
 import FormHelperText from "@mui/joy/FormHelperText";
 import FormLabel from "@mui/joy/FormLabel";
@@ -16,6 +19,7 @@ export default function CustomSelect({ inputProps }) {
             InputProps,
             onChange: onChangeField,
             options,
+            tooltip,
             ...fieldProps
         },
     } = inputProps;
@@ -30,9 +34,22 @@ export default function CustomSelect({ inputProps }) {
                     <FormControl
                         error={Boolean(error?.type || error?.types)}
                         required={controllerProps.rules?.required?.value}
-                        // disabled={fieldProps.readOnly}
                     >
                         <FormLabel>{formLabel}</FormLabel>
+                        <Stack direction="row" alignItems="center" spacing={0.5}>
+                            {tooltip && (
+                                <Tooltip
+                                    title={tooltip}
+                                    leaveDelay={1000}
+                                    arrow
+                                >
+                                    <HelpIcon
+                                        fontSize="small"
+                                        sx={{ color: "text.tertiary", cursor: "help" }}
+                                    />
+                                </Tooltip>
+                            )}
+                        </Stack>
                         <Select
                             {...field}
                             onChange={(e, newValue) => {

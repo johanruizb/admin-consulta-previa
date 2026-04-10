@@ -57,6 +57,7 @@ const FormularioCursos = [
         field: {
             label: "Modulo completado",
             content: "¿El modulo ha sido completado?",
+            tooltip: "Filtra personas según si completaron todos los módulos del curso",
         },
     },
     {
@@ -156,8 +157,8 @@ const FormularioCursos = [
             defaultValue: false,
         },
         field: {
-            label: "Mostrar personas sin actividad",
-            content: "Personas sin registro de actividad",
+            content: "Mostrar personas sin actividad",
+            label: "Personas sin registro de actividad",
         },
     },
 ];

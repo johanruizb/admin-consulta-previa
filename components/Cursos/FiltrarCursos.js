@@ -11,7 +11,7 @@ import Grid from "@mui/material/Grid";
 import { useSessionStorage } from "@uidotdev/usehooks";
 import Fuse from "fuse.js";
 import { cloneDeep, debounce } from "lodash";
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { Fragment, memo, useCallback, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import FormularioCursos from "./constants";
 import GruposSelect from "./GruposSelect";
@@ -34,7 +34,7 @@ function filter(originalData, searchValue, callback) {
     }
 }
 
-export default function FiltrarCursos({ setFilter, data }) {
+export default memo(function FiltrarCursos({ setFilter, data }) {
     const [expanded, setExpanded] = useSessionStorage(
         "FiltrarCursos__expanded",
         false,
@@ -149,4 +149,4 @@ export default function FiltrarCursos({ setFilter, data }) {
             </Accordion>
         </Box>
     );
-}
+})

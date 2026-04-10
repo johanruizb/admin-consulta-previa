@@ -1,5 +1,8 @@
 import Close from "@mui/icons-material/Close";
+import HelpIcon from "@mui/icons-material/Help";
 import Checkbox from "@mui/joy/Checkbox";
+import Stack from "@mui/joy/Stack";
+import Tooltip from "@mui/joy/Tooltip";
 
 import FormControl from "@mui/joy/FormControl";
 import FormHelperText from "@mui/joy/FormHelperText";
@@ -12,7 +15,7 @@ export default function CustomCheckbox({ inputProps }) {
 
     const {
         controller: controllerProps,
-        field: { InputProps, ...fieldProps },
+        field: { InputProps, tooltip, ...fieldProps },
     } = inputProps;
 
     return (
@@ -36,17 +39,30 @@ export default function CustomCheckbox({ inputProps }) {
                             {fieldProps.label ??
                                 `${controllerProps.name} sin etiqueta`}
                         </FormLabel>
-                        <Checkbox
-                            uncheckedIcon={<Close />}
-                            label={fieldProps.content}
-                            // {...field}
-                            onChange={(e) => field.onChange(e.target.checked)}
-                            checked={field.value ?? false}
-                            sx={{
-                                alignItems: "center",
-                                height: "36px",
-                            }}
-                        />
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                            <Checkbox
+                                uncheckedIcon={<Close />}
+                                label={fieldProps.content}
+                                onChange={(e) => field.onChange(e.target.checked)}
+                                checked={field.value ?? false}
+                                sx={{
+                                    alignItems: "center",
+                                    height: "36px",
+                                }}
+                            />
+                            {tooltip && (
+                                <Tooltip
+                                    title={tooltip}
+                                    leaveDelay={1000}
+                                    arrow
+                                >
+                                    <HelpIcon
+                                        fontSize="small"
+                                        sx={{ color: "text.tertiary", cursor: "help" }}
+                                    />
+                                </Tooltip>
+                            )}
+                        </Stack>
                         <FormHelperText>{error?.message ?? " "}</FormHelperText>
                     </FormControl>
                 );

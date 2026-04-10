@@ -47,7 +47,7 @@ const Status = memo(function Status({ params, header }) {
     );
 });
 
-export default function TablaAvancesV2({
+export default memo(function TablaAvancesV2({
     data,
     hasPermission,
     onView,
@@ -285,4 +285,4 @@ export default function TablaAvancesV2({
             </Fragment>
         </Fragment>
     );
-}
+})
