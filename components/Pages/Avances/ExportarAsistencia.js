@@ -29,16 +29,13 @@ import fetcher from "@/components/fetcher";
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 import { getURL } from "@/components/utils";
 import { useCiclo } from "@/contexts/CicloContext";
+import { useIsClient } from "@uidotdev/usehooks";
 import dayjs from "dayjs";
 import { useSnackbar } from "notistack";
 import useSWR from "swr";
 
 function ExportarAsistencia() {
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
+    const mounted = useIsClient();
 
     return mounted ? <ExportarAsistenciaInner /> : null;
 }
@@ -63,7 +60,7 @@ function ExportarAsistenciaInner() {
         dayjs().endOf("month").format("YYYY-MM-DD"),
     );
 
-    const defaultsApplied = useRef(false);
+    const [defaultsApplied, setDefaultsApplied] = useState(false);
 
     const { data: cursos, isLoading: cursosLoading } = useSWR(
         selectedCicloId
@@ -83,21 +80,17 @@ function ExportarAsistenciaInner() {
         fetcher,
     );
 
-    useEffect(() => {
-        if (defaultsApplied.current || isAdmin) return;
-        if (!misGrupos || misGrupos.length === 0) return;
-
-        const cursosUnicos = [
-            ...new Set(misGrupos.map((g) => g.curso_id)),
-        ];
-        if (cursosUnicos.length === 1) {
-            setCursoId(cursosUnicos[0]);
-        } else {
-            setCursoId("all");
-        }
+    if (
+        !defaultsApplied &&
+        !isAdmin &&
+        misGrupos &&
+        misGrupos.length > 0
+    ) {
+        const cursosUnicos = [...new Set(misGrupos.map((g) => g.curso_id))];
+        setCursoId(cursosUnicos.length === 1 ? cursosUnicos[0] : "all");
         setGrupoIds(misGrupos.map((g) => g.id));
-        defaultsApplied.current = true;
-    }, [misGrupos, isAdmin]);
+        setDefaultsApplied(true);
+    }
 
     const cursoOptions = useMemo(() => {
         if (!cursos) return [];

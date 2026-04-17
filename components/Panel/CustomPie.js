@@ -43,7 +43,13 @@ export default function CustomPie({ data = [], colors, slotProps = {} }) {
     } = slotProps;
 
     return (
-        <Stack flexDirection="row" flexWrap="wrap" flex={1}>
+        <Stack
+            flexDirection={{
+                xs: "column",
+                md: "row",
+            }}
+            flex={1}
+        >
             <Box {...pieRootProps}>
                 <PieChart
                     colors={chartColors}
@@ -107,9 +113,7 @@ export default function CustomPie({ data = [], colors, slotProps = {} }) {
                                     }}
                                 />
                                 <Tooltip
-                                    title={`${item.label} (${formatNumber(
-                                        item.value,
-                                    )})`}
+                                    title={`${item.label} (${formatNumber(item.value)})`}
                                     arrow
                                 >
                                     <Typography
@@ -119,8 +123,7 @@ export default function CustomPie({ data = [], colors, slotProps = {} }) {
                                             ml: "0 !important",
                                         }}
                                     >
-                                        {item.label} ({formatNumber(item.value)}
-                                        )
+                                        {item.label} ({formatNumber(item.value)})
                                     </Typography>
                                 </Tooltip>
                             </Stack>

@@ -21,16 +21,17 @@ import Backdrop from "@mui/material/Backdrop";
 import Grid from "@mui/material/Grid";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRouter } from "next/router";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import useSWRImmutable from "swr/immutable";
+import { useIsClient } from "@uidotdev/usehooks";
 import Avances from ".";
 
 export default function Wrapper() {
     const { isLoading: permissionIsLoading, hasPermission } =
         usePermissionContext();
 
-    const [mounted, setMounted] = useState(false);
+    const mounted = useIsClient();
     const router = useRouter();
     const { user_id } = router.query;
 
@@ -42,10 +43,6 @@ export default function Wrapper() {
         revalidateOnMount: true,
         refreshInterval: false,
     });
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
 
     const ready =
         mounted && !permissionIsLoading && !isValidating && !isLoading;

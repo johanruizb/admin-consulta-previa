@@ -10,7 +10,7 @@ function Navigate({ to, options, replace }) {
         } else {
             router.push(to, undefined, options);
         }
-    }, [to, options]);
+    }, [to, options, replace, router]);
 
     return null;
 }
