@@ -1,5 +1,8 @@
 import fetcher from "@/components/fetcher";
+import { getURL } from "@/components/utils";
+import { useCiclo } from "@/contexts/CicloContext";
 import BalanceRoundedIcon from "@mui/icons-material/BalanceRounded";
+import { Tooltip } from "@mui/joy";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import Chip from "@mui/joy/Chip";
@@ -8,10 +11,14 @@ import DialogActions from "@mui/joy/DialogActions";
 import DialogContent from "@mui/joy/DialogContent";
 import DialogTitle from "@mui/joy/DialogTitle";
 import Divider from "@mui/joy/Divider";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
 import IconButton from "@mui/joy/IconButton";
 import Input from "@mui/joy/Input";
 import Modal from "@mui/joy/Modal";
 import ModalDialog from "@mui/joy/ModalDialog";
+import Option from "@mui/joy/Option";
+import Select from "@mui/joy/Select";
 import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
 import { useSnackbar } from "notistack";
@@ -42,11 +49,28 @@ function ActividadPeso({ actividad, onChange }) {
     );
 }
 
-function PesosActividadesModal({ open, onClose, cursoId }) {
+function PesosActividadesModal({ open, onClose, initialCursoId }) {
     const { enqueueSnackbar } = useSnackbar();
     const { mutate: globalMutate } = useSWRConfig();
+    const { selectedCicloId } = useCiclo();
+    const [cursoId, setCursoId] = useState(initialCursoId || null);
     const [modulos, setModulos] = useState(null);
     const [saving, setSaving] = useState(false);
+
+    const { data: cursos, isLoading: cursosLoading } = useSWR(
+        open && selectedCicloId
+            ? getURL(`api/usuarios/cursos/disponibles?ciclo_id=${selectedCicloId}`)
+            : null,
+        fetcher,
+    );
+
+    useEffect(() => {
+        if (initialCursoId) setCursoId(initialCursoId);
+    }, [initialCursoId]);
+
+    useEffect(() => {
+        setModulos(null);
+    }, [cursoId]);
 
     const { data, isLoading } = useSWR(
         open && cursoId
@@ -171,13 +195,36 @@ function PesosActividadesModal({ open, onClose, cursoId }) {
                 </DialogTitle>
 
                 <DialogContent sx={{ overflow: "auto" }}>
-                    {isLoading && (
+                    <FormControl size="sm" sx={{ mb: 1.5 }}>
+                        <FormLabel>Curso</FormLabel>
+                        <Select
+                            size="sm"
+                            placeholder="Selecciona un curso"
+                            value={cursoId}
+                            onChange={(_, v) => setCursoId(v)}
+                            disabled={cursosLoading}
+                        >
+                            {cursos?.map((curso) => (
+                                <Option key={curso.id} value={curso.id}>
+                                    {curso.shortname}
+                                </Option>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    {!cursoId && (
+                        <Typography level="body-sm" color="neutral" textAlign="center" sx={{ py: 4 }}>
+                            Selecciona un curso para ver los pesos
+                        </Typography>
+                    )}
+
+                    {cursoId && isLoading && (
                         <Stack alignItems="center" py={4}>
                             <CircularProgress />
                         </Stack>
                     )}
 
-                    {!isLoading && modulos && (
+                    {cursoId && !isLoading && modulos && (
                         <Stack spacing={2} sx={{ py: 1 }}>
                             <Stack direction="row" justifyContent="space-between" alignItems="center">
                                 <Typography level="body-sm" color="neutral">
@@ -256,7 +303,7 @@ function PesosActividadesModal({ open, onClose, cursoId }) {
                         variant="solid"
                         color="primary"
                         loading={saving}
-                        disabled={!modulos || isLoading}
+                        disabled={!modulos || isLoading || !cursoId}
                         onClick={handleSave}
                     >
                         Guardar
@@ -275,21 +322,23 @@ export function PesosActividadesButton({ cursoId }) {
 
     return (
         <>
-            <IconButton
-                size="sm"
-                variant="outlined"
-                color="neutral"
-                onClick={() => setOpen(true)}
-                title="Configurar pesos de actividades"
-                aria-label="Configurar pesos de actividades"
-            >
-                <BalanceRoundedIcon fontSize="small" />
-            </IconButton>
+            <Tooltip title="Configurar pesos de actividades" placement="top" arrow>
+                <IconButton
+                    size="sm"
+                    variant="outlined"
+                    color="neutral"
+                    onClick={() => setOpen(true)}
+                    title="Configurar pesos de actividades"
+                    aria-label="Configurar pesos de actividades"
+                >
+                    <BalanceRoundedIcon fontSize="small" />
+                </IconButton>
+            </Tooltip>
             {open && (
                 <PesosActividadesModal
                     open={open}
                     onClose={() => setOpen(false)}
-                    cursoId={cursoId}
+                    initialCursoId={cursoId}
                 />
             )}
         </>
