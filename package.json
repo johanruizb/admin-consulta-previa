@@ -9,7 +9,7 @@
     "dev": "npx next dev -p 2418 --turbopack",
     "build": "npx next build",
     "start": "npx next start -p 20426",
-    "lint": "npx next lint"
+    "lint": "npx eslint ."
   },
   "dependencies": {
     "@clerk/nextjs": "^6.39.0",

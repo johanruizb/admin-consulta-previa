@@ -263,15 +263,11 @@ HistoryList.propTypes = {
  * Componente para renderizar una actividad
  */
 const ActivityItem = memo(function ActivityItem({ actividad }) {
-    // Pre-formatear fecha solo si está completado
-    const statusText = useMemo(() => {
-        if (!actividad?.completado) {
-            return "Incompleto";
-        }
-        return `Completado — ${dayjs(actividad.date).format(
-            "DD/MM/YYYY HH:mm:ss A",
-        )}`;
-    }, [actividad?.completado, actividad?.date]);
+    const statusText = !actividad?.completado
+        ? "Incompleto"
+        : `Completado — ${dayjs(actividad.date).format(
+              "DD/MM/YYYY HH:mm:ss A",
+          )}`;
 
     return (
         <ListItem sx={{ ml: "24px" }}>

@@ -1,5 +1,5 @@
 import Box from "@mui/joy/Box";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef } from "react";
 import { useSchema } from "../Home/ColorSchemeToggle";
 
 const EmbedMonitor = ({
@@ -12,11 +12,8 @@ const EmbedMonitor = ({
 
     const containerRef = useRef(null);
     const iframeRef = useRef(null);
-    const [uid] = useState(
-        `embed-container-${Date.now()}-${Math.random()
-            .toString(36)
-            .substr(2, 5)}`,
-    );
+    const reactId = useId();
+    const uid = `embed-container-${reactId}`;
 
     useEffect(() => {
         if (!monitor || !containerRef.current) return;

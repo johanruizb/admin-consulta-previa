@@ -3,15 +3,11 @@ import IconButton from "@mui/joy/IconButton";
 
 import Close from "@mui/icons-material/Close";
 
-import { useLocalStorage } from "@uidotdev/usehooks";
-import { useEffect, useRef, useState } from "react";
+import { useIsClient, useLocalStorage } from "@uidotdev/usehooks";
+import { useEffect, useRef } from "react";
 
 export default function CustomAlert({ autoHideDuration = 6000 }) {
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
+    const mounted = useIsClient();
 
     return mounted ? <Custom autoHideDuration={autoHideDuration} /> : null;
 }

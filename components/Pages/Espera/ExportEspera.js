@@ -3,19 +3,16 @@
 import Button from "@mui/joy/Button";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import { getURL } from "../../utils";
 
+import { useIsClient } from "@uidotdev/usehooks";
 import dayjs from "dayjs";
 import { useSnackbar } from "notistack";
 import usePermissionContext from "../../Home/permissionContext/usePermission";
 
 function ExportEspera() {
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
+    const mounted = useIsClient();
 
     return mounted ? <Export /> : null;
 }

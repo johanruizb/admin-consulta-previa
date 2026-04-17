@@ -40,16 +40,17 @@ import Stack from "@mui/joy/Stack";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRouter as useNavigate } from "next/navigation";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useState, useTransition } from "react";
+import { useCallback, useState, useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import useSWR, { useSWRConfig } from "swr";
 import useSWRImmutable from "swr/immutable";
+import { useIsClient } from "@uidotdev/usehooks";
 import Registros from ".";
 
 export default function Wrapper() {
     const { hasPermission, isAdmin } = usePermissionContext();
 
-    const [mounted, setMounted] = useState(false);
+    const mounted = useIsClient();
     const router = useRouter();
 
     const { id } = router.query;
@@ -62,10 +63,6 @@ export default function Wrapper() {
         revalidateOnMount: true,
         refreshInterval: false,
     });
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
 
     // Solo bloqueamos el render por datos del usuario, no por permisos
     const dataReady = mounted && !isValidating && !isLoading;
@@ -140,14 +137,17 @@ function View({ defaultValues, isAdmin }) {
         navigate.push("/registros", undefined, { shallow: true });
     }, [navigate]);
 
-    const openAlert = (content, color = "success", options = {}) => {
-        const variant = color === "danger" ? "error" : color;
-        enqueueSnackbar(content, {
-            variant,
-            style: { whiteSpace: "pre-line" },
-            ...options,
-        });
-    };
+    const openAlert = useCallback(
+        (content, color = "success", options = {}) => {
+            const variant = color === "danger" ? "error" : color;
+            enqueueSnackbar(content, {
+                variant,
+                style: { whiteSpace: "pre-line" },
+                ...options,
+            });
+        },
+        [enqueueSnackbar],
+    );
 
     const methods = useForm({ defaultValues });
     const { handleSubmit } = methods;
@@ -205,7 +205,7 @@ function View({ defaultValues, isAdmin }) {
                 }
             });
         },
-        [id, openAlert, router, startTransition],
+        [id, openAlert, router, startTransition, mutate, selectedCicloId],
     );
 
     const validado = defaultValues?.info_validada;

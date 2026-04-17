@@ -12,7 +12,7 @@ import Input from "@mui/joy/Input";
 
 import { Controller, useFormContext } from "react-hook-form";
 
-import { forwardRef, useEffect, useRef, useState } from "react";
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getURL } from "../utils";
 
 import FileUploadIcon from "@mui/icons-material/FileUpload";
@@ -36,30 +36,60 @@ const CustomImage = forwardRef(function CustomImage(
         },
     });
 
-    const ratioRef = useRef();
     const inputRef = useRef();
 
-    const [objectURL, setObjectURL] = useState();
+    const [ratioSize, setRatioSize] = useState({ width: 0, height: 0 });
+    const [ratioNode, setRatioNode] = useState(null);
+
+    const ratioRef = useCallback((node) => {
+        setRatioNode(node);
+    }, []);
 
     useEffect(() => {
-        if (typeof url === "string")
-            fetch(getURL("api/" + url)).then((response) => {
-                response.blob().then((blob) => {
-                    const url = window.URL.createObjectURL(blob);
-                    setObjectURL(url);
-                });
+        if (!ratioNode) return;
+        const observer = new ResizeObserver(() => {
+            setRatioSize({
+                width: ratioNode.clientWidth,
+                height: ratioNode.clientHeight,
             });
-        else if (url instanceof File) {
-            const newURL = window.URL.createObjectURL(url);
-            setObjectURL(newURL);
-        }
+        });
+        observer.observe(ratioNode);
+        return () => observer.disconnect();
+    }, [ratioNode]);
+
+    const fileObjectURL = useMemo(() => {
+        if (url instanceof File) return window.URL.createObjectURL(url);
+        return null;
+    }, [url]);
+
+    useEffect(() => {
+        if (!fileObjectURL) return;
+        return () => window.URL.revokeObjectURL(fileObjectURL);
+    }, [fileObjectURL]);
+
+    const [fetchedObjectURL, setFetchedObjectURL] = useState();
+
+    useEffect(() => {
+        if (typeof url !== "string") return;
+        let createdURL;
+        let cancelled = false;
+        fetch(getURL("api/" + url)).then((response) => {
+            response.blob().then((blob) => {
+                if (cancelled) return;
+                createdURL = window.URL.createObjectURL(blob);
+                setFetchedObjectURL(createdURL);
+            });
+        });
 
         return () => {
-            if (objectURL) {
-                window.URL.revokeObjectURL(objectURL);
+            cancelled = true;
+            if (createdURL) {
+                window.URL.revokeObjectURL(createdURL);
             }
         };
     }, [url]);
+
+    const objectURL = fileObjectURL || fetchedObjectURL;
 
     const handleClick = (e) => {
         e.preventDefault();
@@ -83,8 +113,8 @@ const CustomImage = forwardRef(function CustomImage(
                         src={objectURL}
                         alt="Imagen"
                         ref={ref}
-                        width={ratioRef?.current?.clientWidth ?? 0}
-                        height={ratioRef?.current?.clientHeight ?? 0}
+                        width={ratioSize.width}
+                        height={ratioSize.height}
                         onClick={handleClick}
                     />
                 ) : (

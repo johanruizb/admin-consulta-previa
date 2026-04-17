@@ -2,55 +2,38 @@ import { getURL } from "@/components/utils";
 import { useMemo, useCallback } from "react";
 import useSWR from "swr";
 
+async function fetchResumen([url, body]) {
+    const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body,
+    });
+    if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+    return res.json();
+}
+
 export function useAvancesData(formValues) {
-    // Memoizar la SWR key para evitar recalculos innecesarios
+    const serializedValues = JSON.stringify(formValues);
+
     const swrKey = useMemo(() => {
-        if (
-            !formValues ||
-            !formValues.ciclo_id ||
-            !formValues.activity__module__course_id
-        )
+        if (!formValues?.ciclo_id || !formValues?.activity__module__course_id)
             return null;
 
-        return [
-            getURL("/api/moodle/reporte/resumen"),
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formValues),
-            },
-        ];
-    }, [formValues]);
-
-    // Fetcher optimizado
-    const fetcher = useCallback(async ([url, config]) => {
-        const res = await fetch(url, config);
-
-        if (!res.ok) {
-            throw new Error(`Error ${res.status}: ${res.statusText}`);
-        }
-
-        return res.json();
-    }, []);
+        return [getURL("/api/moodle/reporte/resumen"), serializedValues];
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [serializedValues]);
 
     const { data, error, isLoading, isValidating, mutate } = useSWR(
         swrKey,
-        fetcher,
+        fetchResumen,
         {
             revalidateOnReconnect: true,
             errorRetryCount: 2,
+            keepPreviousData: true,
         },
     );
 
-    // Función para refrescar datos manualmente
-    const refreshData = useCallback(() => {
-        return mutate(undefined, { revalidate: true });
-    }, [mutate]);
-
-    // Función para refrescar sin revalidación (más rápida)
-    const forceRefresh = useCallback(() => {
-        return mutate(undefined, { validate: false });
-    }, [mutate]);
+    const refreshData = useCallback(() => mutate(), [mutate]);
 
     return {
         data,
@@ -58,10 +41,5 @@ export function useAvancesData(formValues) {
         isLoading,
         isValidating,
         refreshData,
-        forceRefresh,
-        // Estado derivado
-        hasError: !!error,
-        hasData: !!data && !error,
-        isEmpty: !!data && (!data.resultados || data.resultados.length === 0),
     };
 }

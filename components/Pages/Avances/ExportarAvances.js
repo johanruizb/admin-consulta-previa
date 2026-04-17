@@ -3,20 +3,17 @@ import Button from "@mui/joy/Button";
 
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
-import { Fragment, useEffect, useState, useCallback } from "react";
+import { Fragment, useState, useCallback } from "react";
 
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 import { getURL } from "@/components/utils";
+import { useIsClient } from "@uidotdev/usehooks";
 import dayjs from "dayjs";
 import { useSnackbar } from "notistack";
 import { useFormContext } from "react-hook-form";
 
 function ExportAvances({ filterValues }) {
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
+    const mounted = useIsClient();
 
     return mounted ? <Export filterValues={filterValues} /> : null;
 }

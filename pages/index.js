@@ -39,8 +39,9 @@ import { usePrevious } from "@uidotdev/usehooks";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import Head from "next/head";
-import { Fragment, useEffect, useEffectEvent, useState } from "react";
+import { Fragment, useCallback, useEffect, useEffectEvent, useState } from "react";
 import useSWR from "swr";
+import { UmbralCertificadoButton } from "@/components/Pages/Avances/UmbralCertificadoModal";
 
 dayjs.locale("es");
 
@@ -58,6 +59,7 @@ const getDefaultFilters = () => ({
     plataforma: null,
     courses: null,
     info_validada: false,
+    solo_certificados: false,
 });
 
 export default function Page() {
@@ -65,7 +67,7 @@ export default function Page() {
     const [filters, setFilters] = useState(getDefaultFilters);
     const [exporting, setExporting] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
-    const { hasPermission } = usePermissionContext();
+    const { hasPermission, isAdmin } = usePermissionContext();
     const [filterOptions, setFilterOptions] = useState({
         tipo_cliente: [],
         etnia: [],
@@ -128,7 +130,9 @@ export default function Page() {
 
     useClient(() => setMounted(true));
 
-    useEffect(() => {
+    const [prevSelectedCicloId, setPrevSelectedCicloId] = useState(selectedCicloId);
+    if (prevSelectedCicloId !== selectedCicloId) {
+        setPrevSelectedCicloId(selectedCicloId);
         setFilters(getDefaultFilters());
         setFilterOptions({
             tipo_cliente: [],
@@ -138,55 +142,57 @@ export default function Page() {
             departamento: [],
             plataforma: [...PLATFORM_OPTIONS],
         });
-    }, [selectedCicloId]);
+    }
 
-    useEffect(() => {
-        if (!data) return;
+    const [prevData, setPrevData] = useState(data);
+    if (prevData !== data) {
+        setPrevData(data);
+        if (data) {
+            const formatOptions = (items) =>
+                (items || [])
+                    .map((item) => {
+                        if (item?.id === null || item?.id === undefined) {
+                            return null;
+                        }
+                        return {
+                            value: String(item.id),
+                            label: item.label,
+                        };
+                    })
+                    .filter(Boolean);
 
-        const formatOptions = (items) =>
-            (items || [])
-                .map((item) => {
-                    if (item?.id === null || item?.id === undefined) {
-                        return null;
-                    }
-                    return {
-                        value: String(item.id),
-                        label: item.label,
-                    };
-                })
-                .filter(Boolean);
+            const mergeOptions = (current, incoming) => {
+                if (!incoming || incoming.length === 0) {
+                    return current;
+                }
+                const map = new Map();
+                current.forEach((option) => {
+                    map.set(option.value, option);
+                });
+                incoming.forEach((option) => {
+                    map.set(option.value, option);
+                });
+                return Array.from(map.values()).sort((a, b) =>
+                    a.label.localeCompare(b.label, "es", { sensitivity: "base" })
+                );
+            };
 
-        const mergeOptions = (current, incoming) => {
-            if (!incoming || incoming.length === 0) {
-                return current;
-            }
-            const map = new Map();
-            current.forEach((option) => {
-                map.set(option.value, option);
-            });
-            incoming.forEach((option) => {
-                map.set(option.value, option);
-            });
-            return Array.from(map.values()).sort((a, b) =>
-                a.label.localeCompare(b.label, "es", { sensitivity: "base" })
-            );
-        };
-
-        setFilterOptions((prev) => ({
-            tipo_cliente: mergeOptions(
-                prev.tipo_cliente,
-                formatOptions(data?.rol)
-            ),
-            etnia: mergeOptions(prev.etnia, formatOptions(data?.etnia)),
-            genero: mergeOptions(prev.genero, formatOptions(data?.genero)),
-            zona: mergeOptions(prev.zona, formatOptions(data?.zona)),
-            departamento: mergeOptions(
-                prev.departamento,
-                formatOptions(data?.departamento)
-            ),
-            plataforma: prev.plataforma,
-        }));
-    }, [data]);
+            setFilterOptions((prev) => ({
+                tipo_cliente: mergeOptions(
+                    prev.tipo_cliente,
+                    formatOptions(data?.rol)
+                ),
+                etnia: mergeOptions(prev.etnia, formatOptions(data?.etnia)),
+                genero: mergeOptions(prev.genero, formatOptions(data?.genero)),
+                zona: mergeOptions(prev.zona, formatOptions(data?.zona)),
+                departamento: mergeOptions(
+                    prev.departamento,
+                    formatOptions(data?.departamento)
+                ),
+                plataforma: prev.plataforma,
+            }));
+        }
+    }
 
     const handleCursoChange = (event) => {
         const value = event.target.value;
@@ -221,7 +227,7 @@ export default function Page() {
         }));
     });
 
-    const resetFilters = useEffectEvent(() => {
+    const resetFilters = useCallback(() => {
         setFilters((prev) => {
             const base = getDefaultFilters();
             base.courses = Array.isArray(cursos)
@@ -229,7 +235,7 @@ export default function Page() {
                 : prev.courses;
             return base;
         });
-    });
+    }, [cursos]);
 
     const handleExportEstadisticas = () => {
         const exportParams = new URLSearchParams();
@@ -293,7 +299,6 @@ export default function Page() {
         if (selectedCicloId && selectedCicloId !== prevCicloId) {
             resetSelectedCurso();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedCicloId, prevCicloId, cursos]);
 
     if (!mounted) return null;
@@ -408,24 +413,28 @@ export default function Page() {
                 }}
             >
                 <Stack
-                    direction="row"
+                    direction={{ md: "row", xs: "column" }}
                     spacing={1}
                     sx={{
                         alignSelf: { xs: "stretch", sm: "flex-end" },
                     }}
                 >
-                    <Tooltip title="Exportar estadísticas a Excel">
-                        <IconButton
-                            variant="outlined"
-                            color="neutral"
-                            size="sm"
-                            onClick={handleExportEstadisticas}
-                            disabled={exporting || loading || !data?.has_statistics || !hasPermission("autenticacion.exportar_estadisticas")}
-                            loading={exporting}
-                        >
-                            <FileDownloadIcon />
-                        </IconButton>
-                    </Tooltip>
+                    {
+                        hasPermission("autenticacion.exportar_estadisticas") &&
+                        <Tooltip title="Exportar estadísticas a Excel" arrow>
+                            <Button
+                                variant="solid"
+                                color="success"
+                                size="sm"
+                                onClick={handleExportEstadisticas}
+                                disabled={exporting || loading || !data?.has_statistics}
+                                loading={exporting}
+                                startDecorator={<FileDownloadIcon />}
+                            >
+                                Exportar
+                            </Button>
+                        </Tooltip>
+                    }
                     <Button
                         variant="outlined"
                         size="sm"
@@ -483,6 +492,30 @@ export default function Page() {
                         Mostrar solo validadas
                     </FormLabel>
                 </FormControl>
+                <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent={{ xs: "space-between", md: "flex-start" }}
+                    sx={{ mt: 0.5 }}
+                    spacing={{ md: 3, xs: 0 }}
+                >
+                    <FormControl
+                        orientation="horizontal"
+                        sx={{ alignItems: "center", gap: 1 }}
+                    >
+                        <Switch
+                            checked={filters.solo_certificados}
+                            onChange={(e) =>
+                                setFilters((prev) => ({
+                                    ...prev,
+                                    solo_certificados: e.target.checked,
+                                }))
+                            }
+                        />
+                        <FormLabel>Mostrar solo certificados</FormLabel>
+                    </FormControl>
+                    <UmbralCertificadoButton />
+                </Stack>
             </Box>
             <Grid
                 container
@@ -640,7 +673,7 @@ export default function Page() {
                                 </CardContent>
                             </Card>
                         </Grid>
-                        <Grid size={8}>
+                        <Grid size={{ xs: 12, md: 8 }}>
                             <InscripcionesPorPeriodo
                                 courses={curso}
                                 filters={filters}

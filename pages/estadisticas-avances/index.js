@@ -11,6 +11,7 @@ import {
 } from "@/components/Pages/Avances/EstadisticasSkeletons";
 import { ConfiguracionCompletitudButton } from "@/components/Pages/Avances/ConfiguracionCompletitudModal";
 import { PesosActividadesButton } from "@/components/Pages/Avances/PesosActividadesModal";
+import { UmbralCertificadoButton } from "@/components/Pages/Avances/UmbralCertificadoModal";
 import ExportAvances from "@/components/Pages/Avances/ExportarAvances";
 import GraficoAvanceGrupos from "@/components/Pages/Avances/GraficoAvanceGrupos";
 import TablaAvanceGrupos from "@/components/Pages/Avances/TablaAvanceGrupos";
@@ -40,7 +41,7 @@ import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import { BarChart } from "@mui/x-charts/BarChart";
 import Head from "next/head";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 
 const COLORS = {
@@ -64,7 +65,7 @@ export default function EstadisticasAvancesPage() {
     const [grupoId, setGrupoId] = useState(null);
     const [selectedModulos, setSelectedModulos] = useState(null);
     const [mounted, setMounted] = useState(false);
-    const filterChangeRef = useRef(null);
+    const [lastFilter, setLastFilter] = useState(null);
 
     const { isLoading: permissionIsLoading, isAdmin } = usePermissionContext();
     usePermission("moodle.view_actividadescompletadas");
@@ -109,45 +110,49 @@ export default function EstadisticasAvancesPage() {
     );
 
     const isRefetching = isValidating && !isLoading;
-    const lastFilter = filterChangeRef.current;
     const isResumenRefetching = isRefetching;
     const isModulosRefetching = isRefetching && lastFilter !== "modulo";
     const isTablaMetaRefetching = isRefetching && lastFilter !== "modulo";
 
     const handleCursoChange = useCallback((_, value) => {
-        filterChangeRef.current = "course";
+        setLastFilter("course");
         setCursoId(value);
         setGrupoId(null);
         setSelectedModulos(null);
     }, []);
 
     const handleGrupoChange = useCallback((_, value) => {
-        filterChangeRef.current = "group";
+        setLastFilter("group");
         setGrupoId(value);
     }, []);
 
-    useEffect(() => {
-        if (cursos && cursos.length > 0 && !cursoId) {
-            setCursoId(cursos[0].id);
-        }
-    }, [cursos, cursoId]);
+    if (cursos && cursos.length > 0 && !cursoId) {
+        setCursoId(cursos[0].id);
+    }
 
     // Auto-seleccionar módulo "Principal" cuando llegan los datos
-    const modulosDisponibles = data?.modulos_disponibles || [];
-    useEffect(() => {
-        if (modulosDisponibles.length > 0 && selectedModulos === null && !isValidating) {
-            const principal = modulosDisponibles.find((m) =>
-                m.name.toLowerCase().includes("principal"),
-            );
-            setSelectedModulos(
-                principal ? [principal.id] : modulosDisponibles.map((m) => m.id),
-            );
-        }
-    }, [modulosDisponibles, selectedModulos, isValidating]);
+    const modulosDisponibles = useMemo(
+        () => data?.modulos_disponibles || [],
+        [data?.modulos_disponibles],
+    );
+    if (
+        modulosDisponibles.length > 0 &&
+        selectedModulos === null &&
+        !isValidating
+    ) {
+        const principal = modulosDisponibles.find((m) =>
+            m.name.toLowerCase().includes("principal"),
+        );
+        setSelectedModulos(
+            principal
+                ? [principal.id]
+                : modulosDisponibles.map((m) => m.id),
+        );
+    }
 
     const handleModuloToggle = useCallback(
         (moduloId) => {
-            filterChangeRef.current = "modulo";
+            setLastFilter("modulo");
             setSelectedModulos((prev) => {
                 if (!prev) return [moduloId];
                 if (prev.includes(moduloId)) {
@@ -640,6 +645,7 @@ export default function EstadisticasAvancesPage() {
                                             <>
                                                 <ConfiguracionCompletitudButton cursoId={cursoId} />
                                                 <PesosActividadesButton cursoId={cursoId} />
+                                                <UmbralCertificadoButton cursoId={cursoId} />
                                             </>
                                         )}
                                     </Stack>

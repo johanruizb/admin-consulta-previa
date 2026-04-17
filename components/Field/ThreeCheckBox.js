@@ -1,10 +1,14 @@
 import Close from "@mui/icons-material/Close";
+import HelpIcon from "@mui/icons-material/Help";
 import Checkbox from "@mui/joy/Checkbox";
+import Stack from "@mui/joy/Stack";
+import Tooltip from "@mui/joy/Tooltip";
 
 import FormControl from "@mui/joy/FormControl";
 import FormHelperText from "@mui/joy/FormHelperText";
 import FormLabel from "@mui/joy/FormLabel";
 
+import { startTransition } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 export default function ThreeCheckBox({ inputProps }) {
@@ -12,7 +16,7 @@ export default function ThreeCheckBox({ inputProps }) {
 
     const {
         controller: controllerProps,
-        field: { InputProps, ...fieldProps },
+        field: { InputProps, tooltip, ...fieldProps },
     } = inputProps;
 
     return (
@@ -36,31 +40,47 @@ export default function ThreeCheckBox({ inputProps }) {
                             {fieldProps.label ??
                                 `${controllerProps.name} sin etiqueta`}
                         </FormLabel>
-                        <Checkbox
-                            uncheckedIcon={<Close />}
-                            label={fieldProps.content}
-                            // {...field}
-
-                            onChange={(e) => {
-                                switch (field.value) {
-                                    case "all":
-                                        field.onChange(true);
-                                        break;
-                                    case true:
-                                        field.onChange(false);
-                                        break;
-                                    default:
-                                        field.onChange("all");
-                                        break;
-                                }
-                            }}
-                            checked={field.value === true}
-                            indeterminate={field.value === "all"}
-                            sx={{
-                                alignItems: "center",
-                                height: "36px",
-                            }}
-                        />
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                            <Checkbox
+                                uncheckedIcon={<Close />}
+                                label={fieldProps.content}
+                                onChange={() => {
+                                    startTransition(() => {
+                                        switch (field.value) {
+                                            case "all":
+                                                field.onChange(true);
+                                                break;
+                                            case true:
+                                                field.onChange(false);
+                                                break;
+                                            default:
+                                                field.onChange("all");
+                                                break;
+                                        }
+                                    });
+                                }}
+                                checked={field.value === true}
+                                indeterminate={field.value === "all"}
+                                sx={{
+                                    alignItems: "center",
+                                    height: "36px",
+                                    flex: "1 1 auto",
+                                }}
+                            />
+                            {tooltip && (
+                                <Tooltip
+                                    title={tooltip}
+                                    leaveDelay={1000}
+                                    arrow
+                                    // variant="soft"
+                                >
+                                    <HelpIcon
+                                        fontSize="small"
+                                        sx={{ color: "text.tertiary", cursor: "help" }}
+                                    />
+                                </Tooltip>
+                            )}
+                        </Stack>
                         <FormHelperText>{error?.message ?? " "}</FormHelperText>
                     </FormControl>
                 );

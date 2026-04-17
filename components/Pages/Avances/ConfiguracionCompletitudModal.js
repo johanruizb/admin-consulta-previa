@@ -1,5 +1,8 @@
 import fetcher from "@/components/fetcher";
+import { getURL } from "@/components/utils";
+import { useCiclo } from "@/contexts/CicloContext";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
+import { Tooltip } from "@mui/joy";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import Checkbox from "@mui/joy/Checkbox";
@@ -128,10 +131,10 @@ function ModuloConfig({ config, onChange }) {
                                 })}
                                 {(!config.actividades_disponibles ||
                                     config.actividades_disponibles.length === 0) && (
-                                    <Typography level="body-xs" color="neutral">
-                                        Sin actividades disponibles
-                                    </Typography>
-                                )}
+                                        <Typography level="body-xs" color="neutral">
+                                            Sin actividades disponibles
+                                        </Typography>
+                                    )}
                             </Stack>
                         </FormControl>
                     )}
@@ -141,11 +144,28 @@ function ModuloConfig({ config, onChange }) {
     );
 }
 
-function ConfiguracionCompletitudModal({ open, onClose, cursoId, onSaved }) {
+function ConfiguracionCompletitudModal({ open, onClose, initialCursoId, onSaved }) {
     const { enqueueSnackbar } = useSnackbar();
     const { mutate: globalMutate } = useSWRConfig();
+    const { selectedCicloId } = useCiclo();
+    const [cursoId, setCursoId] = useState(initialCursoId || null);
     const [configs, setConfigs] = useState(null);
     const [saving, setSaving] = useState(false);
+
+    const { data: cursos, isLoading: cursosLoading } = useSWR(
+        open && selectedCicloId
+            ? getURL(`api/usuarios/cursos/disponibles?ciclo_id=${selectedCicloId}`)
+            : null,
+        fetcher,
+    );
+
+    useEffect(() => {
+        if (initialCursoId) setCursoId(initialCursoId);
+    }, [initialCursoId]);
+
+    useEffect(() => {
+        setConfigs(null);
+    }, [cursoId]);
 
     const { data, isLoading } = useSWR(
         open && cursoId
@@ -258,16 +278,39 @@ function ConfiguracionCompletitudModal({ open, onClose, cursoId, onSaved }) {
                 </DialogTitle>
 
                 <DialogContent sx={{ overflow: "auto" }}>
-                    {isLoading && (
+                    <FormControl size="sm" sx={{ mb: 1.5 }}>
+                        <FormLabel>Curso</FormLabel>
+                        <Select
+                            size="sm"
+                            placeholder="Selecciona un curso"
+                            value={cursoId}
+                            onChange={(_, v) => setCursoId(v)}
+                            disabled={cursosLoading}
+                        >
+                            {cursos?.map((curso) => (
+                                <Option key={curso.id} value={curso.id}>
+                                    {curso.shortname}
+                                </Option>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    {!cursoId && (
+                        <Typography level="body-sm" color="neutral" textAlign="center" sx={{ py: 4 }}>
+                            Selecciona un curso para ver la configuración
+                        </Typography>
+                    )}
+
+                    {cursoId && isLoading && (
                         <Stack alignItems="center" py={4}>
                             <CircularProgress />
                         </Stack>
                     )}
 
-                    {!isLoading && configs && (
+                    {cursoId && !isLoading && configs && (
                         <Stack spacing={1.5} sx={{ py: 1 }}>
                             <Typography level="body-sm" color="neutral">
-                                Define qué significa "completar" cada módulo para el
+                                Define qué significa &quot;completar&quot; cada módulo para el
                                 cálculo de cumplimiento de meta.
                             </Typography>
                             {configs.map((config, index) => (
@@ -293,7 +336,7 @@ function ConfiguracionCompletitudModal({ open, onClose, cursoId, onSaved }) {
                         variant="solid"
                         color="primary"
                         loading={saving}
-                        disabled={!configs || isLoading}
+                        disabled={!configs || isLoading || !cursoId}
                         onClick={handleSave}
                     >
                         Guardar
@@ -312,21 +355,23 @@ export function ConfiguracionCompletitudButton({ cursoId }) {
 
     return (
         <>
-            <IconButton
-                size="sm"
-                variant="outlined"
-                color="neutral"
-                onClick={() => setOpen(true)}
-                title="Configurar completitud de módulos"
-                aria-label="Configurar completitud de módulos"
-            >
-                <SettingsRoundedIcon fontSize="small" />
-            </IconButton>
+            <Tooltip title="Configurar completitud de módulos" placement="top" arrow>
+                <IconButton
+                    size="sm"
+                    variant="outlined"
+                    color="neutral"
+                    onClick={() => setOpen(true)}
+                    title="Configurar completitud de módulos"
+                    aria-label="Configurar completitud de módulos"
+                >
+                    <SettingsRoundedIcon fontSize="small" />
+                </IconButton>
+            </Tooltip>
             {open && (
                 <ConfiguracionCompletitudModal
                     open={open}
                     onClose={() => setOpen(false)}
-                    cursoId={cursoId}
+                    initialCursoId={cursoId}
                 />
             )}
         </>

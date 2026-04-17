@@ -9,11 +9,11 @@ import MenuItem from "@mui/joy/MenuItem";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import { getURL } from "../utils";
 
 import { useCiclo } from "@/contexts/CicloContext";
-import { useLocalStorage } from "@uidotdev/usehooks";
+import { useIsClient, useLocalStorage } from "@uidotdev/usehooks";
 import dayjs from "dayjs";
 import { useSnackbar } from "notistack";
 import useSWR from "swr";
@@ -26,11 +26,7 @@ const options = [
 ];
 
 function ExportUsers() {
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
+    const mounted = useIsClient();
 
     return mounted ? <Export /> : null;
 }
@@ -43,7 +39,7 @@ function Export() {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const actionRef = useRef(null);
-    const anchorRef = useRef(null);
+    const [anchorEl, setAnchorEl] = useState(null);
     const [selectedIndex, setSelectedIndex] = useLocalStorage(
         "ExportUsers__selectedIndex",
         0
@@ -142,7 +138,7 @@ function Export() {
               ) ? (
                 <Fragment>
                     <ButtonGroup
-                        ref={anchorRef}
+                        ref={setAnchorEl}
                         variant="solid"
                         color="primary"
                         aria-label="split button"
@@ -200,7 +196,7 @@ function Export() {
                     <Menu
                         open={open}
                         onClose={() => setOpen(false)}
-                        anchorEl={anchorRef.current}
+                        anchorEl={anchorEl}
                     >
                         {options.map((option, index) => (
                             <MenuItem

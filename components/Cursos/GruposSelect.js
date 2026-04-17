@@ -7,7 +7,7 @@ import Option from "@mui/joy/Option";
 import Select from "@mui/joy/Select";
 import Skeleton from "@mui/joy/Skeleton";
 import Grid from "@mui/material/Grid";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import useSWR from "swr";
 
@@ -19,7 +19,7 @@ import useSWR from "swr";
  * @param {boolean} props.compact - Si es true, no renderiza el wrapper Grid
  */
 export default function GruposSelect({ compact = false, size = "md" }) {
-    const { control, setValue } = useFormContext();
+    const { control } = useFormContext();
     const { selectedCicloId } = useCiclo();
 
     // Observar el curso seleccionado
@@ -45,15 +45,6 @@ export default function GruposSelect({ compact = false, size = "md" }) {
             label: grupo.name,
         }));
     }, [grupos]);
-
-    // Resetear valor del grupo cuando cambie el curso o ciclo
-    useEffect(() => {
-        if (options.length > 0) {
-            setValue("grupo_usuario", "all");
-        } else {
-            setValue("grupo_usuario", null);
-        }
-    }, [courseId, selectedCicloId, setValue, options.length]);
 
     // No renderizar si no hay grupos disponibles
     if (!apiUrl || isLoading) {

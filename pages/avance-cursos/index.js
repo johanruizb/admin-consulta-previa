@@ -3,8 +3,6 @@ import Layout from "@/components/Home/Layout";
 import usePermissionContext from "@/components/Home/permissionContext/usePermission";
 import ExportarAsistencia from "@/components/Pages/Avances/ExportarAsistencia";
 import ExportAvances from "@/components/Pages/Avances/ExportarAvances";
-import TablaAvancesV2 from "@/components/Pages/TablaAvancesV2";
-import DevWrapper from "@/components/Wrapper/DevWrapper";
 import { useAvancesData } from "@/hooks/useAvancesData";
 import { useAvancesForm } from "@/hooks/useAvancesForm";
 import useClient from "@/hooks/useClient";
@@ -21,15 +19,19 @@ import Link from "@mui/joy/Link";
 import Tooltip from "@mui/joy/Tooltip";
 import Typography from "@mui/joy/Typography";
 import Stack from "@mui/material/Stack";
-import { useRenderCount } from "@uidotdev/usehooks";
 import Head from "next/head";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { FormProvider } from "react-hook-form";
 
+const TablaAvancesV2 = dynamic(
+    () => import("@/components/Pages/TablaAvancesV2"),
+    { ssr: false },
+);
+
 export default function Avances({ children }) {
     const router = useRouter();
-    const count = useRenderCount();
 
     // Hook personalizado para el manejo del formulario
     const { methods, formValues } = useAvancesForm();
@@ -78,23 +80,6 @@ export default function Avances({ children }) {
             <Head>
                 <title>Avance de cursos - Consulta previa</title>
             </Head>
-            <DevWrapper>
-                <Box
-                    sx={{
-                        position: "fixed",
-                        bottom: 2,
-                        left: 2,
-                    }}
-                >
-                    <Typography
-                        variant="h1"
-                        component="h1"
-                        sx={{ fontSize: 24, fontWeight: 500 }}
-                    >
-                        {count}
-                    </Typography>
-                </Box>
-            </DevWrapper>
             <Tooltip
                 title={
                     isLoading
@@ -154,21 +139,21 @@ export default function Avances({ children }) {
                     </Typography>
                 </Breadcrumbs>
             </Box>
-            <Box
-                sx={{
-                    display: "flex",
-                    mb: 1,
-                    gap: 1,
-                    flexDirection: { xs: "column", sm: "row" },
-                    alignItems: { xs: "start", sm: "center" },
-                    flexWrap: "wrap",
-                    justifyContent: "space-between",
-                }}
-            >
-                <Typography level="h2" component="h1">
-                    Avance de cursos
-                </Typography>
-                <FormProvider {...methods}>
+            <FormProvider {...methods}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        mb: 1,
+                        gap: 1,
+                        flexDirection: { xs: "column", sm: "row" },
+                        alignItems: { xs: "start", sm: "center" },
+                        flexWrap: "wrap",
+                        justifyContent: "space-between",
+                    }}
+                >
+                    <Typography level="h2" component="h1">
+                        Avance de cursos
+                    </Typography>
                     <Stack
                         spacing={1}
                         direction={{ xs: "column", sm: "row" }}
@@ -179,12 +164,9 @@ export default function Avances({ children }) {
                             <ExportarAsistencia />
                         </Stack>
                     </Stack>
-                </FormProvider>
-            </Box>
-            <FormProvider {...methods}>
+                </Box>
                 <FiltrarCursos
                     data={data}
-                    filter={filter}
                     setFilter={setFilter}
                 />
                 {isLoading || permissionIsLoading ? (
