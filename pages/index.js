@@ -360,11 +360,11 @@ export default function Page() {
                         Estadísticas
                     </Typography>
                 </Stack>
-                <Box
-                    sx={{
-                        flex: { xs: 1, md: 0.5 },
-                        maxWidth: { md: "calc(50% - 152.23px)" },
-                        width: "100%",
+                <Stack
+                    direction={{ xs: "column", md: "row" }}
+                    spacing={{
+                        xs: 1,
+                        md: 12
                     }}
                 >
                     <FormControl>
@@ -402,7 +402,52 @@ export default function Page() {
                             </RadioGroup>
                         )}
                     </FormControl>
-                </Box>
+                    <Stack
+
+                    >
+                        <FormControl
+                            orientation="horizontal"
+                            sx={{ alignItems: "center", gap: 1, mt: 1.5 }}
+                        >
+                            <Switch
+                                checked={filters.info_validada}
+                                onChange={(e) =>
+                                    setFilters((prev) => ({
+                                        ...prev,
+                                        info_validada: e.target.checked,
+                                    }))
+                                }
+                            />
+                            <FormLabel>
+                                Mostrar solo validadas
+                            </FormLabel>
+                        </FormControl>
+                        <Stack
+                            direction="row"
+                            alignItems="center"
+                            justifyContent={{ xs: "space-between", md: "flex-start" }}
+                            sx={{ mt: 0.5 }}
+                            spacing={{ md: 3, xs: 0 }}
+                        >
+                            <FormControl
+                                orientation="horizontal"
+                                sx={{ alignItems: "center", gap: 1 }}
+                            >
+                                <Switch
+                                    checked={filters.solo_certificados}
+                                    onChange={(e) =>
+                                        setFilters((prev) => ({
+                                            ...prev,
+                                            solo_certificados: e.target.checked,
+                                        }))
+                                    }
+                                />
+                                <FormLabel>Mostrar solo certificados</FormLabel>
+                            </FormControl>
+                            <UmbralCertificadoButton />
+                        </Stack>
+                    </Stack>
+                </Stack>
             </Box>
             <Box
                 sx={{
@@ -475,47 +520,7 @@ export default function Page() {
                         </Grid>
                     ))}
                 </Grid>
-                <FormControl
-                    orientation="horizontal"
-                    sx={{ alignItems: "center", gap: 1, mt: 1.5 }}
-                >
-                    <Switch
-                        checked={filters.info_validada}
-                        onChange={(e) =>
-                            setFilters((prev) => ({
-                                ...prev,
-                                info_validada: e.target.checked,
-                            }))
-                        }
-                    />
-                    <FormLabel>
-                        Mostrar solo validadas
-                    </FormLabel>
-                </FormControl>
-                <Stack
-                    direction="row"
-                    alignItems="center"
-                    justifyContent={{ xs: "space-between", md: "flex-start" }}
-                    sx={{ mt: 0.5 }}
-                    spacing={{ md: 3, xs: 0 }}
-                >
-                    <FormControl
-                        orientation="horizontal"
-                        sx={{ alignItems: "center", gap: 1 }}
-                    >
-                        <Switch
-                            checked={filters.solo_certificados}
-                            onChange={(e) =>
-                                setFilters((prev) => ({
-                                    ...prev,
-                                    solo_certificados: e.target.checked,
-                                }))
-                            }
-                        />
-                        <FormLabel>Mostrar solo certificados</FormLabel>
-                    </FormControl>
-                    <UmbralCertificadoButton />
-                </Stack>
+
             </Box>
             <Grid
                 container
