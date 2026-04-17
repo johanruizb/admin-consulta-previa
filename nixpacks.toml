@@ -1,0 +1,15 @@
+[phases.setup]
+nixPkgs = ['...', 'openssl']
+nixLibs = ['...', 'gcc-unwrapped', 'libuuid', 'libGL']
+aptPkgs = ['curl', 'wget']
+
+[phases.install]
+cmds = ['npm ci']
+cacheDirectories = ['/root/.npm']
+
+[phases.build]
+cmds = ['npm run build']
+cacheDirectories = ['.next/cache', 'node_modules/.cache']
+
+[start]
+cmd = 'npm run start'

@@ -233,7 +233,7 @@ function PesosActividadesModal({ open, onClose, initialCursoId }) {
                                 </Typography>
                                 {tieneAlgunPeso && (
                                     <Chip size="sm" variant="soft" color={pesoColor}>
-                                        Total: {totalPeso.toFixed(2)}%
+                                        {totalPeso.toFixed(2)}%
                                     </Chip>
                                 )}
                             </Stack>
