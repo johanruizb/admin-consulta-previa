@@ -809,6 +809,34 @@ export default function Page() {
                                 </CardContent>
                             </Card>
                         </Grid>
+                        {data?.edad_conectividad?.dataset?.length > 0 && (
+                            <Grid size={12}>
+                                <Card variant="outlined" sx={{ height: "100%" }}>
+                                    <CardContent>
+                                        <Typography level="title-lg">
+                                            Personas por edad y conectividad
+                                        </Typography>
+
+                                        <BarChart
+                                            dataset={data.edad_conectividad.dataset}
+                                            xAxis={[
+                                                {
+                                                    scaleType: "band",
+                                                    dataKey: "label",
+                                                },
+                                            ]}
+                                            series={data.edad_conectividad.series.map(
+                                                (s) => ({
+                                                    ...s,
+                                                    stack: "conectividad",
+                                                })
+                                            )}
+                                            height={400}
+                                        />
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        )}
                     </Fragment>
                 ) : (
                     <Grid size={12}>
