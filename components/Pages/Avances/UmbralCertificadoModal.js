@@ -23,7 +23,7 @@ import { useSnackbar } from "notistack";
 import { memo, useCallback, useEffect, useState } from "react";
 import useSWR, { useSWRConfig } from "swr";
 
-function UmbralCertificadoModal({ open, onClose, initialCursoId }) {
+function UmbralCertificadoModal({ open, onClose, initialCursoId = 6 }) {
     const { enqueueSnackbar } = useSnackbar();
     const { mutate: globalMutate } = useSWRConfig();
     const { selectedCicloId } = useCiclo();
